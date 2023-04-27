@@ -3,7 +3,14 @@ class PokemonItem extends CaughtIndicatingItem {
     type: PokemonNameType;
     private _translatedOrDisplayName: KnockoutObservable<string>;
 
-    constructor(pokemon: PokemonNameType, basePrice: number, currency: GameConstants.Currency = GameConstants.Currency.questPoint, public ignoreEV = false, displayName: string = undefined) {
+    constructor(
+        pokemon: PokemonNameType,
+        basePrice: number,
+        currency: GameConstants.Currency = GameConstants.Currency.questPoint,
+        public ignoreEV = false,
+        displayName: string = undefined,
+        private repeatPurchaseModifier = 1
+    ) {
         super(pokemon, basePrice, currency, undefined, undefined, `Add ${pokemon} to your party.`, 'pokemonItem');
         this.type = pokemon;
         this._translatedOrDisplayName = ko.pureComputed(() => displayName ?? PokemonHelper.displayName(pokemon)());
@@ -67,6 +74,20 @@ class PokemonItem extends CaughtIndicatingItem {
 
     get displayName(): string {
         return this._translatedOrDisplayName();
+    }
+
+    totalPrice(amount: number): number {
+        let totalPrice = super.totalPrice(amount);
+        if (this.repeatPurchaseModifier == 1) {
+            return totalPrice;
+        }
+        if (App.game.party.alreadyCaughtPokemonByName(this.type)) {
+            totalPrice *= this.repeatPurchaseModifier;
+        } else if (amount > 1) {
+            const firstPurchasePrice = super.totalPrice(1);
+            totalPrice = firstPurchasePrice + (totalPrice - firstPurchasePrice) * this.repeatPurchaseModifier;
+        }
+        return Math.max(0, Math.round(totalPrice));
     }
 }
 
