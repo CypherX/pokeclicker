@@ -17,10 +17,10 @@
     <script src="libs/Sortable.min.js"></script>
 
     <!-- New module-based code from './modules' -->
-    <script src="scripts/modules.min.js?v=0.10.11"></script>
+    <script src="scripts/modules.min.js?v=0.10.12"></script>
 
     <!--Minified scripts-->
-    <script src="scripts/script.min.js?v=0.10.11"></script>
+    <script src="scripts/script.min.js?v=0.10.12"></script>
 
     <!--Popper.js-->
     <script src="libs/popper.min.js"></script>
@@ -38,27 +38,9 @@
     <link href="libs/introjs-modern.css" rel="stylesheet">
 
     <!--Minified styles-->
-    <link href="styles/styles.min.css?v=0.10.11" rel="stylesheet">
+    <link href="styles/styles.min.css?v=0.10.12" rel="stylesheet">
 
     <!-- Google Analytics-->
-        <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-171657234-1"></script>
-    <script>
-        if (true) {
-            window.dataLayer = window.dataLayer || [];
-
-            function gtag() {
-                dataLayer.push(arguments);
-            }
-
-            gtag('js', new Date());
-
-            gtag('config', 'UA-171657234-1');
-        } else {
-            function gtag(){};
-        }
-    </script>
-
     <style>
         #game.loading {
             display: none !important;
@@ -542,40 +524,84 @@
                     </div>
 
                     <div id="itemBag" class="tab-pane p-3">
-                        <div>
-                            <!-- ko if: Object.values(ItemList).some((i) => i instanceof QuestItem && i.isActive() && player.itemList[i.name]()) -->
-                            <h4>Quest items</h4>
-                            <div class="row justify-content-center">
-                                <!-- ko foreach: Object.values(ItemList).filter((i) => i instanceof QuestItem && i.isActive() && player.itemList[i.name]()) -->
-                                    <div class="btn btn-primary col-2 item-bag-item" data-bind="template: { name: 'otherItemTemplate', data: $data.name }"></div>
-                                <!-- /ko -->
-                            </div>
-                            <!-- /ko -->
-                            <h4>Vitamins</h4>
-                            <div class="row justify-content-center">
-                                <!-- ko foreach: GameHelper.enumNumbers(GameConstants.VitaminType) -->
-                                    <div class="btn btn-primary col-2 item-bag-item" data-bind="template: { name: 'otherItemTemplate', data: GameConstants.VitaminType[$data]}, click: () => { VitaminController.currentlySelected($data); $('#pokemonVitaminModal').modal('show'); }"></div>
-                                <!-- /ko -->
-                            </div>
-                            <div class="row justify-content-center mb-2">
-                                <button type="button" class="btn btn-primary btn-sm" data-bind="click: () => { $('#pokemonVitaminExpandedModal').modal('show') }">All Vitamins</button>
-                            </div>
-                            <h4>Held items</h4>
-                            <div class="row justify-content-center">
-                                <!-- ko foreach: HeldItem.getSortedHeldItems() -->
-                                    <div class="btn btn-primary col-2 item-bag-item" data-bind="template: { name: 'otherItemTemplate', data: $data.name}, click: () => { HeldItem.heldItemSelected($data); $('#heldItemModal').modal('show'); }, visible: $data.isUnlocked()"></div>
-                                <!-- /ko -->
-                            </div>
-                            <!-- ko if: Object.values(ItemList).some((i) => i instanceof MegaStoneItem && player.itemList[i.name]()) -->
-                            <h4>Mega Stones</h4>
-                            <div class="row justify-content-center" data-bind="foreach: Object.values(ItemList).filter((i) => i instanceof MegaStoneItem && player.itemList[i.name]())">
-                                <div class="bg-primary text-white rounded px-1 py-1 col-3 col-lg-2 item-bag-item">
-                                    <img width="40px" data-bind="attr: {src: $data.image }">
-                                    <div class="small text-truncate" data-bind="text: GameConstants.humanifyString($data.name)"></div>
+
+                        <!-- ko if: Object.values(ItemList).some((i) => i instanceof QuestItem && i.isActive() && player.itemList[i.name]()) -->
+                        <div class="bg-primary text-left rounded-0 px-3 py-2 mb-1" data-toggle="collapse" data-target="#itemBag-questItems">
+                            <h5 class="m-0 text-light">Quest Items</h5>
+                        </div>
+                        <div id="itemBag-questItems" class="collapse show">
+                            <div class="card-body pt-2 p-1">
+                                <div class="row justify-content-center">
+                                    <!-- ko foreach: Object.values(ItemList).filter((i) => i instanceof QuestItem && i.isActive() && player.itemList[i.name]()) -->
+                                    <div class="col-6 col-lg-3 mb-2">
+                                        <div class="btn btn-secondary text-left w-100 px-1" style="padding-top: 1px; padding-bottom: 2px;"
+                                            data-bind="template: { name: 'otherItemTemplate', data: $data.name }">
+                                        </div>
+                                    </div>
+                                    <!-- /ko -->
                                 </div>
                             </div>
-                            <!-- /ko -->
                         </div>
+                        <!-- /ko -->
+
+                        <div class="bg-primary text-left rounded-0 px-3 py-2 mb-1" data-toggle="collapse" data-target="#itemBag-vitamins">
+                            <h5 class="m-0 text-light">Vitamins</h5>
+                        </div>
+                        <div id="itemBag-vitamins" class="collapse show">
+                            <div class="card-body pt-2 p-1">
+                                <div class="row justify-content-center">
+                                    <!-- ko foreach: GameHelper.enumNumbers(GameConstants.VitaminType) -->
+                                    <div class="col-6 col-lg-3 mb-2">
+                                        <div class="btn btn-secondary text-left w-100 px-1" style="padding-top: 1px; padding-bottom: 2px;"
+                                            data-bind="template: { name: 'otherItemTemplate', data: GameConstants.VitaminType[$data]},
+                                                click: () => { VitaminController.currentlySelected($data); $('#pokemonVitaminModal').modal('show'); }">
+                                        </div>
+                                    </div>
+                                    <!-- /ko -->
+                                </div>
+                                <div class="row justify-content-center mb-1">
+                                    <button type="button" class="btn btn-secondary btn-sm" data-bind="click: () => { $('#pokemonVitaminExpandedModal').modal('show') }">All Vitamins</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-primary text-left rounded-0 px-3 py-2 mb-1" data-toggle="collapse" data-target="#itemBag-heldItems">
+                            <h5 class="m-0 text-light">Held Items</h5>
+                        </div>
+                        <div id="itemBag-heldItems" class="collapse show mt-1">
+                            <div class="card-body pt-2 p-1">
+                                <div class="row justify-content-center">
+                                    <!-- ko foreach: HeldItem.getSortedHeldItems() -->
+                                    <div class="col-6 col-lg-3 mb-2" data-bind="visible: $data.isUnlocked()">
+                                        <div class="btn btn-secondary text-left w-100 px-1" style="padding-top: 1px; padding-bottom: 2px;"
+                                            data-bind="template: { name: 'otherItemTemplate', data: $data.name },
+                                                click: () => { HeldItem.heldItemSelected($data); $('#heldItemModal').modal('show'); }">
+                                        </div>
+                                    </div>
+                                    <!-- /ko -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ko if: Object.values(ItemList).some((i) => i instanceof MegaStoneItem && player.itemList[i.name]()) -->
+                        <div class="bg-primary text-left rounded-0 px-3 py-2 mb-1" data-toggle="collapse" data-target="#itemBag-megaStones">
+                            <h5 class="m-0 text-light">Mega Stones</h5>
+                        </div>
+                        <div id="itemBag-megaStones" class="collapse show mt-1">
+                            <div class="card-body pt-2 p-1">
+                                <div class="row justify-content-center" data-bind="foreach: Object.values(ItemList).filter((i) => i instanceof MegaStoneItem && player.itemList[i.name]())">
+                                    <div class="col-6 col-lg-3 mb-2">
+                                        <div class="btn btn-secondary px-1 py-0 d-flex align-items-center text-left" style="pointer-events: none;">
+                                            <img width="42px" data-bind="attr: { src: $data.image }">
+                                            <div class="flex-grow-1 small ml-2" style="min-width: 0;">
+                                                <div class="text-truncate" data-bind="text: GameConstants.humanifyString($data.name)"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /ko -->
                     </div>
 
                     <div id="keyItems" class="tab-pane p-3">
@@ -626,15 +652,18 @@
 </div>
 
 <script type="text/html" id="otherItemTemplate">
-    <div data-container="body" data-bind="tooltip: {
+    <div class="d-flex w-100" data-container="body" data-bind="tooltip: {
         title: ItemList[$data] ? `<u>${ItemList[$data].displayName}</u><br/>${ItemList[$data].description || ''}` : '',
         trigger: 'hover',
         placement:'top',
         html: true,
         boundary: document.getElementById('showItemsModal'),
     }">
-        <img data-bind="attr: {src: ItemList[$data].image }" style="max-width: 32px;">
-        <div data-bind="text: player._itemList[$data]().toLocaleString('en-US')"></div>
+        <img width="42px" data-bind="attr: { src: ItemList[$data].image }">
+        <div class="flex-grow-1 small align-self-end ml-2" style="min-width: 0;">
+            <div class="text-truncate" data-bind="text: ItemList[$data].displayName"></div>
+            <div data-bind="text: player._itemList[$data]().toLocaleString('en-US')"></div>
+        </div>
     </div>
 </script>
 
@@ -1109,7 +1138,13 @@
                                 <img class="shadow-icon" src="assets/images/status/shadow.svg" data-bind="visible: $data.shadow == GameConstants.ShadowStatus.Shadow"/>
                                 <img class="shadow-icon" src="assets/images/status/purified.svg" data-bind="visible: $data.shadow == GameConstants.ShadowStatus.Purified"/>
                                 <!-- ko foreach: PokemonHelper.getMegaStones($data.name).filter(s => player.hasMegaStone(s.megaStone)) -->
-                                <img width="20px" data-bind="attr: { src: $data.image }"/>
+                                <img width="20px" data-bind="attr: { src: $data.image },
+                                    tooltip: {
+                                        title: pokemonMap[$parent.name].evolutions.flatMap(e => e.restrictions)
+                                            .find(r => r instanceof MegaEvolveRequirement && r.megaStone == $data.megaStone)?.hint() ?? '',
+                                        trigger: 'hover',
+                                        placement: 'bottom'
+                                }"/>
                                 <!-- /ko -->
                             </div>
                             <div class="pokemonAttack" data-bind="text: attack.toLocaleString('en-US')"></div>
@@ -2073,8 +2108,8 @@
 
     <g data-bind="visible: player.subregion == SubRegions.getSubRegion(GameConstants.Region.kanto, 'Kanto').id">
         <image width="1600" height="960" data-bind="attr: {
-            'xlink:href':'assets/images/kanto-kanto.png?v=0.10.11',
-            href:'assets/images/kanto-kanto.png?v=0.10.11'
+            'xlink:href':'assets/images/kanto-kanto.png?v=0.10.12',
+            href:'assets/images/kanto-kanto.png?v=0.10.12'
         }"></image>
 
         <!-- ------ -->
@@ -3383,6 +3418,30 @@
 
 
 
+        
+
+<rect class="city"
+    data-town="Safari Zone"
+    x="752"
+    y="624"
+    height="80"
+    width="96"
+    data-bind="
+        click:function(){MapHelper.moveToTown('Safari Zone')},
+        attr: { class: MapHelper.calculateTownCssClass('Safari Zone') },
+        ">
+</rect>
+
+    <image width="48" height="48"
+        x="776"
+        y="640"
+        class="iconLocation"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Safari Zone')
+        , attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`}">
+    </image>
+
+
+
         <!--Cinnabar Island-->
         
 
@@ -3875,17 +3934,6 @@
         
 
 <rect class="city"
-    data-town="Safari Zone" 
-    x="752"
-    y="624"
-    height="80"
-    width="96"
-    data-bind="click:function(){Safari.startSafari()}, attr: { class: Safari.canAccess() ? &#39;completed&#39; : &#39;locked&#39; }">
-</rect>
-
-        
-
-<rect class="city"
     data-town="Underground Entrance" 
     x="1328"
     y="480"
@@ -4320,8 +4368,8 @@
 
     <g data-bind="visible: player.subregion == SubRegions.getSubRegion(GameConstants.Region.kanto, 'Sevii Islands 123').id">
         <image width="1600" height="960" data-bind="attr: {
-            'xlink:href':'assets/images/kanto-sevii123.png?v=0.10.11',
-            href:'assets/images/kanto-sevii123.png?v=0.10.11'
+            'xlink:href':'assets/images/kanto-sevii123.png?v=0.10.12',
+            href:'assets/images/kanto-sevii123.png?v=0.10.12'
         }"></image>
 
         <!-- ------ -->
@@ -4856,8 +4904,8 @@
 
     <g data-bind="visible: player.subregion == SubRegions.getSubRegion(GameConstants.Region.kanto, 'Sevii Islands 4567').id">
         <image width="1600" height="960" data-bind="attr: {
-            'xlink:href':'assets/images/kanto-sevii4567.png?v=0.10.11',
-            href:'assets/images/kanto-sevii4567.png?v=0.10.11'
+            'xlink:href':'assets/images/kanto-sevii4567.png?v=0.10.12',
+            href:'assets/images/kanto-sevii4567.png?v=0.10.12'
         }"></image>
 
         <!-- ------ -->
@@ -6374,8 +6422,8 @@
 
                             <g data-bind='visible: player.region == GameConstants.Region.johto'>
     <image width="1600" height="960" data-bind="attr: {
-        'xlink:href':'assets/images/johto.png?v=0.10.11',
-        href:'assets/images/johto.png?v=0.10.11'
+        'xlink:href':'assets/images/johto.png?v=0.10.12',
+        href:'assets/images/johto.png?v=0.10.12'
     }"></image>
 
     <!-- ------ -->
@@ -8592,8 +8640,8 @@
 
                             <g data-bind='visible: player.region == GameConstants.Region.hoenn'>
     <image width="1600" height="960" data-bind="attr: {
-        'xlink:href':'assets/images/hoenn.png?v=0.10.11',
-        href:'assets/images/hoenn.png?v=0.10.11'
+        'xlink:href':'assets/images/hoenn.png?v=0.10.12',
+        href:'assets/images/hoenn.png?v=0.10.12'
     }"></image>
 
     <!-- ------ -->
@@ -11746,8 +11794,8 @@
 
      <g data-bind="visible: player.subregion == SubRegions.getSubRegion(GameConstants.Region.hoenn, 'Orre').id">
         <image width="1600" height="960" data-bind="attr: {
-            'xlink:href':'assets/images/orre.png?v=0.10.11',
-            href:'assets/images/orre.png?v=0.10.11'
+            'xlink:href':'assets/images/orre.png?v=0.10.12',
+            href:'assets/images/orre.png?v=0.10.12'
         }"></image>
 
         <!-- ----- -->
@@ -12265,8 +12313,8 @@
 
                             <g data-bind='visible: player.region == GameConstants.Region.sinnoh'>
     <image width="1600" height="960" data-bind="attr: {
-        'xlink:href':'assets/images/sinnoh.png?v=0.10.11',
-        href:'assets/images/sinnoh.png?v=0.10.11'
+        'xlink:href':'assets/images/sinnoh.png?v=0.10.12',
+        href:'assets/images/sinnoh.png?v=0.10.12'
     }"></image>
 
     <!-- ------ -->
@@ -15099,8 +15147,8 @@
 
                             <g data-bind='visible: player.region == GameConstants.Region.unova'>
     <image width="1600" height="960" data-bind="attr: {
-        'xlink:href':'assets/images/unova.png?v=0.10.11',
-        href:'assets/images/unova.png?v=0.10.11'
+        'xlink:href':'assets/images/unova.png?v=0.10.12',
+        href:'assets/images/unova.png?v=0.10.12'
     }"></image>
 
     <!-- ------ -->
@@ -16313,20 +16361,20 @@
     y="832"
     height="144"
     width="64"
-    data-bind="visible: (App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).curQuest() &gt;= 1 || App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).state() == 2) &amp;&amp; (App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 2&#39;)]() == 0 || App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 3&#39;)]() == 0 || (App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).curQuest() &lt;= 4 &amp;&amp; App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).state() == 1))"/>
+    data-bind="visible: (App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).curQuest() &gt;= 1 || App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).state() == 2) &amp;&amp; (App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 2&#39;)]() == 0 || App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 3&#39;)]() == 0 || (App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).curQuest() &lt;= 4 &amp;&amp; App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).state() == 1))"/>
 <rect class="city"
     data-town="A Perfectly Ordinary Frigate"
     x="624"
     y="832"
     height="144"
     width="64"
-    data-bind="visible: (App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).curQuest() &gt;= 1 || App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).state() == 2) &amp;&amp; (App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 2&#39;)]() == 0 || App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 3&#39;)]() == 0 || (App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).curQuest() &lt;= 4 &amp;&amp; App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).state() == 1)), click:function(){MapHelper.moveToTown(&#39;A Perfectly Ordinary Frigate&#39;)}, attr:{ class: MapHelper.calculateTownCssClass(&#39;A Perfectly Ordinary Frigate&#39;) }">
+    data-bind="visible: (App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).curQuest() &gt;= 1 || App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).state() == 2) &amp;&amp; (App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 2&#39;)]() == 0 || App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 3&#39;)]() == 0 || (App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).curQuest() &lt;= 4 &amp;&amp; App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).state() == 1)), click:function(){MapHelper.moveToTown(&#39;A Perfectly Ordinary Frigate&#39;)}, attr:{ class: MapHelper.calculateTownCssClass(&#39;A Perfectly Ordinary Frigate&#39;) }">
 </rect>
 <image width="48" height="48"
     x="632"
     y="880"
     class="iconLocation"
-    data-bind="visible: MapHelper.isTownCurrentLocation('A Perfectly Ordinary Frigate') && (App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).curQuest() &gt;= 1 || App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).state() == 2) &amp;&amp; (App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 2&#39;)]() == 0 || App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 3&#39;)]() == 0 || (App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).curQuest() &lt;= 4 &amp;&amp; App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).state() == 1))
+    data-bind="visible: MapHelper.isTownCurrentLocation('A Perfectly Ordinary Frigate') && (App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).curQuest() &gt;= 1 || App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).state() == 2) &amp;&amp; (App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 2&#39;)]() == 0 || App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 3&#39;)]() == 0 || (App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).curQuest() &lt;= 4 &amp;&amp; App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).state() == 1))
     , attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`}">
 </image>
 
@@ -16421,20 +16469,20 @@
     y="560"
     height="144"
     width="64"
-    data-bind="visible: App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 2&#39;)]() &gt;= 1 &amp;&amp; App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 3&#39;)]() &gt;= 1 &amp;&amp; (App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).curQuest() &gt;= 5 || App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).state() == 2) &amp;&amp; (App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 4&#39;)]() == 0 || App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 5&#39;)]() == 0 || App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunts 1&#39;)]() == 0 || App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunts 2&#39;)]() == 0 || (App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).curQuest() &lt;= 7 &amp;&amp; App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).state() == 1))"/>
+    data-bind="visible: App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 2&#39;)]() &gt;= 1 &amp;&amp; App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 3&#39;)]() &gt;= 1 &amp;&amp; (App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).curQuest() &gt;= 5 || App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).state() == 2) &amp;&amp; (App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 4&#39;)]() == 0 || App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 5&#39;)]() == 0 || App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunts 1&#39;)]() == 0 || App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunts 2&#39;)]() == 0 || (App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).curQuest() &lt;= 7 &amp;&amp; App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).state() == 1))"/>
 <rect class="city"
     data-town="A Totally Unsuspicious Frigate"
     x="576"
     y="560"
     height="144"
     width="64"
-    data-bind="visible: App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 2&#39;)]() &gt;= 1 &amp;&amp; App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 3&#39;)]() &gt;= 1 &amp;&amp; (App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).curQuest() &gt;= 5 || App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).state() == 2) &amp;&amp; (App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 4&#39;)]() == 0 || App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 5&#39;)]() == 0 || App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunts 1&#39;)]() == 0 || App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunts 2&#39;)]() == 0 || (App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).curQuest() &lt;= 7 &amp;&amp; App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).state() == 1)), click:function(){MapHelper.moveToTown(&#39;A Totally Unsuspicious Frigate&#39;)}, attr:{ class: MapHelper.calculateTownCssClass(&#39;A Totally Unsuspicious Frigate&#39;) }">
+    data-bind="visible: App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 2&#39;)]() &gt;= 1 &amp;&amp; App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 3&#39;)]() &gt;= 1 &amp;&amp; (App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).curQuest() &gt;= 5 || App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).state() == 2) &amp;&amp; (App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 4&#39;)]() == 0 || App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 5&#39;)]() == 0 || App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunts 1&#39;)]() == 0 || App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunts 2&#39;)]() == 0 || (App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).curQuest() &lt;= 7 &amp;&amp; App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).state() == 1)), click:function(){MapHelper.moveToTown(&#39;A Totally Unsuspicious Frigate&#39;)}, attr:{ class: MapHelper.calculateTownCssClass(&#39;A Totally Unsuspicious Frigate&#39;) }">
 </rect>
 <image width="48" height="48"
     x="584"
     y="608"
     class="iconLocation"
-    data-bind="visible: MapHelper.isTownCurrentLocation('A Totally Unsuspicious Frigate') && App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 2&#39;)]() &gt;= 1 &amp;&amp; App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 3&#39;)]() &gt;= 1 &amp;&amp; (App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).curQuest() &gt;= 5 || App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).state() == 2) &amp;&amp; (App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 4&#39;)]() == 0 || App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 5&#39;)]() == 0 || App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunts 1&#39;)]() == 0 || App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunts 2&#39;)]() == 0 || (App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).curQuest() &lt;= 7 &amp;&amp; App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).state() == 1))
+    data-bind="visible: MapHelper.isTownCurrentLocation('A Totally Unsuspicious Frigate') && App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 2&#39;)]() &gt;= 1 &amp;&amp; App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 3&#39;)]() &gt;= 1 &amp;&amp; (App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).curQuest() &gt;= 5 || App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).state() == 2) &amp;&amp; (App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 4&#39;)]() == 0 || App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunt 5&#39;)]() == 0 || App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunts 1&#39;)]() == 0 || App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Team Plasma Grunts 2&#39;)]() == 0 || (App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).curQuest() &lt;= 7 &amp;&amp; App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).state() == 1))
     , attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`}">
 </image>
 
@@ -16570,20 +16618,20 @@
     y="80"
     height="104"
     width="144"
-    data-bind="visible: App.game.statistics.gymsDefeated[GameConstants.getGymIndex(&#39;Opelucid City&#39;)]() &gt;= 1 &amp;&amp; App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Zinzolin 1&#39;)]() &gt;= 1 &amp;&amp; (App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).curQuest() &gt;= 12 || App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).state() == 2) &amp;&amp; (App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Plasma Shadow 1&#39;)]() == 0 || (App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).curQuest() &lt;= 14 &amp;&amp; App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).state() == 1))"/>
+    data-bind="visible: App.game.statistics.gymsDefeated[GameConstants.getGymIndex(&#39;Opelucid City&#39;)]() &gt;= 1 &amp;&amp; App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Zinzolin 1&#39;)]() &gt;= 1 &amp;&amp; (App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).curQuest() &gt;= 12 || App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).state() == 2) &amp;&amp; (App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Plasma Shadow 1&#39;)]() == 0 || (App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).curQuest() &lt;= 14 &amp;&amp; App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).state() == 1))"/>
 <rect class="city"
     data-town="Team Plasma Assault"
     x="752"
     y="80"
     height="104"
     width="144"
-    data-bind="visible: App.game.statistics.gymsDefeated[GameConstants.getGymIndex(&#39;Opelucid City&#39;)]() &gt;= 1 &amp;&amp; App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Zinzolin 1&#39;)]() &gt;= 1 &amp;&amp; (App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).curQuest() &gt;= 12 || App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).state() == 2) &amp;&amp; (App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Plasma Shadow 1&#39;)]() == 0 || (App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).curQuest() &lt;= 14 &amp;&amp; App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).state() == 1)), click:function(){MapHelper.moveToTown(&#39;Team Plasma Assault&#39;)}, attr:{ class: MapHelper.calculateTownCssClass(&#39;Team Plasma Assault&#39;) }">
+    data-bind="visible: App.game.statistics.gymsDefeated[GameConstants.getGymIndex(&#39;Opelucid City&#39;)]() &gt;= 1 &amp;&amp; App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Zinzolin 1&#39;)]() &gt;= 1 &amp;&amp; (App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).curQuest() &gt;= 12 || App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).state() == 2) &amp;&amp; (App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Plasma Shadow 1&#39;)]() == 0 || (App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).curQuest() &lt;= 14 &amp;&amp; App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).state() == 1)), click:function(){MapHelper.moveToTown(&#39;Team Plasma Assault&#39;)}, attr:{ class: MapHelper.calculateTownCssClass(&#39;Team Plasma Assault&#39;) }">
 </rect>
 <image width="48" height="48"
     x="800"
     y="108"
     class="iconLocation"
-    data-bind="visible: MapHelper.isTownCurrentLocation('Team Plasma Assault') && App.game.statistics.gymsDefeated[GameConstants.getGymIndex(&#39;Opelucid City&#39;)]() &gt;= 1 &amp;&amp; App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Zinzolin 1&#39;)]() &gt;= 1 &amp;&amp; (App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).curQuest() &gt;= 12 || App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).state() == 2) &amp;&amp; (App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Plasma Shadow 1&#39;)]() == 0 || (App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).curQuest() &lt;= 14 &amp;&amp; App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).state() == 1))
+    data-bind="visible: MapHelper.isTownCurrentLocation('Team Plasma Assault') && App.game.statistics.gymsDefeated[GameConstants.getGymIndex(&#39;Opelucid City&#39;)]() &gt;= 1 &amp;&amp; App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Zinzolin 1&#39;)]() &gt;= 1 &amp;&amp; (App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).curQuest() &gt;= 12 || App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).state() == 2) &amp;&amp; (App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Plasma Shadow 1&#39;)]() == 0 || (App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).curQuest() &lt;= 14 &amp;&amp; App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).state() == 1))
     , attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`}">
 </image>
 
@@ -17265,20 +17313,20 @@
     y="256"
     height="144"
     width="64"
-    data-bind="visible: App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Plasma Shadow 1&#39;)]() &gt;= 1 &amp;&amp; (App.game.statistics.dungeonsCleared[GameConstants.getDungeonIndex(&#39;Plasma Frigate&#39;)]() == 0 || (App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).curQuest() &lt;= 15 &amp;&amp; App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).state() == 1)) &amp;&amp; (App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).curQuest() &gt;= 15 || App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).state() == 2)"/>
+    data-bind="visible: App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Plasma Shadow 1&#39;)]() &gt;= 1 &amp;&amp; (App.game.statistics.dungeonsCleared[GameConstants.getDungeonIndex(&#39;Plasma Frigate&#39;)]() == 0 || (App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).curQuest() &lt;= 15 &amp;&amp; App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).state() == 1)) &amp;&amp; (App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).curQuest() &gt;= 15 || App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).state() == 2)"/>
 <rect class="city"
     data-town="Plasma Frigate"
     x="1520"
     y="256"
     height="144"
     width="64"
-    data-bind="visible: App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Plasma Shadow 1&#39;)]() &gt;= 1 &amp;&amp; (App.game.statistics.dungeonsCleared[GameConstants.getDungeonIndex(&#39;Plasma Frigate&#39;)]() == 0 || (App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).curQuest() &lt;= 15 &amp;&amp; App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).state() == 1)) &amp;&amp; (App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).curQuest() &gt;= 15 || App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).state() == 2), click:function(){MapHelper.moveToTown(&#39;Plasma Frigate&#39;)}, attr:{ class: MapHelper.calculateTownCssClass(&#39;Plasma Frigate&#39;) }">
+    data-bind="visible: App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Plasma Shadow 1&#39;)]() &gt;= 1 &amp;&amp; (App.game.statistics.dungeonsCleared[GameConstants.getDungeonIndex(&#39;Plasma Frigate&#39;)]() == 0 || (App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).curQuest() &lt;= 15 &amp;&amp; App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).state() == 1)) &amp;&amp; (App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).curQuest() &gt;= 15 || App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).state() == 2), click:function(){MapHelper.moveToTown(&#39;Plasma Frigate&#39;)}, attr:{ class: MapHelper.calculateTownCssClass(&#39;Plasma Frigate&#39;) }">
 </rect>
 <image width="48" height="48"
     x="1528"
     y="304"
     class="iconLocation"
-    data-bind="visible: MapHelper.isTownCurrentLocation('Plasma Frigate') && App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Plasma Shadow 1&#39;)]() &gt;= 1 &amp;&amp; (App.game.statistics.dungeonsCleared[GameConstants.getDungeonIndex(&#39;Plasma Frigate&#39;)]() == 0 || (App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).curQuest() &lt;= 15 &amp;&amp; App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).state() == 1)) &amp;&amp; (App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).curQuest() &gt;= 15 || App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).state() == 2)
+    data-bind="visible: MapHelper.isTownCurrentLocation('Plasma Frigate') && App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Plasma Shadow 1&#39;)]() &gt;= 1 &amp;&amp; (App.game.statistics.dungeonsCleared[GameConstants.getDungeonIndex(&#39;Plasma Frigate&#39;)]() == 0 || (App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).curQuest() &lt;= 15 &amp;&amp; App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).state() == 1)) &amp;&amp; (App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).curQuest() &gt;= 15 || App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).state() == 2)
     , attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`}">
 </image>
 
@@ -17333,7 +17381,7 @@
     </image>
 
 
-    <!--Giant Chasm extension-->
+    <!--Plasma Frigate extension-->
     
 
 <image href="assets/images/map/plasmafrigate_airship.png" xlink:href="assets/images/map/plasmafrigate_airship.png"
@@ -17341,20 +17389,20 @@
     y="8"
     height="104"
     width="144"
-    data-bind="visible: App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Plasma Shadow 1&#39;)]() &gt;= 1 &amp;&amp; App.game.statistics.dungeonsCleared[GameConstants.getDungeonIndex(&#39;Plasma Frigate&#39;)]() &gt;= 1 &amp;&amp; App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Ghetsis 2&#39;)]() == 0 &amp;&amp; (App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).curQuest() &gt;= 16 || App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).state() == 2)"/>
+    data-bind="visible: App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Plasma Shadow 1&#39;)]() &gt;= 1 &amp;&amp; App.game.statistics.dungeonsCleared[GameConstants.getDungeonIndex(&#39;Plasma Frigate&#39;)]() &gt;= 1 &amp;&amp; App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Ghetsis 2&#39;)]() == 0 &amp;&amp; (App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).curQuest() &gt;= 16 || App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).state() == 2)"/>
 <rect class="city"
-    data-town="Giant Chasm"
+    data-town="Plasma Frigate"
     x="1232"
     y="8"
     height="104"
     width="144"
-    data-bind="visible: App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Plasma Shadow 1&#39;)]() &gt;= 1 &amp;&amp; App.game.statistics.dungeonsCleared[GameConstants.getDungeonIndex(&#39;Plasma Frigate&#39;)]() &gt;= 1 &amp;&amp; App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Ghetsis 2&#39;)]() == 0 &amp;&amp; (App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).curQuest() &gt;= 16 || App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).state() == 2), click:function(){MapHelper.moveToTown(&#39;Giant Chasm&#39;)}, attr:{ class: MapHelper.calculateTownCssClass(&#39;Giant Chasm&#39;) }">
+    data-bind="visible: App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Plasma Shadow 1&#39;)]() &gt;= 1 &amp;&amp; App.game.statistics.dungeonsCleared[GameConstants.getDungeonIndex(&#39;Plasma Frigate&#39;)]() &gt;= 1 &amp;&amp; App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Ghetsis 2&#39;)]() == 0 &amp;&amp; (App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).curQuest() &gt;= 16 || App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).state() == 2), click:function(){MapHelper.moveToTown(&#39;Plasma Frigate&#39;)}, attr:{ class: MapHelper.calculateTownCssClass(&#39;Plasma Frigate&#39;) }">
 </rect>
 <image width="48" height="48"
     x="1280"
     y="36"
     class="iconLocation"
-    data-bind="visible: MapHelper.isTownCurrentLocation('') && App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Plasma Shadow 1&#39;)]() &gt;= 1 &amp;&amp; App.game.statistics.dungeonsCleared[GameConstants.getDungeonIndex(&#39;Plasma Frigate&#39;)]() &gt;= 1 &amp;&amp; App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Ghetsis 2&#39;)]() == 0 &amp;&amp; (App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).curQuest() &gt;= 16 || App.game.quests.getQuestLine(&#39;Quest for the DNA Splicers&#39;).state() == 2)
+    data-bind="visible: MapHelper.isTownCurrentLocation('Plasma Frigate') && App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Plasma Shadow 1&#39;)]() &gt;= 1 &amp;&amp; App.game.statistics.dungeonsCleared[GameConstants.getDungeonIndex(&#39;Plasma Frigate&#39;)]() &gt;= 1 &amp;&amp; App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(&#39;Ghetsis 2&#39;)]() == 0 &amp;&amp; (App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).curQuest() &gt;= 16 || App.game.quests.getQuestLine(&#39;Hollow Truth and Ideals&#39;).state() == 2)
     , attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`}">
 </image>
 
@@ -17975,8 +18023,8 @@
 
                             <g data-bind='visible: player.region == GameConstants.Region.kalos'>
     <image width="1600" height="960" data-bind="attr: {
-        'xlink:href':'assets/images/kalos.png?v=0.10.11',
-        href:'assets/images/kalos.png?v=0.10.11'
+        'xlink:href':'assets/images/kalos.png?v=0.10.12',
+        href:'assets/images/kalos.png?v=0.10.12'
     }"></image>
 
     <!-- ------ -->
@@ -20301,8 +20349,8 @@
 
     <g data-bind="visible: player.subregion == SubRegions.getSubRegion(GameConstants.Region.alola, 'Melemele Island').id">
         <image width="1600" height="960" data-bind="attr: {
-            'xlink:href':'assets/images/alola-melemele.png?v=0.10.11',
-            href:'assets/images/alola-melemele.png?v=0.10.11'
+            'xlink:href':'assets/images/alola-melemele.png?v=0.10.12',
+            href:'assets/images/alola-melemele.png?v=0.10.12'
         }"></image>
 
         <!-- ------ -->
@@ -23609,8 +23657,8 @@
 
     <g data-bind="visible: player.subregion == SubRegions.getSubRegion(GameConstants.Region.alola, 'Akala Island').id">
         <image width="1600" height="960" data-bind="attr: {
-            'xlink:href':'assets/images/alola-akala.png?v=0.10.11',
-            href:'assets/images/alola-akala.png?v=0.10.11'
+            'xlink:href':'assets/images/alola-akala.png?v=0.10.12',
+            href:'assets/images/alola-akala.png?v=0.10.12'
         }"></image>
 
         <!-- ------ -->
@@ -25813,8 +25861,8 @@
 
     <g data-bind="visible: player.subregion == SubRegions.getSubRegion(GameConstants.Region.alola, 'Ula\'ula Island').id">
         <image width="1600" height="960" data-bind="attr: {
-            'xlink:href':'assets/images/alola-ulaula.png?v=0.10.11',
-            href:'assets/images/alola-ulaula.png?v=0.10.11'
+            'xlink:href':'assets/images/alola-ulaula.png?v=0.10.12',
+            href:'assets/images/alola-ulaula.png?v=0.10.12'
         }"></image>
 
         <!-- ------ -->
@@ -28459,8 +28507,8 @@
 
     <g data-bind="visible: player.subregion == SubRegions.getSubRegion(GameConstants.Region.alola, 'Poni Island').id">
         <image width="1600" height="960" data-bind="attr: {
-            'xlink:href':'assets/images/alola-poni.png?v=0.10.11',
-            href:'assets/images/alola-poni.png?v=0.10.11'
+            'xlink:href':'assets/images/alola-poni.png?v=0.10.12',
+            href:'assets/images/alola-poni.png?v=0.10.12'
         }"></image>
 
         <!-- ------ -->
@@ -30511,8 +30559,8 @@
 
     <g data-bind="visible: player.subregion == SubRegions.getSubRegion(GameConstants.Region.alola, 'Magikarp Jump').id">
         <image width="1600" height="960" data-bind="attr: {
-            'xlink:href':'assets/images/alola-magikarp-jump.png?v=0.10.11',
-            href:'assets/images/alola-magikarp-jump.png?v=0.10.11'
+            'xlink:href':'assets/images/alola-magikarp-jump.png?v=0.10.12',
+            href:'assets/images/alola-magikarp-jump.png?v=0.10.12'
         }"></image>
 
         <!-- ------ -->
@@ -32554,8 +32602,8 @@
 
     <g data-bind="visible: player.subregion == SubRegions.getSubRegion(GameConstants.Region.galar, 'South Galar').id">
         <image width="1600" height="960" data-bind="attr: {
-            'xlink:href':'assets/images/galar-south.png?v=0.10.11',
-            href:'assets/images/galar-south.png?v=0.10.11'
+            'xlink:href':'assets/images/galar-south.png?v=0.10.12',
+            href:'assets/images/galar-south.png?v=0.10.12'
         }"></image>
 
         <!-- ------ -->
@@ -34630,8 +34678,8 @@
     </g>
     <g data-bind="visible: player.subregion == SubRegions.getSubRegion(GameConstants.Region.galar, 'North Galar').id">
         <image width="1600" height="960" data-bind="attr: {
-            'xlink:href':'assets/images/galar-north.png?v=0.10.11',
-            href:'assets/images/galar-north.png?v=0.10.11'
+            'xlink:href':'assets/images/galar-north.png?v=0.10.12',
+            href:'assets/images/galar-north.png?v=0.10.12'
         }"></image>
 
         <!-- ------ -->
@@ -35660,8 +35708,8 @@
     </g>
     <g data-bind="visible: player.subregion == SubRegions.getSubRegion(GameConstants.Region.galar, 'Isle of Armor').id">
         <image width="1600" height="960" data-bind="attr: {
-            'xlink:href':'assets/images/galar-isle-of-armor.png?v=0.10.11',
-            href:'assets/images/galar-isle-of-armor.png?v=0.10.11'
+            'xlink:href':'assets/images/galar-isle-of-armor.png?v=0.10.12',
+            href:'assets/images/galar-isle-of-armor.png?v=0.10.12'
         }"></image>
 
         <!-- ------ -->
@@ -38236,8 +38284,8 @@
     </g>
     <g data-bind="visible: player.subregion == SubRegions.getSubRegion(GameConstants.Region.galar, 'Crown Tundra').id">
         <image width="1600" height="960" data-bind="attr: {
-            'xlink:href':'assets/images/galar-crown-tundra.png?v=0.10.11',
-            href:'assets/images/galar-crown-tundra.png?v=0.10.11'
+            'xlink:href':'assets/images/galar-crown-tundra.png?v=0.10.12',
+            href:'assets/images/galar-crown-tundra.png?v=0.10.12'
         }"></image>
 
         <!-- ------ -->
@@ -39916,8 +39964,8 @@
 
                             <g data-bind='visible: player.region == GameConstants.Region.hisui'>
     <image width="1600" height="960" data-bind="attr: {
-        'xlink:href':'assets/images/hsiui.png?v=0.10.11',
-        href:'assets/images/hisui.png?v=0.10.11'
+        'xlink:href':'assets/images/hsiui.png?v=0.10.12',
+        href:'assets/images/hisui.png?v=0.10.12'
     }"></image>
 
     <!-- ------ -->
@@ -44210,26 +44258,66 @@ aria-labelledby="AchievementsModalLabel" aria-hidden="true">
                 </button>
             </div>
             <div class="modal-body p-0">
-                <table class="table table-striped table-hover table-bordered table-sm m-0">
-                    <thead>
-                      <tr>
-                        <th>Statistic</th>
-                        <th>Amount</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td class="text-left">Time Played</td>
-                        <td class="text-left tight text-muted" data-bind="html: GameConstants.formatSecondsToTime(App.game.statistics['secondsPlayed']())">-</td>
-                      </tr>
-                      <!-- ko foreach: App.game.statistics.observables -->
-                      <tr>
-                        <td class="text-left" data-bind="text: GameConstants.camelCaseToString($data)">-</td>
-                        <td class="text-left tight text-muted" data-bind="text: App.game.statistics[$data]().toLocaleString('en-US')">-</td>
-                      </tr>
-                      <!-- /ko -->
-                    </tbody>
-                </table>
+                <ul class="nav nav-tabs nav-fill">
+                    <li class="nav-item"><a class="nav-link active" href="#statisticsModalStatsPane" data-toggle="tab">Stats</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#statisticsModalMultipliersPane" data-toggle="tab">Multipliers</a></li>
+                </ul>
+                <div class="tab-content">
+                    <!-- Stats Pane -->
+                    <div class="tab-pane active" id="statisticsModalStatsPane">
+                        <table class="table table-striped table-hover table-bordered table-sm m-0">
+                            <thead>
+                            <tr>
+                                <th>Statistic</th>
+                                <th>Amount</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="text-left">Time Played</td>
+                                <td class="text-left tight text-muted" data-bind="html: GameConstants.formatSecondsToTime(App.game.statistics['secondsPlayed']())">-</td>
+                            </tr>
+                            <!-- ko foreach: App.game.statistics.observables -->
+                            <tr>
+                                <td class="text-left" data-bind="text: GameConstants.camelCaseToString($data)">-</td>
+                                <td class="text-left tight text-muted" data-bind="text: App.game.statistics[$data]().toLocaleString('en-US')">-</td>
+                            </tr>
+                            <!-- /ko -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Multipliers Pane -->
+                    <div class="tab-pane" id="statisticsModalMultipliersPane">
+                        <table class='table table-sm table-hover m-0'>
+                            <!-- ko foreach: Object.entries(App.game.multiplier.multipliers) -->
+                                <thead>
+                                    <tr>
+                                        <th colspan="2" class="clickable text-left table-dark text-light" data-toggle="collapse" data-bind="attr: { 'href': '#collapse-multiplier-' + $index() }">
+                                            <h3>
+                                                <knockout data-bind="text: GameConstants.camelCaseToString($data[0])"></knockout>
+                                                <div class="float-right">
+                                                    <knockout data-bind="text: `${App.game.multiplier.getBonus($data[0]).toFixed(2)}x`"></knockout>
+                                                </div>
+                                            </h3>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody data-bind="class: 'collapse', attr: { id: 'collapse-multiplier-' + $index()}">
+                                    <!-- ko foreach: $data[1] -->
+                                        <tr data-bind="if: $data.bonusFunction() !== 1">
+                                            <td data-bind="text: $data.source"></td>
+                                            <td data-bind="text: `${$data.bonusFunction().toFixed(2)}x`"></td>
+                                        </tr>
+                                    <!-- /ko -->
+                                    <tr data-bind="if: !$data[1].some(({ bonusFunction }) => bonusFunction() !== 1)">
+                                        <td colspan="2">You have no active multipliers of this type</td>
+                                    </tr>
+                                </tbody>
+                            <!-- /ko -->
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -45781,7 +45869,7 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                     </button>
                                     <!-- ko if: App.game.party.hasMaxLevelPokemon() -->
                                     <ul class="row justify-content-center w-100 p-0 m-0" data-bind="foreach: lazyLoad($element, PartyController.getHatcherySortedList, { pageSize: 60, reset: modalUtils.observableState.breedingModalObservable })">
-                                        <li class="col-sm-4 col-md-3 col-lg-2 pokedexEntry" data-bind="visible: BreedingController.visible($data), style:{background: PokedexHelper.getBackgroundColors($data.name)}, class: App.game.breeding.hasFreeEggSlot() || App.game.breeding.hasFreeQueueSlot() ? '' : 'disabled'">
+                                        <li class="col-sm-4 col-md-3 col-lg-2 pokedexEntry" data-bind="visible: $data.isHatchable(), style:{background: PokedexHelper.getBackgroundColors($data.name)}, class: App.game.breeding.hasFreeEggSlot() || App.game.breeding.hasFreeQueueSlot() ? '' : 'disabled'">
                                             <span class="pokedex-top-text" data-bind="text: $data.displayName">name</span>
                                             <div class="breedingListShiny" data-bind="visible: App.game.party.alreadyCaughtPokemon($data.id, true)">✨</div>
                                             <img class="breeding-shadow-icon shadow-icon" src="assets/images/status/shadow.svg" data-bind="visible: $data.shadow == GameConstants.ShadowStatus.Shadow"/>
@@ -46611,7 +46699,6 @@ aria-labelledby="pokedexModalLabel">
                                             <!-- /ko -->
                                             <img src="" width="80px" data-bind="css: { 'pokemon-not-seen': !PokedexHelper.pokemonSeen($data.id)(), 'pokemon-seen-but-not-caught': !App.game.party.alreadyCaughtPokemonByName(name) && PokedexHelper.pokemonSeen($data.id)() }, attr:{ src: PokemonHelper.getImage($data.id, App.game.party.alreadyCaughtPokemon($data.id, true) && !PokedexHelper.hideShinyImages())}">
                                             <!-- ko if: PokedexHelper.pokemonSeen($data.id) -->
-                                            <span class="pokedex-bottom-text" data-bind="text: PokemonHelper.displayName($data.name)">name</span>
                                             <a class="overlay" href="#pokemonStatisticsModal" data-toggle="modal" data-bind="click: () => {App.game.statistics.selectedPokemonID($data.id)},
                                                 tooltip: {
                                                     html: true,
@@ -46622,10 +46709,21 @@ aria-labelledby="pokedexModalLabel">
                                                         (App.game.party.getPokemon($data.id)?.pokerus >= GameConstants.Pokerus.Contagious ?
                                                             `<br/>EVs: <strong>${App.game.party.getPokemon($data.id).evs().toLocaleString('en-US')}</strong>
                                                             <br/>EV bonus: <strong>×${App.game.party.getPokemon($data.id).calculateEVAttackBonus().toLocaleString('en-US')}</strong>`
+                                                            : '') +
+                                                        (PokemonHelper.hasMegaEvolution($data.name) ?
+                                                            pokemonMap[$data.name].evolutions.flatMap(e => e.restrictions).filter(r => r instanceof MegaEvolveRequirement && player.hasMegaStone(r.megaStone))
+                                                                .map(r => `<br/><u>${GameConstants.humanifyString(GameConstants.MegaStoneType[r.megaStone])}</u><br/>${r.hint()}`).join('')
                                                             : ''),
                                                     trigger: 'hover',
                                                     placement:'bottom'
                                                 }"></a>
+
+                                            <span class="pokedex-bottom-text text-truncate px-1" data-bind="text: PokemonHelper.displayName($data.name),
+                                                tooltip: {
+                                                    title: PokemonHelper.displayName($data.name),
+                                                    trigger: 'hover',
+                                                    placement: 'bottom'
+                                                }">name</span>
 
                                                 <!-- Category Button -->
                                                 <!-- ko if: App.game.party.alreadyCaughtPokemonByName($data.name) -->
@@ -47894,61 +47992,72 @@ aria-labelledby="badgeCaseModalLabel">
                       <td class="text-left">Firmness</td>
                       <td class="text-left tight"><code data-bind="html: GameConstants.humanifyString(BerryFirmness[App.game.farming.berryData[$data].firmness])">-</code></td>
                     </tr>
+                    <!-- ko if: App.game.farming.berryData[$data].aura -->
+                    <tr>
+                      <td class="text-left">Aura</td>
+                      <td class="text-left tight"><code data-bind="text: AuraType[App.game.farming.berryData[$data].aura.auraType]"></code></td>
+                    </tr>
+                    <!-- /ko -->
                     </tbody>
                   <thead>
                     <tr class="text-light">
-                      <th class="text-left bg-dark">Type</th>
-                      <th class="text-left bg-dark">Amount</th>
+                      <th class="text-left bg-dark">Time</th>
+                      <th class="text-left bg-dark">Length</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td class="text-left">Total Life Span</td>
-                      <td class="text-left tight"><code data-bind="html: GameConstants.formatSecondsToTime(App.game.farming.berryData[$data].growthTime[4])">-</code></td>
-                    </tr>
-					<tr>
-                      <td class="text-left">Growth Time</td>
+                      <td class="text-left">Growth Duration</td>
                       <td class="text-left tight"><code data-bind="html: GameConstants.formatSecondsToTime(App.game.farming.berryData[$data].growthTime[3])">-</code></td>
                     </tr>
                     <tr>
-                      <td class="text-left">Harvest Amount</td>
-                      <td class="text-left tight"><code data-bind="text: App.game.farming.berryData[$data].harvestAmount.toLocaleString('en-US')">-</code></td>
+                      <td class="text-left">Berry Stage Duration</td>
+                      <td class="text-left tight"><code data-bind="html: GameConstants.formatSecondsToTime(App.game.farming.berryData[$data].growthTime[4]-App.game.farming.berryData[$data].growthTime[3])">-</code></td>
                     </tr>
                     <tr>
-                      <td class="text-left">Replant Rate</td>
-                      <td class="text-left tight"><code data-bind="text: App.game.farming.berryData[$data].replantRate.toLocaleString('en-US', { style: 'percent' })">-</code></td>
+                      <td class="text-left">Total Life Span</td>
+                      <td class="text-left tight"><code data-bind="html: GameConstants.formatSecondsToTime(App.game.farming.berryData[$data].growthTime[4])">-</code></td>
                     </tr>
-                    <tr>
-                      <td class="text-left">Farm Points per Harvest</td>
-                      <td class="text-left tight"><code data-bind="text: App.game.farming.berryData[$data].farmValue.toLocaleString('en-US')">-</code></td>
-                    </tr>
-                    <tr>
-                      <td class="p-0" colspan="2">
-                        <table class="table table-striped table-hover table-bordered table-sm m-0">
-                          <tr class="text-light">
-                            <th class="bg-dark" colspan="4">Growth Stages</th>
-                          </tr>
-                          <tr>
-                            <td>Sprout</td>
-                            <td>Taller</td>
-                            <td>Bloom</td>
-                            <td>Berry</td>
-                          </tr>
-                          <tr>
-                            <td><img src="assets/images/farm/AllTreeSprout.png"/></td>
-                            <td><img src="" data-bind="attr: { src: `assets/images/farm/${BerryType[$data]}Tree${PlotStage[PlotStage.Taller]}.png` }"/></td>
-                            <td><img src="" data-bind="attr: { src: `assets/images/farm/${BerryType[$data]}Tree${PlotStage[PlotStage.Bloom]}.png` }"/></td>
-                            <td><img src="" data-bind="attr: { src: `assets/images/farm/${BerryType[$data]}Tree${PlotStage[PlotStage.Berry]}.png` }"/></td>
-                          </tr>
-                          <tr>
-                            <td><code data-bind="html: GameConstants.formatSecondsToTime(App.game.farming.berryData[$data].growthTime[0])">-</code></td>
-                            <td><code data-bind="html: GameConstants.formatSecondsToTime(App.game.farming.berryData[$data].growthTime[1])">-</code></td>
-                            <td><code data-bind="html: GameConstants.formatSecondsToTime(App.game.farming.berryData[$data].growthTime[2])">-</code></td>
-                            <td><code data-bind="html: GameConstants.formatSecondsToTime(App.game.farming.berryData[$data].growthTime[3])">-</code></td>
-                          </tr>
-                        </table>
-                      </td>
-                    </tr>
+                    </tbody>
+                    <thead>
+                      <tr class="text-light">
+                        <th class="text-left bg-dark">Farming Info</th>
+                        <th class="text-left bg-dark">Data</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="text-left">Harvest Amount</td>
+                        <td class="text-left tight"><code data-bind="text: App.game.farming.berryData[$data].harvestAmount.toLocaleString('en-US')">-</code></td>
+                      </tr>
+                      <tr>
+                        <td class="text-left">Replant Rate</td>
+                        <td class="text-left tight"><code data-bind="text: App.game.farming.berryData[$data].replantRate.toLocaleString('en-US', { style: 'percent' })">-</code></td>
+                      </tr>
+                      <tr>
+                        <td class="text-left">Farm Points per Harvest</td>
+                        <td class="text-left tight"><code data-bind="text: App.game.farming.berryData[$data].farmValue.toLocaleString('en-US')">-</code></td>
+                      </tr>
+                    </tbody>
+                    <thead>
+                      <tr class="text-light">
+                        <th class="text-left bg-dark">Statistic</th>
+                        <th class="text-left bg-dark">Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="text-left">Current Amount</td>
+                        <td class="text-left tight"><code data-bind="text: App.game.farming.berryList[$data]().toLocaleString('en-US')"></span></td></code></td>
+                      </tr>
+                      <tr>
+                        <td class="text-left">Total Harvested</td>
+                        <td class="text-left tight"><code data-bind="text: App.game.statistics.berriesHarvested[$data]().toLocaleString('en-US')">-</code></td>
+                      </tr><tr>
+                        <td class="text-left">Total Obtained</td>
+                        <td class="text-left tight"><code data-bind="text: App.game.statistics.berriesObtained[$data]().toLocaleString('en-US')">-</code></td>
+                      </tr>
+                    </tbody>
                     <tr>
                       <td class="p-0" colspan="2">
                           <table style="width: 100%;">
@@ -47972,6 +48081,47 @@ aria-labelledby="badgeCaseModalLabel">
                           </table>
                       </td>
                       </tr>
+                    <tr>
+                      <td class="p-0" colspan="2">
+                        <table class="table table-striped table-hover table-bordered table-sm m-0">
+                          <tr class="text-light">
+                            <th class="bg-dark" colspan="4">Growth Stages</th>
+                          </tr>
+                          <tr>
+                            <td>Sprout</td>
+                            <td>Taller</td>
+                            <td>Bloom</td>
+                            <td>Berry</td>
+                          </tr>
+                          <tr>
+                            <td><img src="assets/images/farm/AllTreeSprout.png"/></td>
+                            <td><img src="" data-bind="attr: { src: `assets/images/farm/${BerryType[$data]}Tree${PlotStage[PlotStage.Taller]}.png` }"/></td>
+                            <td><img src="" data-bind="attr: { src: `assets/images/farm/${BerryType[$data]}Tree${PlotStage[PlotStage.Bloom]}.png` }"/></td>
+                            <td><img src="" data-bind="attr: { src: `assets/images/farm/${BerryType[$data]}Tree${PlotStage[PlotStage.Berry]}.png` }"/></td>
+                          </tr>
+                          <tr>
+                            <th colspan="4">Total Time until Stage</th>
+                          </tr>
+                          <tr>
+                            <td><code data-bind="html: GameConstants.formatSecondsToTime(App.game.farming.berryData[$data].growthTime[0])">-</code></td>
+                            <td><code data-bind="html: GameConstants.formatSecondsToTime(App.game.farming.berryData[$data].growthTime[1])">-</code></td>
+                            <td><code data-bind="html: GameConstants.formatSecondsToTime(App.game.farming.berryData[$data].growthTime[2])">-</code></td>
+                            <td><code data-bind="html: GameConstants.formatSecondsToTime(App.game.farming.berryData[$data].growthTime[3])">-</code></td>
+                          </tr>
+                          <!-- ko if: App.game.farming.berryData[$data].aura -->
+                          <tr>
+                            <th colspan="4">Aura Effect at Stage</th>
+                          </tr>
+                          <tr class="aura-box" data-bind="if: App.game.farming.berryData[$data].aura">
+                            <td><code data-bind="html: GameConstants.formatSecondsToTime(1 - 1)">-</code></td>
+                            <td><code data-bind="html: App.game.farming.auraDisplay($data, 0)">-</code></td>
+                            <td><code data-bind="html: App.game.farming.auraDisplay($data, 1)">-</code></td>
+                            <td><code data-bind="html: App.game.farming.auraDisplay($data, 2)">-</code></td>
+                          </tr>
+                          <!-- /ko -->
+                        </table>
+                      </td>
+                    </tr>
                   </tbody>
                   <!-- ko if: FarmController.getHint(+$data) !== ""-->
                   <thead>
@@ -47983,25 +48133,6 @@ aria-labelledby="badgeCaseModalLabel">
                     <td colspan="2"><span data-bind="text: FarmController.getHint(+$data)"></span></td>
                   </tbody>
                   <!-- /ko -->
-                  <thead>
-                    <tr class="text-light">
-                      <th class="text-left bg-dark">Statistic</th>
-                      <th class="text-left bg-dark">Amount</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td class="text-left">Current Amount</td>
-                      <td class="text-left tight"><code data-bind="text: App.game.farming.berryList[$data]().toLocaleString('en-US')"></span></td></code></td>
-                    </tr>
-                    <tr>
-                      <td class="text-left">Harvested</td>
-                      <td class="text-left tight"><code data-bind="text: App.game.statistics.berriesHarvested[$data]().toLocaleString('en-US')">-</code></td>
-                    </tr><tr>
-                      <td class="text-left">Obtained</td>
-                      <td class="text-left tight"><code data-bind="text: App.game.statistics.berriesObtained[$data]().toLocaleString('en-US')">-</code></td>
-                    </tr>
-                  </tbody>
                 </table>
             </div>
         </div>
@@ -48452,6 +48583,13 @@ aria-labelledby="badgeCaseModalLabel">
                                     <div class="pokemonSprite walkDown" data-bind="css: { shiny: $data.shiny },
                                     style: {
                                         backgroundImage: `${$data.shiny ? 'url(\'assets/images/dynamic-background/pokemon/sparkle.png\'), ' : ''}url('assets/images/dynamic-background/pokemon/${Math.floor($data.id).toString().padStart(3, '0')}${$data.shiny ? 's' : ''}.png')`,
+                                        top: `${32 * $data.y - 8}px`,
+                                        left: `${32 * $data.x - 4}px`,
+                                    }"></div>
+                                <!-- /ko -->
+                                <!-- ko foreach: Safari.itemGrid -->
+                                    <div class="safari-item" data-bind="
+                                    style: {
                                         top: `${32 * $data.y - 8}px`,
                                         left: `${32 * $data.x - 4}px`,
                                     }"></div>
@@ -48932,7 +49070,7 @@ aria-labelledby="badgeCaseModalLabel">
     <td class="p-2" data-bind="text: `${setting.displayName}:`">setting name</td>
     <td class="p-0">
         <select class="form-control" data-bind="
-            options: setting.options,
+            options: setting.getValidOptions(),
             optionsValue: 'value',
             optionsText: 'text',
             value: setting.observableValue
@@ -49178,7 +49316,7 @@ aria-labelledby="bulletinBoardModalLabel" aria-hidden="true">
 
 
 <div class="modal noselect fade" id="heldItemModal" tabindex="-1" role="dialog" aria-labelledby="heldItemModal">
-    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
+    <div class="modal-dialog modal-dialog-scrollable modal-sm" role="document">
         <div class="modal-content">
             <!-- ko if: modalUtils.observableState['heldItemModal'] === 'show' -->
             <div class="modal-header bg-dark text-light" style='justify-content: space-around;'>
@@ -49187,14 +49325,14 @@ aria-labelledby="bulletinBoardModalLabel" aria-hidden="true">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body p-0">
+            <div class="modal-body p-0" style="background-color: inherit;">
                 <img data-bind="attr: { src: HeldItem.heldItemSelected().image }" width="40%"/>
                 <br/>
-                <div class="sticky-top bg-dark text-light">
+                <div class="sticky-top" style="background-color: inherit;">
                   <div class="btn-group btn-block m-0" role="group" aria-label="Basic example">
                     <button class="btn btn-block btn-secondary btn-static" data-bind="text: HeldItem.heldItemSelected().displayName + ': ' + player.amountOfItem(HeldItem.heldItemSelected().name)"></button>
                   </div>
-                  <div class="input-group" data-bind="with: Settings.getSetting('heldItemSort')">
+                  <div class="input-group px-1 mt-1" data-bind="with: Settings.getSetting('heldItemSort')">
                       <select autocomplete="off" class="custom-select" onchange="Settings.setSettingByName(this.name, SortOptions[SortOptions[this.value]])"
                           data-bind="foreach: $data.options, attr: {name}, selectedOptions: [$data.observableValue()]">
                           <option data-bind="text: $data.text, value: $data.value"></option>
@@ -49209,14 +49347,41 @@ aria-labelledby="bulletinBoardModalLabel" aria-hidden="true">
                               onchange="Settings.setSettingByName('heldItemSortDirection', this.checked)"/>
                       </div>
                   </div>
-                  <div class="form-check form-check-inline align-middle">
-                    <input type="checkbox" id="hide-holding-item-pokemon" class="form-check-input" data-bind="checked: Settings.getSetting('heldItemHideHoldingPokemon').observableValue()" onchange="Settings.setSettingByName('heldItemHideHoldingPokemon', this.checked)" />
-                    <label for="hide-holding-item-pokemon" class="form-check-label">Hide Pokémon holding an item</label>
-                  </div>
-                  <div class="form-group mb-1">
+                  <div class="form-group px-1 mt-1 mb-0">
                     <input id="heldItemSearch" autocomplete="off" class="form-control" placeholder="Search"
-                        data-bind="textInput: Settings.getSetting('heldItemSearchFilter').observableValue"
-                    />
+                        data-bind="textInput: Settings.getSetting('heldItemSearchFilter').observableValue" />
+                  </div>
+                  <div class="small px-1 pb-2 my-1" style="overflow-x: hidden;">
+                    <div class="form-row px-1">
+                        <div class="form-group col-6 m-0 px-1 py-0">
+                            <label class="mb-1" for="held-item-region-filter">Region</label>
+                            <select id="held-item-region-filter" name="heldItemRegionFilter" autocomplete="off" class="custom-select custom-select-sm" onchange="Settings.setSettingByName(this.name, +this.value)">
+                                <!-- ko foreach: Settings.getSetting('heldItemRegionFilter').options.filter(r => r.value <= player.highestRegion()) -->
+                                <option data-bind="attr: { value: $data.value, selected: Settings.getSetting('heldItemRegionFilter').value === $data.value }, text: $data.text">Region</option>
+                                <!-- /ko -->
+                            </select>
+                        </div>
+                        <div class="form-group col-6 m-0 px-1 py-0">
+                            <label class="mb-1" for="held-item-type-filter">Type</label>
+                            <select id="held-item-type-filter" name="heldItemTypeFilter" autocomplete="off" class="custom-select custom-select-sm" onchange="Settings.setSettingByName(this.name, +this.value)">
+                                <!-- ko foreach: Settings.getSetting('heldItemTypeFilter').options -->
+                                <option data-bind="attr: { value: $data.value, selected: Settings.getSetting('heldItemTypeFilter').value === $data.value }, text: $data.text">Type</option>
+                                <!-- /ko -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-check align-middle mt-1">
+                        <input type="checkbox" id="hide-holding-item-pokemon" class="form-check-input"
+                            data-bind="checked: Settings.getSetting('heldItemHideHoldingPokemon').observableValue()"
+                            onchange="Settings.setSettingByName('heldItemHideHoldingPokemon', this.checked)" />
+                        <label for="hide-holding-item-pokemon" class="form-check-label">Hide Pokémon holding an item</label>
+                    </div>
+                    <div class="form-check align-middle mt-1">
+                        <input type="checkbox" id="show-this-item-pokemon" class="form-check-input"
+                            data-bind="checked: Settings.getSetting('heldItemShowHoldingThisItem').observableValue()"
+                            onchange="Settings.setSettingByName('heldItemShowHoldingThisItem', this.checked)" />
+                        <label for="show-this-item-pokemon" class="form-check-label">Show <u>only</u> Pokémon holding this item</label>
+                    </div>
                   </div>
                 </div>
                 <table class="table table-striped table-hover table-bordered table-sm m-0">
