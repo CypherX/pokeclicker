@@ -501,12 +501,12 @@
                                         <div class="btn-group btn-block">
                                             <!-- ko using: PartyController.hasMultipleStoneEvolutionsAvailable(ItemHandler.pokemonSelected(), GameConstants.StoneType[ItemHandler.stoneSelected()]), as: 'multipleEvolution' -->
                                             <button class="btn btn-success btn-block" data-bind="click: function(){ItemHandler.useStones()},
-                                            tooltip: {
-                                                title: 'If a shiny is found, the game will stop using evolution items.' + (multipleEvolution ? '<br/>If the requirements for more than one evolution is fulfilled, a random evolution will be selected.' : ''),
-                                                trigger: 'hover',
-                                                boundary: 'window',
-                                                html: multipleEvolution,
-                                            }">
+                                                    tooltip: {
+                                                    title: 'If a shiny is found, the game will stop using evolution items.' + (multipleEvolution ? '<br/>If the requirements for more than one evolution is fulfilled, a random evolution will be selected.' : ''),
+                                                    trigger: 'hover',
+                                                    boundary: 'window',
+                                                    html: true,
+                                                    }">
                                                 Use evolution items!
                                             </button>
                                             <!-- /ko -->
@@ -1539,10 +1539,6 @@
 <div class="row justify-content-center no-gutters" data-bind="if: App.game.gameState === GameConstants.GameState.gym">
     <div class="col no-gutters clickable" data-bind="click: function() {GymBattle.clickAttack()}" style="height: 280px; display: block;">
         <h2 class="pageItemTitle mobileBattleTitle" style="display: block;">
-            <knockout class="left">
-                <knockout data-bind="text: GymBattle.gym.leaderName.replace(/\d/g,'')"></knockout>
-            </knockout>
-
             <knockout>
                 <knockout data-bind="template: { name: 'pokemonNameTemplate', data: { 'pokemon': GymBattle.enemyPokemon() } }">Pokémon name</knockout>
             </knockout>
@@ -1578,7 +1574,7 @@
             <img data-bind="attr:{ src: GymBattle.gym.imagePath }" onerror="this.src='assets/images/npcs/specialNPCs/Mysterious Trainer.png';"/>
         </div>
 
-        <div class="trainer-enemy">
+        <div>
             <knockout data-bind="template: { name: 'pokemonSpriteTemplate', data: { 'pokemon': GymBattle.enemyPokemon() } }">Pokémon sprite</knockout>
         </div>
 
@@ -1595,7 +1591,10 @@
             Stop Auto
         </button>
         <h2 class="pageItemFooter" style="display: block; font-size: 1rem;">
-          <table width="100%">
+            <knockout>
+                <knockout data-bind="text: GymBattle.gym.leaderName.replace(/\d/g,'')"></knockout>
+            </knockout>
+            <table width="100%">
               <tr>
                 <td width="50%">
                     <knockout data-bind="template: { name: 'pokemonAttackTemplate', data: { 'pokemon': Battle.enemyPokemon() } }"></knockout>
@@ -1613,15 +1612,9 @@
 
 
                     <!-- One Time Battles -->
-                    
-<div class="row justify-content-center no-gutters" data-bind="if: App.game.gameState === GameConstants.GameState.temporaryBattle">
+                    <div class="row justify-content-center no-gutters" data-bind="if: App.game.gameState === GameConstants.GameState.temporaryBattle">
     <div class="col no-gutters clickable" data-bind="click: function() {TemporaryBattleBattle.clickAttack()}" style="height: 280px; display: block;">
         <h2 class="pageItemTitle mobileBattleTitle" style="display: block;">
-
-            <knockout class="left">
-                <knockout data-bind="text: TemporaryBattleBattle.battle.getDisplayName()"></knockout>
-            </knockout>
-
             <knockout>
                 <knockout data-bind="template: { name: 'pokemonNameTemplate', data: { 'pokemon': TemporaryBattleBattle.enemyPokemon() } }">Pokémon name</knockout>
             </knockout>
@@ -1657,7 +1650,7 @@
             <img data-bind="attr:{ src: TemporaryBattleRunner.battleObservable().getImage() }" onerror="this.src='assets/images/npcs/specialNPCs/Mysterious Trainer.png';"/>
         </div>
 
-        <div class="trainer-enemy" data-bind="ifnot: TemporaryBattleBattle.catching">
+        <div data-bind="ifnot: TemporaryBattleBattle.catching">
             <knockout data-bind="template: { name: 'pokemonSpriteTemplate', data: { 'pokemon': TemporaryBattleBattle.enemyPokemon() } }">Pokémon sprite</knockout>
         </div>
 
@@ -1678,33 +1671,30 @@
             </div>
         </div>
         <h2 class="pageItemFooter" style="display: block; font-size: 1rem;">
-          <table width="100%">
-              <tr>
-                <td width="50%">
-                    <knockout data-bind="template: { name: 'pokemonAttackTemplate', data: { 'pokemon': Battle.enemyPokemon() } }"></knockout>
-                </td>
-                <td width="50%" data-bind="css: { 'text-muted': App.game.challenges.list.disableClickAttack.active() }">
-                    <span style="display: inline;">Click Attack:
-                        <span data-bind="text: App.game.party.calculateClickAttack().toLocaleString('en-US')"></span>
-                    </span>
-                </td>
-              </tr>
-          </table>
+            <knockout>
+                <knockout data-bind="text: TemporaryBattleBattle.battle.getDisplayName()"></knockout>
+            </knockout>
+            <table width="100%">
+                <tr>
+                    <td width="50%">
+                        <knockout data-bind="template: { name: 'pokemonAttackTemplate', data: { 'pokemon': Battle.enemyPokemon() } }"></knockout>
+                    </td>
+                    <td width="50%" data-bind="css: { 'text-muted': App.game.challenges.list.disableClickAttack.active() }">
+                        <span style="display: inline;">Click Attack:
+                            <span data-bind="text: App.game.party.calculateClickAttack().toLocaleString('en-US')"></span>
+                        </span>
+                    </td>
+                </tr>
+            </table>
         </h2>
     </div>
 </div>
 
 
                     <!-- Battle Frontier Battles -->
-                    
-<div class="row justify-content-center no-gutters" data-bind="if: App.game.gameState == GameConstants.GameState.battleFrontier">
+                    <div class="row justify-content-center no-gutters" data-bind="if: App.game.gameState == GameConstants.GameState.battleFrontier">
     <div class="col no-gutters" data-bind="if: BattleFrontierBattle.enemyPokemon" style="height: 280px; display: block;">
         <h2 class="pageItemTitle mobileBattleTitle" style="display: block;">
-
-            <knockout class="left">
-                Stage <knockout data-bind="text: BattleFrontierRunner.stage">0</knockout> / <knockout data-bind="text: BattleFrontierRunner.highest">0</knockout>
-            </knockout>
-
             <knockout>
                 <knockout data-bind="template: { name: 'pokemonNameTemplate', data: { 'pokemon': BattleFrontierBattle.enemyPokemon() } }">Pokémon name</knockout>
             </knockout>
@@ -1723,7 +1713,7 @@
 
         </h2>
 
-        <div class="trainer-enemy">
+        <div>
             <knockout data-bind="template: { name: 'pokemonSpriteTemplate', data: { 'pokemon': BattleFrontierBattle.enemyPokemon() } }">Pokémon sprite</knockout>
         </div>
         <div class="progress hitpoints trainerhitpoints">
@@ -1734,12 +1724,15 @@
             </div>
         </div>
         <h2 class="pageItemFooter" style="display: block; font-size: 1rem;">
-          <table width="100%">
-              <tr>
-                <td>
-                    <span style="display: inline;">
-                        Pokémon Attack:
-                        <span data-bind="
+            <knockout>
+                Stage <knockout data-bind="text: BattleFrontierRunner.stage">0</knockout> / <knockout data-bind="text: BattleFrontierRunner.highest">0</knockout>
+            </knockout>
+            <table width="100%">
+                <tr>
+                    <td>
+                        <span style="display: inline;">
+                            Pokémon Attack:
+                            <span data-bind="
                             text: App.game.party.calculatePokemonAttack(
                                 PokemonType.None,
                                 PokemonType.None,
@@ -1753,13 +1746,12 @@
                                         true,
                                     ).toLocaleString('en-US')} against ${Battle.enemyPokemon().name}`
                                     : '',
-                                trigger: 'hover',
-                            }
-                        "></span>
-                    </span>
-                  </td>
-              </tr>
-          </table>
+                                trigger: 'hover'}">
+                            </span>
+                        </span>
+                    </td>
+                </tr>
+            </table>
         </h2>
     </div>
 </div>
@@ -11797,6 +11789,107 @@
             'xlink:href':'assets/images/orre.png?v=0.10.12',
             href:'assets/images/orre.png?v=0.10.12'
         }"></image>
+
+    <!-- ------ -->
+    <!-- ROUTES -->
+    <!-- ------ -->
+
+    <!--Rock Poké Spot-->
+    
+
+<g
+
+    data-bind="click:function(){ MapHelper.moveToRoute(135, 2); } ">
+    <rect data-route='135'
+        data-bind="attr: { class: MapHelper.calculateRouteCssClass(135, 2) }"
+        height="64"
+        width="80"
+        x="1328" y="528">
+    </rect>
+
+    <text style="font-size: 32px"
+        x="1344"
+        y="570"
+        data-bind="visible: !MapHelper.isRouteCurrentLocation(135, 2)">
+        RPS
+    </text>
+    <image width="48" height="48"
+        x="1344"
+        y="536"
+        class="iconLocation"
+        transform='rotate(0)'
+        data-bind="visible: MapHelper.isRouteCurrentLocation(135, 2),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`}">
+    </image>
+    
+
+</g>
+
+
+    <!--Oasis Poké Spot-->
+    
+
+<g
+
+    data-bind="click:function(){ MapHelper.moveToRoute(136, 2); } ">
+    <rect data-route='136'
+        data-bind="attr: { class: MapHelper.calculateRouteCssClass(136, 2) }"
+        height="64"
+        width="80"
+        x="544" y="544">
+    </rect>
+
+    <text style="font-size: 32px"
+        x="560"
+        y="586"
+        data-bind="visible: !MapHelper.isRouteCurrentLocation(136, 2)">
+        OPS
+    </text>
+    <image width="48" height="48"
+        x="560"
+        y="552"
+        class="iconLocation"
+        transform='rotate(0)'
+        data-bind="visible: MapHelper.isRouteCurrentLocation(136, 2),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`}">
+    </image>
+    
+
+</g>
+
+
+    <!--Cave Poké Spot-->
+    
+
+<g
+
+    data-bind="click:function(){ MapHelper.moveToRoute(137, 2); } ">
+    <rect data-route='137'
+        data-bind="attr: { class: MapHelper.calculateRouteCssClass(137, 2) }"
+        height="64"
+        width="64"
+        x="848" y="272">
+    </rect>
+
+    <text style="font-size: 32px"
+        x="856"
+        y="314"
+        data-bind="visible: !MapHelper.isRouteCurrentLocation(137, 2)">
+        CPS
+    </text>
+    <image width="48" height="48"
+        x="856"
+        y="280"
+        class="iconLocation"
+        transform='rotate(0)'
+        data-bind="visible: MapHelper.isRouteCurrentLocation(137, 2),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`}">
+    </image>
+    
+
+</g>
+
+
 
         <!-- ----- -->
         <!-- TOWNS -->
@@ -44628,6 +44721,15 @@ aria-labelledby="AchievementsModalLabel" aria-hidden="true">
                                 </tr>
                             </tbody>
                             <thead>
+                                <tr><th colspan="2">Safari</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr data-bind="template: { name: 'KeyChoiceSettingTemplate', data: Settings.getSetting('hotkey.safari.ball')}"></tr>
+                                <tr data-bind="template: { name: 'KeyChoiceSettingTemplate', data: Settings.getSetting('hotkey.safari.bait')}"></tr>
+                                <tr data-bind="template: { name: 'KeyChoiceSettingTemplate', data: Settings.getSetting('hotkey.safari.rock')}"></tr>
+                                <tr data-bind="template: { name: 'KeyChoiceSettingTemplate', data: Settings.getSetting('hotkey.safari.run')}"></tr>
+                            </tbody>
+                            <thead>
                                 <tr><th colspan="2">Other</th></tr>
                             </thead>
                             <tbody>
@@ -45869,8 +45971,7 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                     </button>
                                     <!-- ko if: App.game.party.hasMaxLevelPokemon() -->
                                     <ul class="row justify-content-center w-100 p-0 m-0" data-bind="foreach: lazyLoad($element, PartyController.getHatcherySortedList, { pageSize: 60, reset: modalUtils.observableState.breedingModalObservable })">
-                                        <li class="col-sm-4 col-md-3 col-lg-2 pokedexEntry" data-bind="visible: $data.isHatchable(), style:{background: PokedexHelper.getBackgroundColors($data.name)}, class: App.game.breeding.hasFreeEggSlot() || App.game.breeding.hasFreeQueueSlot() ? '' : 'disabled'">
-                                            <span class="pokedex-top-text" data-bind="text: $data.displayName">name</span>
+                                        <li class="col-sm-4 col-md-3 col-lg-2 pokedexEntry" data-bind="visible: BreedingController.visible($data), style:{background: PokedexHelper.getBackgroundColors($data.name)}, class: App.game.breeding.hasFreeEggSlot() || App.game.breeding.hasFreeQueueSlot() ? '' : 'disabled'">
                                             <div class="breedingListShiny" data-bind="visible: App.game.party.alreadyCaughtPokemon($data.id, true)">✨</div>
                                             <img class="breeding-shadow-icon shadow-icon" src="assets/images/status/shadow.svg" data-bind="visible: $data.shadow == GameConstants.ShadowStatus.Shadow"/>
                                             <img class="breeding-shadow-icon shadow-icon" src="assets/images/status/purified.svg" data-bind="visible: $data.shadow == GameConstants.ShadowStatus.Purified"/>
@@ -45880,6 +45981,13 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                             <img src="" width="80px" data-bind="attr:{ src: PokemonHelper.getImage($data.id) }">
                                             <span class="pokedex-bottom-text" data-bind="text: BreedingController.getDisplayValue($data)">value</span>
                                             <a class="overlay" href="#breed" data-bind="click: function() { App.game.breeding.addPokemonToHatchery($data); App.game.breeding.checkCloseModal();}"></a>
+                                            <span class="pokedex-top-text text-truncate px-1" data-bind="text: PokemonHelper.displayName($data.name),
+                                                tooltip: {
+                                                    title: PokemonHelper.displayName($data.name),
+                                                    trigger: 'hover',
+                                                    placement: 'top',
+                                                    boundary: 'viewport'
+                                                }">name</span>
 
                                             <!-- Category Button -->
                                             <div class="pokemonCategory dropdown">
@@ -46007,8 +46115,117 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                                     </div>
                                                 </td>
                                             </tr>
+
+                                            <!-- TWO -->
+                                            <tr>
+                                                <td class="text-left align-middle">Sort:</td>
+                                                <td class="text-center align-middle">
+                                                    <div class="input-group input-group-sm">
+                                                        <select autocomplete="off" class="custom-select" data-bind="options: GameHelper.enumSelectOption(SortOptions).filter(o => o.value !== SortOptions.level), optionsValue: 'value', optionsText: i => SortOptionConfigs[i.value].text, value: $data.sortOption"></select>
+                                                        <div class="input-group-append bg-primary text-light">
+                                                            <label class="clickable m-0 px-2" style="font-size: 20px;" data-bind="
+                                                                attr: {for: 'hatcheryHelperSortDirection' + $index() },
+                                                                text: $data.sortDirection() ? '⥄' : '⥂',
+                                                                tooltip: { title: $data.sortDirection() ? 'Descending (highest value first)' : 'Ascending (lowest value first)', trigger: 'hover', placement:'top' }
+                                                                ">⥂</label>
+                                                            <input class="hidden" type="checkbox"
+                                                                data-bind="attr: { id: 'hatcheryHelperSortDirection' + $index() }, checked:  $data.sortDirection" />
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-left align-middle">Category:</td>
+                                                <td class="text-center align-middle" style="max-width: 1px;">
+                                                    <!--<select autocomplete="off" class="custom-select custom-select-sm"
+                                                        data-bind="options: PokemonCategories.categories(),
+                                                            optionsValue: 'id',
+                                                            optionsText: 'name',
+                                                            value: -1,
+                                                            optionsCaption: 'No Category',
+                                                            optionsAfterRender: (option, item) => ko.applyBindingsToNode(option, { style: { 'background-color': `${item?.color()}` } }, item)">
+                                                    </select>-->
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-secondary btn-sm btn-block dropdown-toggle helper-category-dropdown text-left" type="button" data-toggle="dropdown"
+                                                            data-bind="tooltip: {
+                                                                html: true,
+                                                                title: $data.categoryNames().join('<br/>') || '',
+                                                                placement: 'bottom',
+                                                                trigger: 'hover'
+                                                            }">
+                                                            <div class="text-truncate pr-1" data-bind="text: $data.categoryNames().join('; ') || 'No Category'"></div>
+                                                        </button>
+                                                        <div class="dropdown-menu px-2">
+                                                            <div data-bind="foreach: PokemonCategories.categories()">
+                                                                <div class="form-check d-flex align-items-center">
+                                                                    <input type="checkbox" class="form-check-input mt-0" data-bind="
+                                                                        attr: { id: `helper${$parentContext.$index()}-category${$data.id}` },
+                                                                        checked: $parent.categories, checkedValue: $data.id">
+                                                                    <label class="form-check-label small text-truncate w-100 p-1" style="max-width: 200px;" data-bind="
+                                                                        text: $data.name, attr: { for: `helper${$parentContext.$index()}-category${$data.id}` },
+                                                                        style: { 'background-color': $data.color() }" onclick="event.stopPropagation();"></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="2">
+                                                        <button class="btn btn-block" data-bind="attr: { disabled: !$data.hired() && !App.game.breeding.hatcheryHelpers.canHire() }, css: { 'btn-success': !$data.hired(), 'btn-danger': $data.hired() }, click: () => !$data.hired() ? $data.hire() : $data.fire(), text: !$data.hired() ? 'Hire!' : 'Fire!'">Hire!</button>
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+
+                                            <!-- THREE -->
+                                            <!--<thead>
+                                                <tr>
+                                                    <th colspan="2" class="text-center text-light bg-dark" data-toggle="collapse" data-bind="attr: { 'data-target': `#helper-settings-${$index()}` }">
+                                                        <h6 class="m-0 small">Toggle Settings</h6>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="collapse" style="transition: none;" data-bind="attr: { id: `helper-settings-${$index()}` }">
+                                                <tr>
+                                                    <td class="text-left align-middle">Sort:</td>
+                                                    <td class="text-center align-middle">
+                                                        <div class="input-group input-group-sm">
+                                                            <select autocomplete="off" class="custom-select" data-bind="options: GameHelper.enumSelectOption(SortOptions).filter(o => o.value !== SortOptions.level), optionsValue: 'value', optionsText: i => SortOptionConfigs[i.value].text, value: $data.sortOption"></select>
+                                                            <div class="input-group-append bg-primary text-light">
+                                                                <label class="clickable m-0 px-2" style="font-size: 20px;" data-bind="
+                                                                    attr: {for: 'hatcheryHelperSortDirection' + $index() },
+                                                                    text: $data.sortDirection() ? '⥄' : '⥂',
+                                                                    tooltip: { title: $data.sortDirection() ? 'Descending (highest value first)' : 'Ascending (lowest value first)', trigger: 'hover', placement:'top' }
+                                                                    ">⥂</label>
+                                                                <input class="hidden" type="checkbox"
+                                                                    data-bind="attr: { id: 'hatcheryHelperSortDirection' + $index() }, checked:  $data.sortDirection" />
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-left align-middle">Category:</td>
+                                                    <td class="text-center align-middle">
+                                                        <select autocomplete="off" class="custom-select custom-select-sm"
+                                                            data-bind="options: PokemonCategories.categories(),
+                                                                optionsValue: 'id',
+                                                                optionsText: 'name',
+                                                                value: -1,
+                                                                optionsCaption: 'No Category'">
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="2">
+                                                        <button class="btn btn-block" data-bind="attr: { disabled: !$data.hired() && !App.game.breeding.hatcheryHelpers.canHire() }, css: { 'btn-success': !$data.hired(), 'btn-danger': $data.hired() }, click: () => !$data.hired() ? $data.hire() : $data.fire(), text: !$data.hired() ? 'Hire!' : 'Fire!'">Hire!</button>
+                                                    </td>
+                                                </tr>
+                                            </tfoot>-->
                                         </tbody>
-                                        <thead>
+                                        <!--<thead>
                                             <tr>
                                                 <th colspan="2" class="text-center text-light bg-dark">
                                                     <h5 class="m-0">Settings</h5>
@@ -46031,7 +46248,6 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                                                 data-bind="attr: { id: 'hatcheryHelperSortDirection' + $index() }, checked:  $data.sortDirection" />
                                                         </div>
                                                     </div>
-
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -46041,10 +46257,46 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                                     <button class="btn btn-block" data-bind="attr: { disabled: !$data.hired() && !App.game.breeding.hatcheryHelpers.canHire() }, css: { 'btn-success': !$data.hired(), 'btn-danger': $data.hired() }, click: () => !$data.hired() ? $data.hire() : $data.fire(), text: !$data.hired() ? 'Hire!' : 'Fire!'">Hire!</button>
                                                 </td>
                                             </tr>
-                                        </tfoot>
+                                        </tfoot>-->
                                     </table>
-                                    <p class="card-text">
-                                    </p>
+                                    <!--<p class="card-text">
+                                    </p>-->
+
+                                    <!-- ONE -->
+                                    <!--<div class="form-row small mt-1 px-2 text-center">
+                                        <div class="col-6 pb-1 border-bottom border-secondary">
+                                            <label class="mb-0">Sort</label>
+                                            <div class="input-group input-group-sm">
+                                                <select autocomplete="off" class="custom-select" data-bind="options: GameHelper.enumSelectOption(SortOptions).filter(o => o.value !== SortOptions.level), optionsValue: 'value', optionsText: i => SortOptionConfigs[i.value].text, value: $data.sortOption"></select>
+                                                <div class="input-group-append bg-primary text-light">
+                                                    <label class="clickable m-0 px-2" style="font-size: 20px;" data-bind="
+                                                        attr: {for: 'hatcheryHelperSortDirection' + $index() },
+                                                        text: $data.sortDirection() ? '⥄' : '⥂',
+                                                        tooltip: { title: $data.sortDirection() ? 'Descending (highest value first)' : 'Ascending (lowest value first)', trigger: 'hover', placement:'top' }
+                                                        ">⥂</label>
+                                                    <input class="hidden" type="checkbox"
+                                                        data-bind="attr: { id: 'hatcheryHelperSortDirection' + $index() }, checked:  $data.sortDirection" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 pb-1 border-bottom border-secondary">
+                                            <label class="mb-0">Category</label>
+                                            <select autocomplete="off" class="custom-select custom-select-sm"
+                                                data-bind="options: PokemonCategories.categories(),
+                                                    optionsValue: 'id',
+                                                    optionsText: 'name',
+                                                    value: -1,
+                                                    optionsCaption: 'No Category'">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-0 mx-2 my-1">
+                                        <button class="btn btn-block" data-bind="attr: { disabled: !$data.hired() && !App.game.breeding.hatcheryHelpers.canHire() },
+                                            css: { 'btn-success': !$data.hired(), 'btn-danger': $data.hired() },
+                                            click: () => !$data.hired() ? $data.hire() : $data.fire(),
+                                            text: !$data.hired() ? 'Hire!' : 'Fire!'">Hire!</button>
+                                    </div>-->
+
                                 </div>
                             </div>
                         </div>
@@ -48496,7 +48748,7 @@ aria-labelledby="badgeCaseModalLabel">
                             <img style="position:absolute; left: 10px;" data-bind="visible: player.region == GameConstants.Region[$data], attr: { src: `assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png` }"/> <knockout data-bind="text: GameConstants.camelCaseToString($data)">Region</knockout>
                         </button>
                         <!-- ko using: Weather.regionalWeather[GameConstants.Region[$data]], as: 'weatherType' -->
-                        <button class='btn btn-sm rounded' style="right: 0px; top: 0px; width: auto; height: 36px; padding: 0 4px;"
+                        <button class="btn btn-weather-dock" style="right: 0px; top: 0px; width: auto; padding: 0 4px;"
                             data-bind='style: { background: Weather.weatherConditions[weatherType].color },
                                 tooltip: {
                                     title: WeatherType[weatherType],
@@ -48672,20 +48924,31 @@ aria-labelledby="badgeCaseModalLabel">
            <div class="modal-footer p-0 bg-dark text-light">
                 <div class="message" data-bind='html: SafariBattle.text'></div>
                 <div class="row" style="width: 100%;">
-                    <button type="button" class="btn btn-primary btn-block col-6 m-0" onclick="this.blur();SafariBattle.throwBall()" data-bind='disable: SafariBattle.busy(), text: "Ball (" + Safari.balls() + ")"'>Ball (30)</button>
-                    <div class="btn-group btn-block col-6 m-0 dropup" style="padding:0px;" data-bind="let: { baitType: ko.observable(BaitType.Bait) }">
-                        <button type="button" class='btn btn-primary btn-block' onclick="this.blur();" data-bind='{ click: function(){SafariBattle.throwBait(baitType());}, disable: BaitList[BaitType[baitType()]].amount() <= 0 || SafariBattle.busy() }'>
-                            <div style="display:inline"><img width=16px data-bind="attr: { src: BaitList[BaitType[baitType()]].image }"></div>
-                            <span data-bind="text: BaitList[BaitType[baitType()]].btnName">Bait (∞)</span>
+                    <button type="button" class="btn btn-primary btn-block col-6 m-0" onclick="this.blur();SafariBattle.throwBall()" data-bind="disable: SafariBattle.busy()">
+                        <span class="position-absolute small" style="left: 5px;" data-bind="text: `[${Settings.getSetting('hotkey.safari.ball').value}]`"></span>
+                        <knockout data-bind="text: `Ball (${Safari.balls()})`">Ball (30)</knockout>
+                    </button>
+                    <div class="btn-group btn-block col-6 m-0 dropup" style="padding:0px;">
+                        <button type="button" class='btn btn-primary btn-block' onclick="this.blur();"
+                            data-bind='{ click: function(){SafariBattle.throwBait();}, disable: SafariBattle.selectedBait().amount() <= 0 || SafariBattle.busy() }'>
+                            <span class="position-absolute small" style="left: 5px;" data-bind="text: `[${Settings.getSetting('hotkey.safari.bait').value}]`"></span>
+                            <div style="display:inline"><img width=16px data-bind="attr: { src: SafariBattle.selectedBait().image }"></div>
+                            <span data-bind="text: SafariBattle.selectedBait().btnName">Bait (∞)</span>
                         </button>
                         <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split active" data-bind="text: '&nbsp;'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         </button>
-                        <div class="dropdown-menu dropdown-menu-right" data-bind="foreach: GameHelper.enumNumbers(BaitType)">
-                            <button class="dropdown-item" type="button" data-bind="click: function(){baitType($data)}, text: BaitList[BaitType[$data]].btnName"></button>
+                        <div class="dropdown-menu dropdown-menu-right" data-bind="foreach: GameHelper.enumStrings(BaitType)">
+                            <button class="dropdown-item" type="button" data-bind="click: function(){SafariBattle.selectedBait(BaitList[$data])}, text: BaitList[$data].btnName"></button>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-primary btn-block col-6 m-0" onclick="this.blur();SafariBattle.throwRock()" data-bind="disable: SafariBattle.busy()">Rock (∞)</button>
-                    <button type="button" class="btn btn-primary btn-block col-6 m-0" onclick="this.blur();SafariBattle.run()" data-bind="disable: SafariBattle.busy()">Run</button>
+                    <button type="button" class="btn btn-primary btn-block col-6 m-0" onclick="this.blur();SafariBattle.throwRock()" data-bind="disable: SafariBattle.busy()">
+                        <span class="position-absolute small" style="left: 5px;" data-bind="text: `[${Settings.getSetting('hotkey.safari.rock').value}]`"></span>
+                        Rock (∞)
+                    </button>
+                    <button type="button" class="btn btn-primary btn-block col-6 m-0" onclick="this.blur();SafariBattle.run()" data-bind="disable: SafariBattle.busy()">
+                        <span class="position-absolute small" style="left: 5px;" data-bind="text: `[${Settings.getSetting('hotkey.safari.run').value}]`"></span>
+                        Run
+                    </button>
                 </div>
            </div>
        </div>
