@@ -848,15 +848,16 @@
 
 <script type="text/html" id="multiSelectDropdownTemplate">
     <div class="dropdown">
-        <button class="btn btn-block dropdown-toggle text-left multiselect-dropdown" type="button" data-toggle="dropdown" data-bind="class: $data.buttonClass">
-            <div class="text-truncate pr-2" data-bind="text: typeof $data.buttonText === 'function' ? $data.buttonText() : $data.buttonText"></div>
+        <button class="btn btn-block dropdown-toggle text-left btn-multiselect-dropdown" type="button" data-toggle="dropdown" data-bind="class: $data.buttonClass">
+            <div class="text-truncate pr-2" style="position: relative; top: 1px;"
+                data-bind="text: typeof $data.buttonText === 'function' ? $data.buttonText() : $data.buttonText"></div>
         </button>
-        <div class="dropdown-menu px-2">
+        <div class="dropdown-menu multiselect-dropdown px-2">
             <!-- ko if: $data.showSelectAll -->
             <div class="text-center pb-1 mb-1 border-bottom border-secondary">
                 <button type="button" class="btn btn-secondary btn-sm btn-block"
                     data-bind="text: (typeof $data.selectAllText === 'function' ? $data.selectAllText() : $data.selectAllText) || 'Select All',
-                        click: () => $data.selectAllClick()">Select All</button>
+                        click: () => $data.selectAllClick?.()">Select All</button>
             </div>
             <!-- /ko -->
             <div data-bind="foreach: $data.options">
@@ -865,10 +866,10 @@
                         data-bind="
                             attr: { id: `${$parent.id}-item${$index()}` },
                             checked: $parent.bindingField,
-                            checkedValue: $data[$parent.optionsValue] || $data">
+                            checkedValue: $data[$parent.optionsValue] ?? $data">
                     <label class="form-check-label text-truncate w-100 p-1" style="max-width: 200px; cursor: pointer;"
                         data-bind="
-                            text: $data[$parent.optionsText] || $data,
+                            text: $data[$parent.optionsText] ?? $data,
                             attr: { for: `${$parent.id}-item${$index()}` },
                             class: $parent.itemLabel?.class,
                             style: $parent.itemLabel?.style?.($data)"
@@ -878,6 +879,53 @@
         </div>
     </div>
 </script>
+
+
+<!--
+-------------------
+-- Example Usage --
+-------------------
+
+<knockout data-bind="template: { name: 'multiSelectDropdownTemplate',
+    data: {
+        id: `helper-category${$index()}`,
+        options: PokemonCategories.categories(),
+        optionsText: 'name',
+        optionsValue: 'id',
+        bindingField: $data.categories,
+        buttonText: () => {
+            return $data.categories().map(id => PokemonCategories.categories().find(c => c.id === id)?.name()).join('; ') || 'All Categories';
+        },
+        buttonClass: 'btn-secondary btn-sm',
+        itemLabel: {
+            class: 'text-white small',
+            style: (item) => ({ 'background-color': item.color() })
+        },
+        showSelectAll: true,
+        selectAllText: 'All Categories',
+        selectAllClick: () => $data.categories([]),
+    }}">
+</knockout>
+
+----------------
+-- Properties --
+----------------
+
+id - (Required) Unique identifier for this dropdown menu.
+options - (Required) Array of items to display on the dropdown.
+optionsText - (Optional) Property to use as the display text for the item. Will use the item itself if not defined.
+optionsValue - (Optional) Property to use as the value when the item is selected. Will use the item itself if not defined.
+bindingField - (Required) Observable array backing field for the selected items.
+buttonText - (Required) String or function to set the text of the dropdown button.
+buttonClass - (Optional) Additional classes to customize the dropdown button.
+itemLabel - (Optional)
+  class - (Optional) Additional classes to customize the item labels.
+  style - (Optional) Function to customize CSS styling of the item labels.
+showSelectAll - (Optional) Boolean value to display the Select All button. Default is false.
+selectAllText - (Optional) String or function to set the text of the Select All button. Default is 'Select All'.
+selectAllClick - (Optional) Function called when the Select All button is clicked.
+
+-->
 
 
 <div id="game" class="container loading" data-bind="css: {'container': Settings.getSetting('gameDisplayStyle').observableValue() === 'standard3', 'container-fluid': Settings.getSetting('gameDisplayStyle').observableValue() !== 'standard3'}">
@@ -46091,7 +46139,7 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                     <img class="float-right pixelated" src="" height="24px" data-bind="attr:{ src: `assets/images/profile/trainer-${$data.trainerSprite}.png` }">
                                 </h5>
                                 <div class="card-body p-0">
-                                    <table class="table table-striped table-hover table-bordered table-sm m-0">
+                                    <table class="table table-striped table-hover table-bordered table-sm m-0" style="overflow: visible;">
                                         <thead>
                                             <tr>
                                                 <th colspan="2" class="text-center text-light bg-dark">
@@ -46148,8 +46196,6 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                                     </div>
                                                 </td>
                                             </tr>
-
-                                            <!-- TWO -->
                                             <tr>
                                                 <td class="text-left align-middle">Sort:</td>
                                                 <td class="text-center align-middle">
@@ -46178,25 +46224,6 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                                     }">ⓘ</div>
                                                 </td>
                                                 <td class="text-center align-middle" style="max-width: 1px;">
-                                                    <!--<div class="dropdown">
-                                                        <button class="btn btn-secondary btn-sm btn-block dropdown-toggle helper-category-dropdown text-left" type="button" data-toggle="dropdown">
-                                                            <div class="text-truncate pr-2"
-                                                                data-bind="text: $data.categories().map(id => PokemonCategories.categories().find(c => c.id === id)?.name()).join('; ') || 'No Category'"></div>
-                                                        </button>
-                                                        <div class="dropdown-menu px-2">
-                                                            <div data-bind="foreach: PokemonCategories.categories()">
-                                                                <div class="form-check d-flex align-items-center">
-                                                                    <input type="checkbox" class="form-check-input mt-0" style="cursor: pointer;"
-                                                                        data-bind="attr: { id: `helper${$parentContext.$index()}-category${$data.id}` },
-                                                                            checked: $parent.categories, checkedValue: $data.id">
-                                                                    <label class="form-check-label small text-truncate text-white w-100 p-1" style="max-width: 200px; cursor: pointer;"
-                                                                        data-bind="text: $data.name, attr: { for: `helper${$parentContext.$index()}-category${$data.id}` },
-                                                                            style: { 'background-color': $data.color() }" onclick="event.stopPropagation();"></label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>-->
-
                                                     <knockout data-bind="template: { name: 'multiSelectDropdownTemplate',
                                                         data: {
                                                             id: `helper-category${$index()}`,
@@ -46219,53 +46246,6 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                                     </knockout>
                                                 </td>
                                             </tr>
-
-                                            <!-- THREE -->
-                                            <!--<thead>
-                                                <tr>
-                                                    <th colspan="2" class="text-center text-light bg-dark" data-toggle="collapse" data-bind="attr: { 'data-target': `#helper-settings-${$index()}` }">
-                                                        <h6 class="m-0 small">Toggle Settings</h6>
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="collapse" style="transition: none;" data-bind="attr: { id: `helper-settings-${$index()}` }">
-                                                <tr>
-                                                    <td class="text-left align-middle">Sort:</td>
-                                                    <td class="text-center align-middle">
-                                                        <div class="input-group input-group-sm">
-                                                            <select autocomplete="off" class="custom-select" data-bind="options: GameHelper.enumSelectOption(SortOptions).filter(o => o.value !== SortOptions.level), optionsValue: 'value', optionsText: i => SortOptionConfigs[i.value].text, value: $data.sortOption"></select>
-                                                            <div class="input-group-append bg-primary text-light">
-                                                                <label class="clickable m-0 px-2" style="font-size: 20px;" data-bind="
-                                                                    attr: {for: 'hatcheryHelperSortDirection' + $index() },
-                                                                    text: $data.sortDirection() ? '⥄' : '⥂',
-                                                                    tooltip: { title: $data.sortDirection() ? 'Descending (highest value first)' : 'Ascending (lowest value first)', trigger: 'hover', placement:'top' }
-                                                                    ">⥂</label>
-                                                                <input class="hidden" type="checkbox"
-                                                                    data-bind="attr: { id: 'hatcheryHelperSortDirection' + $index() }, checked:  $data.sortDirection" />
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-left align-middle">Category:</td>
-                                                    <td class="text-center align-middle">
-                                                        <select autocomplete="off" class="custom-select custom-select-sm"
-                                                            data-bind="options: PokemonCategories.categories(),
-                                                                optionsValue: 'id',
-                                                                optionsText: 'name',
-                                                                value: -1,
-                                                                optionsCaption: 'No Category'">
-                                                        </select>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                            <tfoot>
-                                                <tr>
-                                                    <td colspan="2">
-                                                        <button class="btn btn-block" data-bind="attr: { disabled: !$data.hired() && !App.game.breeding.hatcheryHelpers.canHire() }, css: { 'btn-success': !$data.hired(), 'btn-danger': $data.hired() }, click: () => !$data.hired() ? $data.hire() : $data.fire(), text: !$data.hired() ? 'Hire!' : 'Fire!'">Hire!</button>
-                                                    </td>
-                                                </tr>
-                                            </tfoot>-->
                                         </tbody>
                                         <tfoot>
                                             <tr>
@@ -46274,78 +46254,7 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                                 </td>
                                             </tr>
                                         </tfoot>
-                                        <!--<thead>
-                                            <tr>
-                                                <th colspan="2" class="text-center text-light bg-dark">
-                                                    <h5 class="m-0">Settings</h5>
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="text-left align-middle">Sort:</td>
-                                                <td class="text-center align-middle">
-                                                    <div class="input-group input-group-sm">
-                                                        <select autocomplete="off" class="custom-select" data-bind="options: GameHelper.enumSelectOption(SortOptions).filter(o => o.value !== SortOptions.level), optionsValue: 'value', optionsText: i => SortOptionConfigs[i.value].text, value: $data.sortOption"></select>
-                                                        <div class="input-group-append bg-primary text-light">
-                                                            <label class="clickable m-0 px-2" style="font-size: 20px;" data-bind="
-                                                                attr: {for: 'hatcheryHelperSortDirection' + $index() },
-                                                                text: $data.sortDirection() ? '⥄' : '⥂',
-                                                                tooltip: { title: $data.sortDirection() ? 'Descending (highest value first)' : 'Ascending (lowest value first)', trigger: 'hover', placement:'top' }
-                                                                ">⥂</label>
-                                                            <input class="hidden" type="checkbox"
-                                                                data-bind="attr: { id: 'hatcheryHelperSortDirection' + $index() }, checked:  $data.sortDirection" />
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <td colspan="2">
-                                                    <button class="btn btn-block" data-bind="attr: { disabled: !$data.hired() && !App.game.breeding.hatcheryHelpers.canHire() }, css: { 'btn-success': !$data.hired(), 'btn-danger': $data.hired() }, click: () => !$data.hired() ? $data.hire() : $data.fire(), text: !$data.hired() ? 'Hire!' : 'Fire!'">Hire!</button>
-                                                </td>
-                                            </tr>
-                                        </tfoot>-->
                                     </table>
-                                    <!--<p class="card-text">
-                                    </p>-->
-
-                                    <!-- ONE -->
-                                    <!--<div class="form-row small mt-1 px-2 text-center">
-                                        <div class="col-6 pb-1 border-bottom border-secondary">
-                                            <label class="mb-0">Sort</label>
-                                            <div class="input-group input-group-sm">
-                                                <select autocomplete="off" class="custom-select" data-bind="options: GameHelper.enumSelectOption(SortOptions).filter(o => o.value !== SortOptions.level), optionsValue: 'value', optionsText: i => SortOptionConfigs[i.value].text, value: $data.sortOption"></select>
-                                                <div class="input-group-append bg-primary text-light">
-                                                    <label class="clickable m-0 px-2" style="font-size: 20px;" data-bind="
-                                                        attr: {for: 'hatcheryHelperSortDirection' + $index() },
-                                                        text: $data.sortDirection() ? '⥄' : '⥂',
-                                                        tooltip: { title: $data.sortDirection() ? 'Descending (highest value first)' : 'Ascending (lowest value first)', trigger: 'hover', placement:'top' }
-                                                        ">⥂</label>
-                                                    <input class="hidden" type="checkbox"
-                                                        data-bind="attr: { id: 'hatcheryHelperSortDirection' + $index() }, checked:  $data.sortDirection" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-6 pb-1 border-bottom border-secondary">
-                                            <label class="mb-0">Category</label>
-                                            <select autocomplete="off" class="custom-select custom-select-sm"
-                                                data-bind="options: PokemonCategories.categories(),
-                                                    optionsValue: 'id',
-                                                    optionsText: 'name',
-                                                    value: -1,
-                                                    optionsCaption: 'No Category'">
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group mb-0 mx-2 my-1">
-                                        <button class="btn btn-block" data-bind="attr: { disabled: !$data.hired() && !App.game.breeding.hatcheryHelpers.canHire() },
-                                            css: { 'btn-success': !$data.hired(), 'btn-danger': $data.hired() },
-                                            click: () => !$data.hired() ? $data.hire() : $data.fire(),
-                                            text: !$data.hired() ? 'Hire!' : 'Fire!'">Hire!</button>
-                                    </div>-->
-
                                 </div>
                             </div>
                         </div>
