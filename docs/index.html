@@ -105,6 +105,7 @@
 <link id="theme-link" href="https://bootswatch.com/4/yeti/bootstrap.min.css" rel="stylesheet" data-bind="attr: {href: 'https://bootswatch.com/4/' + Settings.getSetting('theme').observableValue() + '/bootstrap.min.css'}">
 
 <!--$DEV_BANNER-->
+<!-- Spash Screen -->
 <div class="d-flex align-items-center justify-content-center background-night py-4" id="saveSelector">
     <div class="justify-content-center container row">
         <div class="col-6">
@@ -173,7 +174,6 @@
         </div>
     </div>
 </template>
-
 
 <div class="loader background-night" id="loader">
     <br>
@@ -845,6 +845,39 @@
     } 
 }">Pokémon gender statistic</knockout> 
 -->
+
+<script type="text/html" id="multiSelectDropdownTemplate">
+    <div class="dropdown">
+        <button class="btn btn-block dropdown-toggle text-left multiselect-dropdown" type="button" data-toggle="dropdown" data-bind="class: $data.buttonClass">
+            <div class="text-truncate pr-2" data-bind="text: typeof $data.buttonText === 'function' ? $data.buttonText() : $data.buttonText"></div>
+        </button>
+        <div class="dropdown-menu px-2">
+            <!-- ko if: $data.showSelectAll -->
+            <div class="text-center pb-1 mb-1 border-bottom border-secondary">
+                <button type="button" class="btn btn-secondary btn-sm btn-block"
+                    data-bind="text: (typeof $data.selectAllText === 'function' ? $data.selectAllText() : $data.selectAllText) || 'Select All',
+                        click: () => $data.selectAllClick()">Select All</button>
+            </div>
+            <!-- /ko -->
+            <div data-bind="foreach: $data.options">
+                <div class="form-check d-flex align-items-center">
+                    <input type="checkbox" class="form-check-input mt-0" style="cursor: pointer;"
+                        data-bind="
+                            attr: { id: `${$parent.id}-item${$index()}` },
+                            checked: $parent.bindingField,
+                            checkedValue: $data[$parent.optionsValue] || $data">
+                    <label class="form-check-label text-truncate w-100 p-1" style="max-width: 200px; cursor: pointer;"
+                        data-bind="
+                            text: $data[$parent.optionsText] || $data,
+                            attr: { for: `${$parent.id}-item${$index()}` },
+                            class: $parent.itemLabel?.class,
+                            style: $parent.itemLabel?.style?.($data)"
+                        onclick="event.stopPropagation();"></label>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
 
 
 <div id="game" class="container loading" data-bind="css: {'container': Settings.getSetting('gameDisplayStyle').observableValue() === 'standard3', 'container-fluid': Settings.getSetting('gameDisplayStyle').observableValue() !== 'standard3'}">
@@ -45029,7 +45062,7 @@ aria-labelledby="AchievementsModalLabel" aria-hidden="true">
             <span class="text-muted">or download the Windows client:</span><br/>
             <span class="text-muted"><a href="https://github.com/RedSparr0w/Pokeclicker-desktop/releases/latest" target="_blank">https://github.com/RedSparr0w/Pokeclicker-desktop/releases/latest</a></span></p>
             <p><strong>Where is the wiki?</strong><br/>
-            <span class="text-muted"><a href="https://pokeclicker.miraheze.org/" target="_blank">https://pokeclicker.miraheze.org/</a><br/>
+            <span class="text-muted"><a href="https://wiki.pokeclicker.com/" target="_blank">https://wiki.pokeclicker.com/</a><br/>
             The Start Menu has a Wiki button too.</span></p>
             <p><strong>My game isn&#39;t running at full speed when the window isn&#39;t active.</strong><br/>
             <span class="text-muted">This is a setting on browsers that slows down inactive windows.</span><br/>
@@ -45971,7 +46004,7 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                     </button>
                                     <!-- ko if: App.game.party.hasMaxLevelPokemon() -->
                                     <ul class="row justify-content-center w-100 p-0 m-0" data-bind="foreach: lazyLoad($element, PartyController.getHatcherySortedList, { pageSize: 60, reset: modalUtils.observableState.breedingModalObservable })">
-                                        <li class="col-sm-4 col-md-3 col-lg-2 pokedexEntry" data-bind="visible: BreedingController.visible($data), style:{background: PokedexHelper.getBackgroundColors($data.name)}, class: App.game.breeding.hasFreeEggSlot() || App.game.breeding.hasFreeQueueSlot() ? '' : 'disabled'">
+                                        <li class="col-sm-4 col-md-3 col-lg-2 pokedexEntry" data-bind="visible: $data.isHatchable(), style:{background: PokedexHelper.getBackgroundColors($data.name)}, class: App.game.breeding.hasFreeEggSlot() || App.game.breeding.hasFreeQueueSlot() ? '' : 'disabled'">
                                             <div class="breedingListShiny" data-bind="visible: App.game.party.alreadyCaughtPokemon($data.id, true)">✨</div>
                                             <img class="breeding-shadow-icon shadow-icon" src="assets/images/status/shadow.svg" data-bind="visible: $data.shadow == GameConstants.ShadowStatus.Shadow"/>
                                             <img class="breeding-shadow-icon shadow-icon" src="assets/images/status/purified.svg" data-bind="visible: $data.shadow == GameConstants.ShadowStatus.Purified"/>
@@ -46135,48 +46168,57 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="text-left align-middle">Category:</td>
+                                                <td class="text-left align-middle">
+                                                    Category:
+                                                    <div class="d-inline-block float-right"  data-bind="tooltip: {
+                                                        html: true,
+                                                        title: 'Hatchery Helpers <u>always</u> use the filters and settings selected in the Hatchery. Assigning a Helper to one or more categories will limit them to Pokémon in those categories <u>in addition</u> to the other Hatchery filters.',
+                                                        placement: 'top',
+                                                        trigger: 'hover'
+                                                    }">ⓘ</div>
+                                                </td>
                                                 <td class="text-center align-middle" style="max-width: 1px;">
-                                                    <!--<select autocomplete="off" class="custom-select custom-select-sm"
-                                                        data-bind="options: PokemonCategories.categories(),
-                                                            optionsValue: 'id',
-                                                            optionsText: 'name',
-                                                            value: -1,
-                                                            optionsCaption: 'No Category',
-                                                            optionsAfterRender: (option, item) => ko.applyBindingsToNode(option, { style: { 'background-color': `${item?.color()}` } }, item)">
-                                                    </select>-->
-                                                    <div class="dropdown">
-                                                        <button class="btn btn-secondary btn-sm btn-block dropdown-toggle helper-category-dropdown text-left" type="button" data-toggle="dropdown"
-                                                            data-bind="tooltip: {
-                                                                html: true,
-                                                                title: $data.categoryNames().join('<br/>') || '',
-                                                                placement: 'bottom',
-                                                                trigger: 'hover'
-                                                            }">
-                                                            <div class="text-truncate pr-1" data-bind="text: $data.categoryNames().join('; ') || 'No Category'"></div>
+                                                    <!--<div class="dropdown">
+                                                        <button class="btn btn-secondary btn-sm btn-block dropdown-toggle helper-category-dropdown text-left" type="button" data-toggle="dropdown">
+                                                            <div class="text-truncate pr-2"
+                                                                data-bind="text: $data.categories().map(id => PokemonCategories.categories().find(c => c.id === id)?.name()).join('; ') || 'No Category'"></div>
                                                         </button>
                                                         <div class="dropdown-menu px-2">
                                                             <div data-bind="foreach: PokemonCategories.categories()">
                                                                 <div class="form-check d-flex align-items-center">
-                                                                    <input type="checkbox" class="form-check-input mt-0" data-bind="
-                                                                        attr: { id: `helper${$parentContext.$index()}-category${$data.id}` },
-                                                                        checked: $parent.categories, checkedValue: $data.id">
-                                                                    <label class="form-check-label small text-truncate w-100 p-1" style="max-width: 200px;" data-bind="
-                                                                        text: $data.name, attr: { for: `helper${$parentContext.$index()}-category${$data.id}` },
-                                                                        style: { 'background-color': $data.color() }" onclick="event.stopPropagation();"></label>
+                                                                    <input type="checkbox" class="form-check-input mt-0" style="cursor: pointer;"
+                                                                        data-bind="attr: { id: `helper${$parentContext.$index()}-category${$data.id}` },
+                                                                            checked: $parent.categories, checkedValue: $data.id">
+                                                                    <label class="form-check-label small text-truncate text-white w-100 p-1" style="max-width: 200px; cursor: pointer;"
+                                                                        data-bind="text: $data.name, attr: { for: `helper${$parentContext.$index()}-category${$data.id}` },
+                                                                            style: { 'background-color': $data.color() }" onclick="event.stopPropagation();"></label>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div>-->
+
+                                                    <knockout data-bind="template: { name: 'multiSelectDropdownTemplate',
+                                                        data: {
+                                                            id: `helper-category${$index()}`,
+                                                            options: PokemonCategories.categories(),
+                                                            optionsText: 'name',
+                                                            optionsValue: 'id',
+                                                            bindingField: $data.categories,
+                                                            buttonText: () => {
+                                                                return $data.categories().map(id => PokemonCategories.categories().find(c => c.id === id)?.name()).join('; ') || 'All Categories';
+                                                            },
+                                                            buttonClass: 'btn-secondary btn-sm',
+                                                            itemLabel: {
+                                                                class: 'text-white small',
+                                                                style: (item) => ({ 'background-color': item.color() })
+                                                            },
+                                                            showSelectAll: true,
+                                                            selectAllText: 'All Categories',
+                                                            selectAllClick: () => $data.categories([]),
+                                                        }}">
+                                                    </knockout>
                                                 </td>
                                             </tr>
-                                            <tfoot>
-                                                <tr>
-                                                    <td colspan="2">
-                                                        <button class="btn btn-block" data-bind="attr: { disabled: !$data.hired() && !App.game.breeding.hatcheryHelpers.canHire() }, css: { 'btn-success': !$data.hired(), 'btn-danger': $data.hired() }, click: () => !$data.hired() ? $data.hire() : $data.fire(), text: !$data.hired() ? 'Hire!' : 'Fire!'">Hire!</button>
-                                                    </td>
-                                                </tr>
-                                            </tfoot>
 
                                             <!-- THREE -->
                                             <!--<thead>
@@ -46225,6 +46267,13 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                                 </tr>
                                             </tfoot>-->
                                         </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="2">
+                                                    <button class="btn btn-block" data-bind="attr: { disabled: !$data.hired() && !App.game.breeding.hatcheryHelpers.canHire() }, css: { 'btn-success': !$data.hired(), 'btn-danger': $data.hired() }, click: () => !$data.hired() ? $data.hire() : $data.fire(), text: !$data.hired() ? 'Hire!' : 'Fire!'">Hire!</button>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
                                         <!--<thead>
                                             <tr>
                                                 <th colspan="2" class="text-center text-light bg-dark">
