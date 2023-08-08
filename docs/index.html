@@ -1441,12 +1441,12 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
                                     <span id="animateCurrency-battlePoint" data-bind="text: Settings.getSetting('currencyMainDisplayReduced').observableValue() ? GameConstants.formatNumber(App.game.wallet.currencies[GameConstants.Currency.battlePoint]()) : App.game.wallet.currencies[GameConstants.Currency.battlePoint]().toLocaleString('en-US')">0</span>
                                 </span>
                             </td>
-                            <!--<td class="col">
+                            <td class="col" data-bind="visible: Settings.getSetting('currencyMainDisplayExtended').observableValue() && PokemonContestController.requirements.isCompleted()">
                                 <span style="display: inline; position: relative;">
                                     <img title="Contest Tokens&#013;&#010;Gained by competing in Contests" src="assets/images/currency/contestToken.svg" height="25px">
                                     <span id="animateCurrency-contestToken" data-bind="text: Settings.getSetting('currencyMainDisplayReduced').observableValue() ? GameConstants.formatNumber(App.game.wallet.currencies[GameConstants.Currency.contestToken]()) : App.game.wallet.currencies[GameConstants.Currency.contestToken]().toLocaleString('en-US')">0</span>
                                 </span>
-                            </td> -->
+                            </td>
                         </tr>
                     </table>
                 </div>
@@ -4548,6 +4548,32 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
 
         
 
+<image href="assets/images/map/mewtwox.png" xlink:href="assets/images/map/mewtwox.png"
+    x="896"
+    y="64"
+    height="64"
+    width="64"
+    data-bind="visible: TemporaryBattleList[&#39;Anomaly Mewtwo 1&#39;] &amp;&amp; TemporaryBattleList[&#39;Anomaly Mewtwo 1&#39;].isVisible()"/>
+<rect class="city"
+    data-town="Anomaly Mewtwo"
+    x="896"
+    y="64"
+    height="64"
+    width="64"
+    data-bind="visible: TemporaryBattleList[&#39;Anomaly Mewtwo 1&#39;] &amp;&amp; TemporaryBattleList[&#39;Anomaly Mewtwo 1&#39;].isVisible(), click: () =&gt; TemporaryBattleList[&#39;Anomaly Mewtwo 1&#39;].protectedOnclick()">
+</rect>
+<image width="48" height="48"
+    x="904"
+    y="72"
+    class="iconLocation hide"
+    data-bind="visible: MapHelper.isTownCurrentLocation('') && TemporaryBattleList[&#39;Anomaly Mewtwo 1&#39;] &amp;&amp; TemporaryBattleList[&#39;Anomaly Mewtwo 1&#39;].isVisible(),
+        attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+        playerSpriteMove">
+</image>
+
+
+        
+
 <image href="assets/images/map/suicune.png" xlink:href="assets/images/map/suicune.png"
     x="1280"
     y="16"
@@ -4622,6 +4648,61 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
         attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
         playerSpriteMove">
 </image>
+
+
+        <!--New Island-->
+        
+
+<image href="assets/images/map/new_island.png" xlink:href="assets/images/map/new_island.png"
+    x="1280"
+    y="800"
+    height="48"
+    width="64"
+    data-bind="visible: TownList[&#39;New Island&#39;].isUnlocked()"/>
+<rect class="city"
+    data-town=""
+    x="1280"
+    y="800"
+    height="48"
+    width="64"
+    data-bind="visible: TownList[&#39;New Island&#39;].isUnlocked(), click:function(){MapHelper.moveToTown(&#39;New Island&#39;)}, attr:{ class: MapHelper.calculateTownCssClass(&#39;New Island&#39;) }">
+</rect>
+<image width="48" height="48"
+    x="1288"
+    y="800"
+    class="iconLocation hide"
+    data-bind="visible: MapHelper.isTownCurrentLocation('') && TownList[&#39;New Island&#39;].isUnlocked(),
+        attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+        playerSpriteMove">
+</image>
+
+
+        <!--New Island extension-->
+        
+
+<image href="assets/images/map/transparent.png" xlink:href="assets/images/map/transparent.png"
+    x="1280"
+    y="800"
+    height="48"
+    width="64"
+    data-bind="visible: TownList[&#39;New Island&#39;].isUnlocked()"/>
+<rect class="city"
+    data-town=""
+    x="1280"
+    y="800"
+    height="48"
+    width="64"
+    data-bind="visible: TownList[&#39;New Island&#39;].isUnlocked(), click:function(){MapHelper.moveToTown(&#39;New Island&#39;)}, attr:{ class: MapHelper.calculateTownCssClass(&#39;New Island&#39;) }">
+</rect>
+<image width="48" height="48"
+    x="1288"
+    y="800"
+    class="iconLocation hide"
+    data-bind="visible: MapHelper.isTownCurrentLocation('New Island') && TownList[&#39;New Island&#39;].isUnlocked(),
+        attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+        playerSpriteMove">
+</image>
+
 
     
     </g>
@@ -9149,6 +9230,32 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
         playerSpriteMove">
 </image>
 
+
+    
+
+<image href="assets/images/map/mewtwox.png" xlink:href="assets/images/map/mewtwox.png"
+    x="1344"
+    y="560"
+    height="64"
+    width="64"
+    data-bind="visible: TemporaryBattleList[&#39;Anomaly Mewtwo 2&#39;] &amp;&amp; TemporaryBattleList[&#39;Anomaly Mewtwo 2&#39;].isVisible()"/>
+<rect class="city"
+    data-town="Anomaly Mewtwo"
+    x="1344"
+    y="560"
+    height="64"
+    width="64"
+    data-bind="visible: TemporaryBattleList[&#39;Anomaly Mewtwo 2&#39;] &amp;&amp; TemporaryBattleList[&#39;Anomaly Mewtwo 2&#39;].isVisible(), click: () =&gt; TemporaryBattleList[&#39;Anomaly Mewtwo 2&#39;].protectedOnclick()">
+</rect>
+<image width="48" height="48"
+    x="1352"
+    y="568"
+    class="iconLocation hide"
+    data-bind="visible: MapHelper.isTownCurrentLocation('') && TemporaryBattleList[&#39;Anomaly Mewtwo 2&#39;] &amp;&amp; TemporaryBattleList[&#39;Anomaly Mewtwo 2&#39;].isVisible(),
+        attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+        playerSpriteMove">
+</image>
+
 </g>
 
                             <g data-bind='visible: player.region == GameConstants.Region.hoenn'>
@@ -12510,6 +12617,33 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
         playerSpriteMove">
 </image>
 
+
+     
+
+<image href="assets/images/map/mewtwoy.png" xlink:href="assets/images/map/mewtwoy.png"
+    x="1056"
+    y="400"
+    height="64"
+    width="64"
+    data-bind="visible: TemporaryBattleList[&#39;Anomaly Mewtwo 3&#39;] &amp;&amp; TemporaryBattleList[&#39;Anomaly Mewtwo 3&#39;].isVisible()"/>
+<rect class="city"
+    data-town="Anomaly Mewtwo"
+    x="1056"
+    y="400"
+    height="64"
+    width="64"
+    data-bind="visible: TemporaryBattleList[&#39;Anomaly Mewtwo 3&#39;] &amp;&amp; TemporaryBattleList[&#39;Anomaly Mewtwo 3&#39;].isVisible(), click: () =&gt; TemporaryBattleList[&#39;Anomaly Mewtwo 3&#39;].protectedOnclick()">
+</rect>
+<image width="48" height="48"
+    x="1064"
+    y="408"
+    class="iconLocation hide"
+    data-bind="visible: MapHelper.isTownCurrentLocation('') && TemporaryBattleList[&#39;Anomaly Mewtwo 3&#39;] &amp;&amp; TemporaryBattleList[&#39;Anomaly Mewtwo 3&#39;].isVisible(),
+        attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+        playerSpriteMove">
+</image>
+
+
      <g data-bind="visible: player.subregion == SubRegions.getSubRegion(GameConstants.Region.hoenn, 'Orre').id">
         <image width="1600" height="960" data-bind="attr: {
             'xlink:href':'assets/images/orre.png?v=0.10.14',
@@ -13045,18 +13179,18 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
 
 
 
-        <!--Kaminko's House-->
+        <!--Kaminko's Manor-->
         
 
 <rect class="city"
-    data-town="Kaminko&#39;s House"
+    data-town="Kaminko&#39;s Manor"
     x="272"
     y="368"
     height="176"
     width="96"
     data-bind="
-        click:function(){MapHelper.moveToTown('Kaminko\&#39;s House')},
-        attr: { class: MapHelper.calculateTownCssClass('Kaminko\&#39;s House') },
+        click:function(){MapHelper.moveToTown('Kaminko\&#39;s Manor')},
+        attr: { class: MapHelper.calculateTownCssClass('Kaminko\&#39;s Manor') },
         ">
 </rect>
 
@@ -13064,93 +13198,93 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
         x="296"
         y="432"
         class="iconLocation hide"
-        data-bind="visible: MapHelper.isTownCurrentLocation('Kaminko\&#39;s House'),
+        data-bind="visible: MapHelper.isTownCurrentLocation('Kaminko\&#39;s Manor'),
             attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
             playerSpriteMove">
     </image>
 
 
 
-        <!--Kaminko's House extension-->
+        <!--Kaminko's Manor extension-->
         
 
 <rect class="city"
-    data-town="Kaminko&#39;s House"
+    data-town="Kaminko&#39;s Manor"
     x="256"
     y="400"
     height="112"
     width="16"
     data-bind="
-        click:function(){MapHelper.moveToTown('Kaminko\&#39;s House')},
-        attr: { class: MapHelper.calculateTownCssClass('Kaminko\&#39;s House') },
+        click:function(){MapHelper.moveToTown('Kaminko\&#39;s Manor')},
+        attr: { class: MapHelper.calculateTownCssClass('Kaminko\&#39;s Manor') },
         ">
 </rect>
 
 
 
-        <!--Kaminko's House extension-->
+        <!--Kaminko's Manor extension-->
         
 
 <rect class="city"
-    data-town="Kaminko&#39;s House"
+    data-town="Kaminko&#39;s Manor"
     x="368"
     y="384"
     height="144"
     width="16"
     data-bind="
-        click:function(){MapHelper.moveToTown('Kaminko\&#39;s House')},
-        attr: { class: MapHelper.calculateTownCssClass('Kaminko\&#39;s House') },
+        click:function(){MapHelper.moveToTown('Kaminko\&#39;s Manor')},
+        attr: { class: MapHelper.calculateTownCssClass('Kaminko\&#39;s Manor') },
         ">
 </rect>
 
 
 
-        <!--Kaminko's House extension-->
+        <!--Kaminko's Manor extension-->
         
 
 <rect class="city"
-    data-town="Kaminko&#39;s House"
+    data-town="Kaminko&#39;s Manor"
     x="384"
     y="400"
     height="112"
     width="16"
     data-bind="
-        click:function(){MapHelper.moveToTown('Kaminko\&#39;s House')},
-        attr: { class: MapHelper.calculateTownCssClass('Kaminko\&#39;s House') },
+        click:function(){MapHelper.moveToTown('Kaminko\&#39;s Manor')},
+        attr: { class: MapHelper.calculateTownCssClass('Kaminko\&#39;s Manor') },
         ">
 </rect>
 
 
 
-        <!--Kaminko's House extension-->
+        <!--Kaminko's Manor extension-->
         
 
 <rect class="city"
-    data-town="Kaminko&#39;s House"
+    data-town="Kaminko&#39;s Manor"
     x="400"
     y="416"
     height="80"
     width="16"
     data-bind="
-        click:function(){MapHelper.moveToTown('Kaminko\&#39;s House')},
-        attr: { class: MapHelper.calculateTownCssClass('Kaminko\&#39;s House') },
+        click:function(){MapHelper.moveToTown('Kaminko\&#39;s Manor')},
+        attr: { class: MapHelper.calculateTownCssClass('Kaminko\&#39;s Manor') },
         ">
 </rect>
 
 
 
-        <!--SS Libra-->
+        <!--S. S. Libra-->
         
 
 <rect class="city"
-    data-town="SS Libra"
+    data-town="S. S. Libra"
     x="1104"
     y="496"
     height="48"
     width="96"
     data-bind="
-        click:function(){MapHelper.moveToTown('SS Libra')},
-        attr: { class: MapHelper.calculateTownCssClass('SS Libra') },
+        click:function(){MapHelper.moveToTown('S. S. Libra')},
+        attr: { class: MapHelper.calculateTownCssClass('S. S. Libra') },
         ">
 </rect>
 
@@ -13158,7 +13292,7 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
         x="1128"
         y="496"
         class="iconLocation hide"
-        data-bind="visible: MapHelper.isTownCurrentLocation('SS Libra'),
+        data-bind="visible: MapHelper.isTownCurrentLocation('S. S. Libra'),
             attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
             playerSpriteMove">
     </image>
@@ -13815,6 +13949,58 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
     data-bind="click:function(){MapHelper.openShipModal()}, attr: { class: MapHelper.calculateTownCssClass(&#39;Gateon Port&#39;) },
 		playerSpriteMove">
 </rect>
+
+
+    
+
+<image href="assets/images/map/Miror B.png" xlink:href="assets/images/map/Miror B.png"
+    x="896"
+    y="272"
+    height="96"
+    width="64"
+    data-bind="visible: TemporaryBattleList[&#39;Miror B. 1&#39;] &amp;&amp; TemporaryBattleList[&#39;Miror B. 1&#39;].isVisible()"/>
+<rect class="city"
+    data-town="Miror B."
+    x="896"
+    y="272"
+    height="96"
+    width="64"
+    data-bind="visible: TemporaryBattleList[&#39;Miror B. 1&#39;] &amp;&amp; TemporaryBattleList[&#39;Miror B. 1&#39;].isVisible(), click: () =&gt; TemporaryBattleList[&#39;Miror B. 1&#39;].protectedOnclick()">
+</rect>
+<image width="48" height="48"
+    x="904"
+    y="296"
+    class="iconLocation hide"
+    data-bind="visible: MapHelper.isTownCurrentLocation('') && TemporaryBattleList[&#39;Miror B. 1&#39;] &amp;&amp; TemporaryBattleList[&#39;Miror B. 1&#39;].isVisible(),
+        attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+        playerSpriteMove">
+</image>
+
+
+    
+
+<image href="assets/images/map/Zook.png" xlink:href="assets/images/map/Zook.png"
+    x="1168"
+    y="288"
+    height="96"
+    width="64"
+    data-bind="visible: TemporaryBattleList[&#39;Zook&#39;] &amp;&amp; TemporaryBattleList[&#39;Zook&#39;].isVisible()"/>
+<rect class="city"
+    data-town="Zook"
+    x="1168"
+    y="288"
+    height="96"
+    width="64"
+    data-bind="visible: TemporaryBattleList[&#39;Zook&#39;] &amp;&amp; TemporaryBattleList[&#39;Zook&#39;].isVisible(), click: () =&gt; TemporaryBattleList[&#39;Zook&#39;].protectedOnclick()">
+</rect>
+<image width="48" height="48"
+    x="1176"
+    y="312"
+    class="iconLocation hide"
+    data-bind="visible: MapHelper.isTownCurrentLocation('') && TemporaryBattleList[&#39;Zook&#39;] &amp;&amp; TemporaryBattleList[&#39;Zook&#39;].isVisible(),
+        attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+        playerSpriteMove">
+</image>
 
 
     </g>
@@ -16602,6 +16788,32 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
 </image>
 
 
+        
+
+<image href="assets/images/map/transparent.png" xlink:href="assets/images/map/transparent.png"
+    x="464"
+    y="112"
+    height="16"
+    width="16"
+    data-bind="visible: App.game.statistics.routeKills[&#39;sinnoh&#39;][217]() &gt;= 10"/>
+<rect class="city"
+    data-town="Secret Berry Shop"
+    x="464"
+    y="112"
+    height="16"
+    width="16"
+    data-bind="visible: App.game.statistics.routeKills[&#39;sinnoh&#39;][217]() &gt;= 10, click:function(){MapHelper.moveToTown(&#39;Secret Berry Shop&#39;)}, attr:{ class: MapHelper.calculateTownCssClass(&#39;Secret Berry Shop&#39;) }">
+</rect>
+<image width="48" height="48"
+    x="448"
+    y="96"
+    class="iconLocation hide"
+    data-bind="visible: MapHelper.isTownCurrentLocation('') && App.game.statistics.routeKills[&#39;sinnoh&#39;][217]() &gt;= 10,
+        attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+        playerSpriteMove">
+</image>
+
+
      
 
 <image href="assets/images/map/blimp_empty.png" xlink:href="assets/images/map/blimp_empty.png"
@@ -16831,6 +17043,32 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
     y="56"
     class="iconLocation hide"
     data-bind="visible: MapHelper.isTownCurrentLocation('') && TemporaryBattleList[&#39;Ash Ketchum Sinnoh&#39;] &amp;&amp; TemporaryBattleList[&#39;Ash Ketchum Sinnoh&#39;].isVisible(),
+        attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+        playerSpriteMove">
+</image>
+
+
+     
+
+<image href="assets/images/map/mewtwoy.png" xlink:href="assets/images/map/mewtwoy.png"
+    x="624"
+    y="416"
+    height="64"
+    width="64"
+    data-bind="visible: TemporaryBattleList[&#39;Anomaly Mewtwo 4&#39;] &amp;&amp; TemporaryBattleList[&#39;Anomaly Mewtwo 4&#39;].isVisible()"/>
+<rect class="city"
+    data-town="Anomaly Mewtwo"
+    x="624"
+    y="416"
+    height="64"
+    width="64"
+    data-bind="visible: TemporaryBattleList[&#39;Anomaly Mewtwo 4&#39;] &amp;&amp; TemporaryBattleList[&#39;Anomaly Mewtwo 4&#39;].isVisible(), click: () =&gt; TemporaryBattleList[&#39;Anomaly Mewtwo 4&#39;].protectedOnclick()">
+</rect>
+<image width="48" height="48"
+    x="632"
+    y="424"
+    class="iconLocation hide"
+    data-bind="visible: MapHelper.isTownCurrentLocation('') && TemporaryBattleList[&#39;Anomaly Mewtwo 4&#39;] &amp;&amp; TemporaryBattleList[&#39;Anomaly Mewtwo 4&#39;].isVisible(),
         attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
         playerSpriteMove">
 </image>
@@ -19879,6 +20117,32 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
     y="440"
     class="iconLocation hide"
     data-bind="visible: MapHelper.isTownCurrentLocation('') && TemporaryBattleList[&#39;Ash Ketchum Unova&#39;] &amp;&amp; TemporaryBattleList[&#39;Ash Ketchum Unova&#39;].isVisible(),
+        attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+        playerSpriteMove">
+</image>
+
+
+     
+
+<image href="assets/images/map/mewtwoy.png" xlink:href="assets/images/map/mewtwoy.png"
+    x="936"
+    y="704"
+    height="64"
+    width="64"
+    data-bind="visible: TemporaryBattleList[&#39;Anomaly Mewtwo 5&#39;] &amp;&amp; TemporaryBattleList[&#39;Anomaly Mewtwo 5&#39;].isVisible()"/>
+<rect class="city"
+    data-town="Anomaly Mewtwo"
+    x="936"
+    y="704"
+    height="64"
+    width="64"
+    data-bind="visible: TemporaryBattleList[&#39;Anomaly Mewtwo 5&#39;] &amp;&amp; TemporaryBattleList[&#39;Anomaly Mewtwo 5&#39;].isVisible(), click: () =&gt; TemporaryBattleList[&#39;Anomaly Mewtwo 5&#39;].protectedOnclick()">
+</rect>
+<image width="48" height="48"
+    x="944"
+    y="712"
+    class="iconLocation hide"
+    data-bind="visible: MapHelper.isTownCurrentLocation('') && TemporaryBattleList[&#39;Anomaly Mewtwo 5&#39;] &amp;&amp; TemporaryBattleList[&#39;Anomaly Mewtwo 5&#39;].isVisible(),
         attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
         playerSpriteMove">
 </image>
@@ -27414,15 +27678,6 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
         attr: { class: MapHelper.calculateTownCssClass('Roadside Motel') },
         ">
 </rect>
-
-    <image width="48" height="48"
-        x="896"
-        y="140"
-        class="iconLocation hide"
-        data-bind="visible: MapHelper.isTownCurrentLocation('Roadside Motel'),
-            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
-            playerSpriteMove">
-    </image>
 
 
 
@@ -45580,25 +45835,6 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
         x="1472" y="624">
     </rect>
 
-    <text style="font-size: 32px"
-        x="1464"
-        y="650"
-        data-bind="visible: !MapHelper.isRouteCurrentLocation(27, 8)">
-        HB
-    </text>
-    <image width="48" height="48"
-        x="1456"
-        y="616"
-        class="iconLocation hide"
-        transform='rotate(0)'
-        rotate=""
-        localx="1472"
-        localy="624"
-        data-bind="visible: MapHelper.isRouteCurrentLocation(27, 8),
-            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
-            playerSpriteMove">
-    </image>
-    
 
 </g>
 
@@ -45615,25 +45851,6 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
         x="1456" y="608">
     </rect>
 
-    <text style="font-size: 32px"
-        x="1448"
-        y="626"
-        data-bind="visible: !MapHelper.isRouteCurrentLocation(27, 8)">
-        HB
-    </text>
-    <image width="48" height="48"
-        x="1440"
-        y="592"
-        class="iconLocation hide"
-        transform='rotate(0)'
-        rotate=""
-        localx="1456"
-        localy="608"
-        data-bind="visible: MapHelper.isRouteCurrentLocation(27, 8),
-            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
-            playerSpriteMove">
-    </image>
-    
 
 </g>
 
@@ -46867,7 +47084,7 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
         data-bind="attr: { class: MapHelper.calculateRouteCssClass(36, 8) }"
         height="32"
         width="64"
-        x="1376" y="192">
+        x="1376" y="224">
     </rect>
 
 
@@ -47737,7 +47954,7 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
     data-bind="click:function(){ MapHelper.moveToRoute(46, 8); } ">
     <rect data-route='46'
         data-bind="attr: { class: MapHelper.calculateRouteCssClass(46, 8) }"
-        height="16"
+        height="32"
         width="16"
         x="496" y="128">
     </rect>
@@ -48194,20 +48411,20 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
     data-bind="click:function(){ MapHelper.moveToRoute(53, 8); } ">
     <rect data-route='53'
         data-bind="attr: { class: MapHelper.calculateRouteCssClass(53, 8) }"
-        height="48"
+        height="32"
         width="80"
         x="48" y="80">
     </rect>
 
     <text style="font-size: 32px"
         x="64"
-        y="114"
+        y="106"
         data-bind="visible: !MapHelper.isRouteCurrentLocation(53, 8)">
         SHS
     </text>
     <image width="48" height="48"
         x="64"
-        y="80"
+        y="72"
         class="iconLocation hide"
         transform='rotate(0)'
         rotate=""
@@ -50297,7 +50514,7 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
         data-town="Primeval Grotto"
         x="544"
         y="192"
-        height="32"
+        height="64"
         width="80"
         data-bind="click:function(){MapHelper.moveToTown('Primeval Grotto')},
             attr: { class: MapHelper.calculateTownCssClass('Primeval Grotto') }">
@@ -50306,7 +50523,7 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
 
     <image width="48" height="48"
         x="560"
-        y="184"
+        y="200"
         class="iconLocation hide"
         data-bind="visible: MapHelper.isTownCurrentLocation('Primeval Grotto'),
             attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
@@ -50320,8 +50537,8 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
 
     <rect class="city"
         data-town="Primeval Grotto"
-        x="528"
-        y="224"
+        x="576"
+        y="176"
         height="16"
         width="64"
         data-bind="click:function(){MapHelper.moveToTown('Primeval Grotto')},
@@ -50336,10 +50553,58 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
 
     <rect class="city"
         data-town="Primeval Grotto"
-        x="512"
-        y="240"
+        x="624"
+        y="192"
+        height="48"
+        width="16"
+        data-bind="click:function(){MapHelper.moveToTown('Primeval Grotto')},
+            attr: { class: MapHelper.calculateTownCssClass('Primeval Grotto') }">
+    </rect>
+
+
+
+    <!--Primeval Grotto extension-->
+    
+
+
+    <rect class="city"
+        data-town="Primeval Grotto"
+        x="528"
+        y="256"
         height="16"
         width="32"
+        data-bind="click:function(){MapHelper.moveToTown('Primeval Grotto')},
+            attr: { class: MapHelper.calculateTownCssClass('Primeval Grotto') }">
+    </rect>
+
+
+
+    <!--Primeval Grotto extension-->
+    
+
+
+    <rect class="city"
+        data-town="Primeval Grotto"
+        x="512"
+        y="208"
+        height="16"
+        width="32"
+        data-bind="click:function(){MapHelper.moveToTown('Primeval Grotto')},
+            attr: { class: MapHelper.calculateTownCssClass('Primeval Grotto') }">
+    </rect>
+
+
+
+    <!--Primeval Grotto extension-->
+    
+
+
+    <rect class="city"
+        data-town="Primeval Grotto"
+        x="496"
+        y="224"
+        height="32"
+        width="48"
         data-bind="click:function(){MapHelper.moveToTown('Primeval Grotto')},
             attr: { class: MapHelper.calculateTownCssClass('Primeval Grotto') }">
     </rect>
@@ -51446,6 +51711,1059 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
         playerSpriteMove">
 </image>
 
+
+</g>
+
+                            <g data-bind='visible: player.region == GameConstants.Region.paldea'>
+    <image width="1600" height="960" data-bind="attr: {
+        'xlink:href':'assets/images/paldea.png?v=0.10.14',
+        href:'assets/images/paldea.png?v=0.10.14'
+    }"></image>
+
+    <!-- ------ -->
+    <!-- ROUTES -->
+    <!-- ------ -->
+
+    <!--Poco Path-->
+    
+
+<g
+
+    data-bind="click:function(){ MapHelper.moveToRoute(1, 9); } ">
+    <rect data-route='1'
+        data-bind="attr: { class: MapHelper.calculateRouteCssClass(1, 9) }"
+        height="48"
+        width="48"
+        x="0" y="0">
+    </rect>
+
+    <text style="font-size: 32px"
+        x="8"
+        y="34"
+        data-bind="visible: !MapHelper.isRouteCurrentLocation(1, 9)">
+        PP
+    </text>
+    <image width="48" height="48"
+        x="0"
+        y="0"
+        class="iconLocation hide"
+        transform='rotate(0)'
+        rotate=""
+        localx="0"
+        localy="0"
+        data-bind="visible: MapHelper.isRouteCurrentLocation(1, 9),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+    
+
+</g>
+
+
+    <!--South Province (Area One)-->
+    
+
+<g
+
+    data-bind="click:function(){ MapHelper.moveToRoute(2, 9); } ">
+    <rect data-route='2'
+        data-bind="attr: { class: MapHelper.calculateRouteCssClass(2, 9) }"
+        height="48"
+        width="48"
+        x="48" y="0">
+    </rect>
+
+    <text style="font-size: 32px"
+        x="48"
+        y="34"
+        data-bind="visible: !MapHelper.isRouteCurrentLocation(2, 9)">
+        SP1
+    </text>
+    <image width="48" height="48"
+        x="48"
+        y="0"
+        class="iconLocation hide"
+        transform='rotate(0)'
+        rotate=""
+        localx="48"
+        localy="0"
+        data-bind="visible: MapHelper.isRouteCurrentLocation(2, 9),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+    
+
+</g>
+
+
+    <!--South Province (Area Two)-->
+    
+
+<g
+
+    data-bind="click:function(){ MapHelper.moveToRoute(3, 9); } ">
+    <rect data-route='3'
+        data-bind="attr: { class: MapHelper.calculateRouteCssClass(3, 9) }"
+        height="48"
+        width="48"
+        x="96" y="0">
+    </rect>
+
+    <text style="font-size: 32px"
+        x="96"
+        y="34"
+        data-bind="visible: !MapHelper.isRouteCurrentLocation(3, 9)">
+        SP2
+    </text>
+    <image width="48" height="48"
+        x="96"
+        y="0"
+        class="iconLocation hide"
+        transform='rotate(0)'
+        rotate=""
+        localx="96"
+        localy="0"
+        data-bind="visible: MapHelper.isRouteCurrentLocation(3, 9),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+    
+
+</g>
+
+
+    <!--South Province (Area Three)-->
+    
+
+<g
+
+    data-bind="click:function(){ MapHelper.moveToRoute(4, 9); } ">
+    <rect data-route='4'
+        data-bind="attr: { class: MapHelper.calculateRouteCssClass(4, 9) }"
+        height="48"
+        width="48"
+        x="144" y="0">
+    </rect>
+
+    <text style="font-size: 32px"
+        x="144"
+        y="34"
+        data-bind="visible: !MapHelper.isRouteCurrentLocation(4, 9)">
+        SP3
+    </text>
+    <image width="48" height="48"
+        x="144"
+        y="0"
+        class="iconLocation hide"
+        transform='rotate(0)'
+        rotate=""
+        localx="144"
+        localy="0"
+        data-bind="visible: MapHelper.isRouteCurrentLocation(4, 9),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+    
+
+</g>
+
+
+    <!-- ----- -->
+    <!-- TOWNS -->
+    <!-- ----- -->
+
+    <!--Cabo Poco-->
+    
+
+<rect class="city"
+    data-town="Cabo Poco"
+    x="0"
+    y="320"
+    height="48"
+    width="48"
+    data-bind="
+        click:function(){MapHelper.moveToTown('Cabo Poco')},
+        attr: { class: MapHelper.calculateTownCssClass('Cabo Poco') },
+        
+            css: { flash: MapHelper.ableToTravel() }
+        ">
+</rect>
+
+    <image width="48" height="48"
+        x="0"
+        y="320"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Cabo Poco'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!--Poco Path Lighthouse-->
+    
+
+<rect class="city"
+    data-town="Poco Path Lighthouse"
+    x="48"
+    y="320"
+    height="48"
+    width="48"
+    data-bind="
+        click:function(){MapHelper.moveToTown('Poco Path Lighthouse')},
+        attr: { class: MapHelper.calculateTownCssClass('Poco Path Lighthouse') },
+        ">
+</rect>
+
+    <image width="48" height="48"
+        x="48"
+        y="320"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Poco Path Lighthouse'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!--Los Platos-->
+    
+
+<rect class="city"
+    data-town="Los Platos"
+    x="96"
+    y="320"
+    height="48"
+    width="48"
+    data-bind="
+        click:function(){MapHelper.moveToTown('Los Platos')},
+        attr: { class: MapHelper.calculateTownCssClass('Los Platos') },
+        ">
+</rect>
+
+    <image width="48" height="48"
+        x="96"
+        y="320"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Los Platos'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!--Mesagoza-->
+    
+
+<rect class="city"
+    data-town="Mesagoza"
+    x="144"
+    y="320"
+    height="48"
+    width="48"
+    data-bind="
+        click:function(){MapHelper.moveToTown('Mesagoza')},
+        attr: { class: MapHelper.calculateTownCssClass('Mesagoza') },
+        ">
+</rect>
+
+    <image width="48" height="48"
+        x="144"
+        y="320"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Mesagoza'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!--Naranjuva Academy-->
+    
+
+<rect class="city"
+    data-town="Naranjuva Academy"
+    x="192"
+    y="320"
+    height="48"
+    width="48"
+    data-bind="
+        click:function(){MapHelper.moveToTown('Naranjuva Academy')},
+        attr: { class: MapHelper.calculateTownCssClass('Naranjuva Academy') },
+        ">
+</rect>
+
+    <image width="48" height="48"
+        x="192"
+        y="320"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Naranjuva Academy'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!--Cortondo-->
+    
+
+<rect class="city"
+    data-town="Cortondo"
+    x="240"
+    y="320"
+    height="48"
+    width="48"
+    data-bind="
+        click:function(){MapHelper.moveToTown('Cortondo')},
+        attr: { class: MapHelper.calculateTownCssClass('Cortondo') },
+        ">
+</rect>
+
+    <image width="48" height="48"
+        x="240"
+        y="320"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Cortondo'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!--Artazon-->
+    
+
+<rect class="city"
+    data-town="Artazon"
+    x="288"
+    y="320"
+    height="48"
+    width="48"
+    data-bind="
+        click:function(){MapHelper.moveToTown('Artazon')},
+        attr: { class: MapHelper.calculateTownCssClass('Artazon') },
+        ">
+</rect>
+
+    <image width="48" height="48"
+        x="288"
+        y="320"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Artazon'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!--Levincia-->
+    
+
+<rect class="city"
+    data-town="Levincia"
+    x="336"
+    y="320"
+    height="48"
+    width="48"
+    data-bind="
+        click:function(){MapHelper.moveToTown('Levincia')},
+        attr: { class: MapHelper.calculateTownCssClass('Levincia') },
+        ">
+</rect>
+
+    <image width="48" height="48"
+        x="336"
+        y="320"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Levincia'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!--Alfornada-->
+    
+
+<rect class="city"
+    data-town="Alfornada"
+    x="384"
+    y="320"
+    height="48"
+    width="48"
+    data-bind="
+        click:function(){MapHelper.moveToTown('Alfornada')},
+        attr: { class: MapHelper.calculateTownCssClass('Alfornada') },
+        ">
+</rect>
+
+    <image width="48" height="48"
+        x="384"
+        y="320"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Alfornada'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!--Cascarrafa-->
+    
+
+<rect class="city"
+    data-town="Cascarrafa"
+    x="432"
+    y="320"
+    height="48"
+    width="48"
+    data-bind="
+        click:function(){MapHelper.moveToTown('Cascarrafa')},
+        attr: { class: MapHelper.calculateTownCssClass('Cascarrafa') },
+        ">
+</rect>
+
+    <image width="48" height="48"
+        x="432"
+        y="320"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Cascarrafa'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!--Porto Marinada-->
+    
+
+<rect class="city"
+    data-town="Porto Marinada"
+    x="480"
+    y="320"
+    height="48"
+    width="48"
+    data-bind="
+        click:function(){MapHelper.moveToTown('Porto Marinada')},
+        attr: { class: MapHelper.calculateTownCssClass('Porto Marinada') },
+        ">
+</rect>
+
+    <image width="48" height="48"
+        x="480"
+        y="320"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Porto Marinada'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!--Medali-->
+    
+
+<rect class="city"
+    data-town="Medali"
+    x="528"
+    y="320"
+    height="48"
+    width="48"
+    data-bind="
+        click:function(){MapHelper.moveToTown('Medali')},
+        attr: { class: MapHelper.calculateTownCssClass('Medali') },
+        ">
+</rect>
+
+    <image width="48" height="48"
+        x="528"
+        y="320"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Medali'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!--Zapapico-->
+    
+
+<rect class="city"
+    data-town="Zapapico"
+    x="576"
+    y="320"
+    height="48"
+    width="48"
+    data-bind="
+        click:function(){MapHelper.moveToTown('Zapapico')},
+        attr: { class: MapHelper.calculateTownCssClass('Zapapico') },
+        ">
+</rect>
+
+    <image width="48" height="48"
+        x="576"
+        y="320"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Zapapico'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!--Montenevera-->
+    
+
+<rect class="city"
+    data-town="Montenevera"
+    x="624"
+    y="320"
+    height="48"
+    width="48"
+    data-bind="
+        click:function(){MapHelper.moveToTown('Montenevera')},
+        attr: { class: MapHelper.calculateTownCssClass('Montenevera') },
+        ">
+</rect>
+
+    <image width="48" height="48"
+        x="624"
+        y="320"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Montenevera'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!--Pokémon League Paldea-->
+    
+
+<rect class="city"
+    data-town="Pokémon League Paldea"
+    x="672"
+    y="320"
+    height="48"
+    width="48"
+    data-bind="
+        click:function(){MapHelper.moveToTown('Pokémon League Paldea')},
+        attr: { class: MapHelper.calculateTownCssClass('Pokémon League Paldea') },
+        ">
+</rect>
+
+    <image width="48" height="48"
+        x="672"
+        y="320"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Pokémon League Paldea'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!--Segin Squad's Base-->
+    
+
+<rect class="city"
+    data-town="Segin Squad&#39;s Base"
+    x="720"
+    y="320"
+    height="48"
+    width="48"
+    data-bind="
+        click:function(){MapHelper.moveToTown('Segin Squad\&#39;s Base')},
+        attr: { class: MapHelper.calculateTownCssClass('Segin Squad\&#39;s Base') },
+        ">
+</rect>
+
+    <image width="48" height="48"
+        x="720"
+        y="320"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Segin Squad\&#39;s Base'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!--Schedar Squad's Base-->
+    
+
+<rect class="city"
+    data-town="Schedar Squad&#39;s Base"
+    x="768"
+    y="320"
+    height="48"
+    width="48"
+    data-bind="
+        click:function(){MapHelper.moveToTown('Schedar Squad\&#39;s Base')},
+        attr: { class: MapHelper.calculateTownCssClass('Schedar Squad\&#39;s Base') },
+        ">
+</rect>
+
+    <image width="48" height="48"
+        x="768"
+        y="320"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Schedar Squad\&#39;s Base'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!--Navi Squad's Base-->
+    
+
+<rect class="city"
+    data-town="Navi Squad&#39;s Base"
+    x="816"
+    y="320"
+    height="48"
+    width="48"
+    data-bind="
+        click:function(){MapHelper.moveToTown('Navi Squad\&#39;s Base')},
+        attr: { class: MapHelper.calculateTownCssClass('Navi Squad\&#39;s Base') },
+        ">
+</rect>
+
+    <image width="48" height="48"
+        x="816"
+        y="320"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Navi Squad\&#39;s Base'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!--Ruchbah Squad's Base-->
+    
+
+<rect class="city"
+    data-town="Ruchbah Squad&#39;s Base"
+    x="864"
+    y="320"
+    height="48"
+    width="48"
+    data-bind="
+        click:function(){MapHelper.moveToTown('Ruchbah Squad\&#39;s Base')},
+        attr: { class: MapHelper.calculateTownCssClass('Ruchbah Squad\&#39;s Base') },
+        ">
+</rect>
+
+    <image width="48" height="48"
+        x="864"
+        y="320"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Ruchbah Squad\&#39;s Base'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!--Caph Squad's Base-->
+    
+
+<rect class="city"
+    data-town="Caph Squad&#39;s Base"
+    x="912"
+    y="320"
+    height="48"
+    width="48"
+    data-bind="
+        click:function(){MapHelper.moveToTown('Caph Squad\&#39;s Base')},
+        attr: { class: MapHelper.calculateTownCssClass('Caph Squad\&#39;s Base') },
+        ">
+</rect>
+
+    <image width="48" height="48"
+        x="912"
+        y="320"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Caph Squad\&#39;s Base'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!--Zero Gate-->
+    
+
+<rect class="city"
+    data-town="Zero Gate"
+    x="960"
+    y="320"
+    height="48"
+    width="48"
+    data-bind="
+        click:function(){MapHelper.moveToTown('Zero Gate')},
+        attr: { class: MapHelper.calculateTownCssClass('Zero Gate') },
+        ">
+</rect>
+
+    <image width="48" height="48"
+        x="960"
+        y="320"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Zero Gate'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!--Zero Lab-->
+    
+
+<rect class="city"
+    data-town="Zero Lab"
+    x="1008"
+    y="320"
+    height="48"
+    width="48"
+    data-bind="
+        click:function(){MapHelper.moveToTown('Zero Lab')},
+        attr: { class: MapHelper.calculateTownCssClass('Zero Lab') },
+        ">
+</rect>
+
+    <image width="48" height="48"
+        x="1008"
+        y="320"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Zero Lab'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!-- ----- -->
+    <!--DUNGEONS-->
+    <!-- ----- -->
+
+    <!--Inlet Grotto-->
+    
+
+
+    <rect class="city"
+        data-town="Inlet Grotto"
+        x="0"
+        y="640"
+        height="48"
+        width="48"
+        data-bind="click:function(){MapHelper.moveToTown('Inlet Grotto')},
+            attr: { class: MapHelper.calculateTownCssClass('Inlet Grotto') }">
+    </rect>
+
+
+    <image width="48" height="48"
+        x="0"
+        y="640"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Inlet Grotto'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!--Glaseado Mountain-->
+    
+
+
+    <rect class="city"
+        data-town="Glaseado Mountain"
+        x="48"
+        y="640"
+        height="48"
+        width="48"
+        data-bind="click:function(){MapHelper.moveToTown('Glaseado Mountain')},
+            attr: { class: MapHelper.calculateTownCssClass('Glaseado Mountain') }">
+    </rect>
+
+
+    <image width="48" height="48"
+        x="48"
+        y="640"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Glaseado Mountain'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!--Grasswither Shrine-->
+    
+
+
+    <rect class="city"
+        data-town="Grasswither Shrine"
+        x="96"
+        y="640"
+        height="48"
+        width="48"
+        data-bind="click:function(){MapHelper.moveToTown('Grasswither Shrine')},
+            attr: { class: MapHelper.calculateTownCssClass('Grasswither Shrine') }">
+    </rect>
+
+
+    <image width="48" height="48"
+        x="96"
+        y="640"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Grasswither Shrine'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!--Icerend Shrine-->
+    
+
+
+    <rect class="city"
+        data-town="Icerend Shrine"
+        x="144"
+        y="640"
+        height="48"
+        width="48"
+        data-bind="click:function(){MapHelper.moveToTown('Icerend Shrine')},
+            attr: { class: MapHelper.calculateTownCssClass('Icerend Shrine') }">
+    </rect>
+
+
+    <image width="48" height="48"
+        x="144"
+        y="640"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Icerend Shrine'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!--Groundblight Shrine-->
+    
+
+
+    <rect class="city"
+        data-town="Groundblight Shrine"
+        x="192"
+        y="640"
+        height="48"
+        width="48"
+        data-bind="click:function(){MapHelper.moveToTown('Groundblight Shrine')},
+            attr: { class: MapHelper.calculateTownCssClass('Groundblight Shrine') }">
+    </rect>
+
+
+    <image width="48" height="48"
+        x="192"
+        y="640"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Groundblight Shrine'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!--Firescourge Shrine-->
+    
+
+
+    <rect class="city"
+        data-town="Firescourge Shrine"
+        x="240"
+        y="640"
+        height="48"
+        width="48"
+        data-bind="click:function(){MapHelper.moveToTown('Firescourge Shrine')},
+            attr: { class: MapHelper.calculateTownCssClass('Firescourge Shrine') }">
+    </rect>
+
+
+    <image width="48" height="48"
+        x="240"
+        y="640"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Firescourge Shrine'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!--Area Zero-->
+    
+
+
+    <rect class="city"
+        data-town="Area Zero"
+        x="288"
+        y="640"
+        height="48"
+        width="48"
+        data-bind="click:function(){MapHelper.moveToTown('Area Zero')},
+            attr: { class: MapHelper.calculateTownCssClass('Area Zero') }">
+    </rect>
+
+
+    <image width="48" height="48"
+        x="288"
+        y="640"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Area Zero'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!--Area Zero Depths-->
+    
+
+
+    <rect class="city"
+        data-town="Area Zero Depths"
+        x="336"
+        y="640"
+        height="48"
+        width="48"
+        data-bind="click:function(){MapHelper.moveToTown('Area Zero Depths')},
+            attr: { class: MapHelper.calculateTownCssClass('Area Zero Depths') }">
+    </rect>
+
+
+    <image width="48" height="48"
+        x="336"
+        y="640"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Area Zero Depths'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+    <!-- ------------------ -->
+    <!-- PLACES OF INTEREST -->
+    <!-- ------------------ -->
+
+    
+
+<rect class="city"
+    data-town="Dock" 
+    x="0"
+    y="912"
+    height="48"
+    width="48"
+    data-bind="click:function(){MapHelper.openShipModal()}, attr: { class: MapHelper.calculateTownCssClass(&#39;Coumarine City&#39;) },
+		playerSpriteMove">
+</rect>
+
+
+    
+
+<rect class="city"
+    data-town="Underground Entrance" 
+    x="48"
+    y="896"
+    height="64"
+    width="48"
+    data-bind="click:function(){App.game.underground.openUndergroundModal()}, attr: { class: App.game.underground.canAccess() ? &#39;completed&#39; : &#39;locked&#39; },
+		playerSpriteMove">
+</rect>
+
+
+     
+
+<rect class="city"
+    data-town="Farm" 
+    x="96"
+    y="912"
+    height="48"
+    width="48"
+    data-bind="click:function(){FarmController.openFarmModal()}, attr: { class: App.game.farming.canAccess() ? &#39;completed&#39; : &#39;locked&#39; },
+		playerSpriteMove">
+</rect>
+
+
+     
+
+<rect class="city"
+    data-town="Pokémon Day Care" 
+    x="144"
+    y="896"
+    height="64"
+    width="64"
+    data-bind="click:function(){BreedingController.openBreedingModal()}, attr: { class: App.game.breeding.canAccess() ? &#39;completed&#39; : &#39;locked&#39; },
+		playerSpriteMove">
+</rect>
+
+
+     
+
+<image href="assets/images/map/blimp_empty.png" xlink:href="assets/images/map/blimp_empty.png"
+    x="1504"
+    y="912"
+    height="48"
+    width="96"
+    data-bind="visible: MapHelper.ableToTravel() &amp;&amp; player.regionStarters[GameConstants.Region.kanto]() != GameConstants.Starter.Special"/>
+<rect class="city"
+    data-town="Instructor Jacq&#39;s Blimp"
+    x="1504"
+    y="912"
+    height="48"
+    width="96"
+    data-bind="visible: MapHelper.ableToTravel() &amp;&amp; player.regionStarters[GameConstants.Region.kanto]() != GameConstants.Starter.Special, click:function(){MapHelper.moveToTown(&#39;Cabo Poco&#39;)}, attr:{ class: MapHelper.calculateTownCssClass(&#39;Cabo Poco&#39;) }">
+</rect>
+<image width="48" height="48"
+    x="1528"
+    y="912"
+    class="iconLocation hide"
+    data-bind="visible: MapHelper.isTownCurrentLocation('') && MapHelper.ableToTravel() &amp;&amp; player.regionStarters[GameConstants.Region.kanto]() != GameConstants.Starter.Special,
+        attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+        playerSpriteMove">
+</image>
+
+
+     
+
+<image href="assets/images/map/blimp_pikachu.png" xlink:href="assets/images/map/blimp_pikachu.png"
+    x="1504"
+    y="912"
+    height="48"
+    width="96"
+    data-bind="visible: MapHelper.ableToTravel() &amp;&amp; player.regionStarters[GameConstants.Region.kanto]() == GameConstants.Starter.Special"/>
+<rect class="city"
+    data-town="Instructor Jacq&#39;s Blimp"
+    x="1504"
+    y="912"
+    height="48"
+    width="96"
+    data-bind="visible: MapHelper.ableToTravel() &amp;&amp; player.regionStarters[GameConstants.Region.kanto]() == GameConstants.Starter.Special, click:function(){MapHelper.moveToTown(&#39;Cabo Poco&#39;)}, attr:{ class: MapHelper.calculateTownCssClass(&#39;Cabo Poco&#39;) }">
+</rect>
+<image width="48" height="48"
+    x="1528"
+    y="912"
+    class="iconLocation hide"
+    data-bind="visible: MapHelper.isTownCurrentLocation('') && MapHelper.ableToTravel() &amp;&amp; player.regionStarters[GameConstants.Region.kanto]() == GameConstants.Starter.Special,
+        attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+        playerSpriteMove">
+</image>
 
 </g>
 
@@ -55818,9 +57136,7 @@ aria-labelledby="badgeCaseModalLabel">
                                         <td class="text-nowrap align-middle text-center" data-bind="text: `${$data.curQuest() + 1} / ${$data.totalQuests}`"></td>
                                         <td class="align-middle text-center">
                                             <button type="button" class="btn btn-danger btn-sm" data-bind="click: () => { $data.suspendQuest() }, tooltip: {
-                                                title: $data.isPausable() ?
-                                                    'Pausing this quest line will remove it from your quest list and prevent any progress.<br /><br />It can be resumed from the current step at the Bulletin Board it was originally accepted.'
-                                                    : 'This quest line cannot be paused. It is either a story or progression related quest or you are currently in an area or quest step that prevents this.',
+                                                title: $data.pauseTooltip,
                                                 trigger: 'hover',
                                                 placement: 'top',
                                                 html: true
@@ -56564,9 +57880,9 @@ aria-labelledby="badgeCaseModalLabel">
                             <tbody data-bind='foreach: BerryDeal.getDeals(ShopHandler.shopObservable().location)'>
                                 <!-- ko foreach: berries -->
                                 <tr>
-                                    <td data-bind="text: App.game.farming.berryList[$data.berryType]()"></td>
+                                    <td data-bind="text: App.game.farming.berryList[$data.berryType]().toLocaleString('en-US')"></td>
                                     <td><img height="28px" data-bind="attr: {src: FarmController.getBerryImage($data.berryType) }, css: {'berryLocked': !App.game.farming.unlockedBerries[$data.berryType]() }"></img></td>
-                                    <td data-bind="text: amount + ' x ' + (App.game.farming.unlockedBerries[$data.berryType]() ? BerryType[$data.berryType] : '???')"></td>
+                                    <td data-bind="text: amount.toLocaleString('en-US') + ' x ' + (App.game.farming.unlockedBerries[$data.berryType]() ? BerryType[$data.berryType] : '???')"></td>
                                     <!-- ko if: $index() === 0 -->
                                     <td class='vertical-middle' data-bind="attr: { rowspan: $parent.berries.length }">→</td>
                                     <td class='vertical-middle' data-bind="attr: { rowspan: $parent.berries.length }">
@@ -57020,18 +58336,40 @@ aria-labelledby="badgeCaseModalLabel">
                                 <p>As you perform actions, you will gain Safari XP and increase your Safari Level. If you catch a Pokémon, there is a chance an item will appear on the map.</p>
                                 <p>
                                     When you have encountered a Pokémon, you will be given 4 options:
-                                    <ul>
-                                        <li>Ball: This will throw a Poké Ball and give you a chance of capturing the Pokémon. Provides 10 Safari XP.</li>
-                                        <li>Rock: Throwing a Rock will make the Pokémon angry, and more likely to flee, but easier to catch. Provides 10 Safari XP.</li>
-                                        <li>Bait: Throwing any kind of Bait will make the Pokémon eat, and less likely to flee, but harder to catch. Berry Baits change the base rates of the Pokémon, with Razz lowering flee rate, and Nanab increasing catch rate. Only one Berry effect can be present at a time. Provides 5 Safari XP.</li>
-                                        <li>Run: This will end the encounter.</li>
-                                    </ul>
+                                    <table class="table table-bordered table-sm" style="color: inherit;">
+                                        <tr>
+                                            <td class="align-middle"><b>Ball</b></td>
+                                            <td>This will throw a Poké Ball and give you a chance of capturing the Pokémon. Provides 10 Safari XP.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="align-middle"><b>Rock</b></td>
+                                            <td>Throwing a Rock will make the Pokémon angry, and more likely to flee, but easier to catch. Provides 10 Safari XP.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="align-middle"><b>Bait</b></td>
+                                            <td>Throwing any kind of Bait will make the Pokémon eat, and less likely to flee, but harder to catch. Berry Baits change the base rates of the Pokémon, with Razz lowering flee rate, and Nanab increasing catch rate. Only one Berry effect can be present at a time. Provides 5 Safari XP.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="align-middle"><b>Run</b></td>
+                                            <td>This will end the encounter.</td>
+                                        </tr>
+                                    </table>
                                 </p>
                                 <p>Catching a Pokémon will provide 50 Safari XP.</p>
+                                <p>Picking up an item will provide 10 Safari XP.</p>
                                 <p>After your turn of the encounter, if it did not result in the encounter ending, the wild Pokémon will have a chance of running away.</p>
                                 <p>Your safari exploration will end when you have run out of Poké Balls. You can freely leave and re-enter without having to pay the fee again as long as you still have Poké Balls remaining.</p>
-                                <p>Safari Level will increase the effectiveness of Rocks and Bait, the Egg Steps gained from walking, and the odds that an item will spawn when a Pokémon is caught.</p>
+                                <p>Safari Level will increase the effectiveness of Rocks and Bait, the catch chance, the Egg Steps gained from walking, and the odds that an item will spawn when a Pokémon is caught.</p>
                                 <p>Some items are not available until a certain Safari Level is reached.</p>
+                                <p>
+                                    Every 10 Safari Levels, the animation will speed up by the following values:
+                                    <ul style="list-style-type: none;">
+                                        <li><b>Level 10:</b> 11% faster.</li>
+                                        <li><b>Level 20:</b> 33% faster.</li>
+                                        <li><b>Level 30:</b> 75% faster.</li>
+                                        <li><b>Level 40:</b> 122% faster.</li>
+                                    </ul>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -58217,7 +59555,7 @@ aria-labelledby="purifyChamberModalLabel">
                   <tbody data-bind="foreach: PartyController.getConsumableSortedList()">
                     <tr class="clickable" data-bind="click: () => { $data.useConsumable(ConsumableController.currentlySelected(), ConsumableController.getMultiplier()); }, hidden: $data.hideFromConsumableList()">
                       <td class="text-left"><knockout data-bind="text: $data.displayName"></knockout><sup data-bind="visible: $data.shiny">✨</sup></td>
-                      <td class="text-center tight" data-bind="text: $data.calculateAttack(true)">Attack</td>
+                      <td class="text-center tight" data-bind="text: $data.calculateAttack(true).toLocaleString('en-US')">Attack</td>
                     </tr>
                   </tbody>
                 </table>
