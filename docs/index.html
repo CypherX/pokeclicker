@@ -2057,6 +2057,12 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
             }">
           </li>
           <!-- /ko -->
+          <!-- ko if: player.town().dungeon.allAvailableShadowPokemon().some(p => App.game.party.getPokemonByName(p)?.shadow < GameConstants.ShadowStatus.Shadow) -->
+          <li class="list-inline-item">
+            <img class="boss" src="assets/images/status/shadow.svg"/>
+            <img class="dungeon-pokemon-preview dungeon-pokemon-locked" src="assets/images/npcs/specialNPCs/Mysterious Trainer.png"/>
+          </li>
+          <!-- /ko -->
         </ul>
       </div>
     </knockout>
@@ -13299,6 +13305,64 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
 
 
 
+        <!--Orre Colosseum-->
+        
+
+<rect class="city"
+    data-town="Orre Colosseum"
+    x="320"
+    y="576"
+    height="80"
+    width="112"
+    data-bind="
+        click:function(){MapHelper.moveToTown('Orre Colosseum')},
+        attr: { class: MapHelper.calculateTownCssClass('Orre Colosseum') },
+        ">
+</rect>
+
+    <image width="48" height="48"
+        x="352"
+        y="592"
+        class="iconLocation hide"
+        data-bind="visible: MapHelper.isTownCurrentLocation('Orre Colosseum'),
+            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+            playerSpriteMove">
+    </image>
+
+
+
+        <!--Orre Colosseum extension-->
+        
+
+<rect class="city"
+    data-town="Orre Colosseum"
+    x="336"
+    y="656"
+    height="32"
+    width="80"
+    data-bind="
+        click:function(){MapHelper.moveToTown('Orre Colosseum')},
+        attr: { class: MapHelper.calculateTownCssClass('Orre Colosseum') },
+        ">
+</rect>
+
+
+
+        <!--Orre Colosseum extension-->
+        
+
+<rect class="city"
+    data-town="Orre Colosseum"
+    x="352"
+    y="544"
+    height="32"
+    width="80"
+    data-bind="
+        click:function(){MapHelper.moveToTown('Orre Colosseum')},
+        attr: { class: MapHelper.calculateTownCssClass('Orre Colosseum') },
+        ">
+</rect>
+
 
 
         <!-- -------- -->
@@ -13629,66 +13693,6 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
             attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
             playerSpriteMove">
     </image>
-
-
-
-        <!--Orre Colosseum-->
-        
-
-
-    <rect class="city"
-        data-town="Orre Colosseum"
-        x="320"
-        y="576"
-        height="80"
-        width="112"
-        data-bind="click:function(){MapHelper.moveToTown('Orre Colosseum')},
-            attr: { class: MapHelper.calculateTownCssClass('Orre Colosseum') }">
-    </rect>
-
-
-    <image width="48" height="48"
-        x="352"
-        y="592"
-        class="iconLocation hide"
-        data-bind="visible: MapHelper.isTownCurrentLocation('Orre Colosseum'),
-            attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
-            playerSpriteMove">
-    </image>
-
-
-
-        <!--Orre Colosseum extension-->
-        
-
-
-    <rect class="city"
-        data-town="Orre Colosseum"
-        x="336"
-        y="656"
-        height="32"
-        width="80"
-        data-bind="click:function(){MapHelper.moveToTown('Orre Colosseum')},
-            attr: { class: MapHelper.calculateTownCssClass('Orre Colosseum') }">
-    </rect>
-
-
-
-
-        <!--Orre Colosseum extension-->
-        
-
-
-    <rect class="city"
-        data-town="Orre Colosseum"
-        x="352"
-        y="544"
-        height="32"
-        width="80"
-        data-bind="click:function(){MapHelper.moveToTown('Orre Colosseum')},
-            attr: { class: MapHelper.calculateTownCssClass('Orre Colosseum') }">
-    </rect>
-
 
 
 
@@ -37475,6 +37479,84 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
         playerSpriteMove">
 </image>
 
+
+            
+
+<image href="assets/images/map/Raid.png" xlink:href="assets/images/map/Raid.png"
+    x="416"
+    y="464"
+    height="64"
+    width="64"
+    data-bind="visible: TemporaryBattleList[&#39;Max Raid 1&#39;] &amp;&amp; TemporaryBattleList[&#39;Max Raid 1&#39;].isVisible()"/>
+<rect class="city"
+    data-town="Max Raid"
+    x="416"
+    y="464"
+    height="64"
+    width="64"
+    data-bind="visible: TemporaryBattleList[&#39;Max Raid 1&#39;] &amp;&amp; TemporaryBattleList[&#39;Max Raid 1&#39;].isVisible(), click: () =&gt; TemporaryBattleList[&#39;Max Raid 1&#39;].protectedOnclick()">
+</rect>
+<image width="48" height="48"
+    x="424"
+    y="472"
+    class="iconLocation hide"
+    data-bind="visible: MapHelper.isTownCurrentLocation('') && TemporaryBattleList[&#39;Max Raid 1&#39;] &amp;&amp; TemporaryBattleList[&#39;Max Raid 1&#39;].isVisible(),
+        attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+        playerSpriteMove">
+</image>
+
+
+            
+
+<image href="assets/images/map/Raid.png" xlink:href="assets/images/map/Raid.png"
+    x="1056"
+    y="288"
+    height="64"
+    width="64"
+    data-bind="visible: TemporaryBattleList[&#39;Max Raid 2&#39;] &amp;&amp; TemporaryBattleList[&#39;Max Raid 2&#39;].isVisible()"/>
+<rect class="city"
+    data-town="Max Raid"
+    x="1056"
+    y="288"
+    height="64"
+    width="64"
+    data-bind="visible: TemporaryBattleList[&#39;Max Raid 2&#39;] &amp;&amp; TemporaryBattleList[&#39;Max Raid 2&#39;].isVisible(), click: () =&gt; TemporaryBattleList[&#39;Max Raid 2&#39;].protectedOnclick()">
+</rect>
+<image width="48" height="48"
+    x="1064"
+    y="296"
+    class="iconLocation hide"
+    data-bind="visible: MapHelper.isTownCurrentLocation('') && TemporaryBattleList[&#39;Max Raid 2&#39;] &amp;&amp; TemporaryBattleList[&#39;Max Raid 2&#39;].isVisible(),
+        attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+        playerSpriteMove">
+</image>
+
+
+            
+
+<image href="assets/images/map/Raid.png" xlink:href="assets/images/map/Raid.png"
+    x="896"
+    y="800"
+    height="64"
+    width="64"
+    data-bind="visible: TemporaryBattleList[&#39;Max Raid 3&#39;] &amp;&amp; TemporaryBattleList[&#39;Max Raid 3&#39;].isVisible()"/>
+<rect class="city"
+    data-town="Max Raid"
+    x="896"
+    y="800"
+    height="64"
+    width="64"
+    data-bind="visible: TemporaryBattleList[&#39;Max Raid 3&#39;] &amp;&amp; TemporaryBattleList[&#39;Max Raid 3&#39;].isVisible(), click: () =&gt; TemporaryBattleList[&#39;Max Raid 3&#39;].protectedOnclick()">
+</rect>
+<image width="48" height="48"
+    x="904"
+    y="808"
+    class="iconLocation hide"
+    data-bind="visible: MapHelper.isTownCurrentLocation('') && TemporaryBattleList[&#39;Max Raid 3&#39;] &amp;&amp; TemporaryBattleList[&#39;Max Raid 3&#39;].isVisible(),
+        attr: {href:`assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png`},
+        playerSpriteMove">
+</image>
+
     </g>
     <g data-bind="visible: player.subregion == SubRegions.getSubRegion(GameConstants.Region.galar, 'North Galar').id">
         <image width="1600" height="960" data-bind="attr: {
@@ -55365,7 +55447,7 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                                 <label>Sort</label>
                                                 <div class="input-group">
                                                     <select autocomplete="off" class="custom-select" onchange="Settings.setSettingByName(this.name, SortOptions[SortOptions[this.value]])"
-                                                        data-bind="foreach: $data.options.filter(o => o.value !== SortOptions.level), attr: {name}, selectedOptions: [$data.observableValue()]">
+                                                        data-bind="foreach: $data.options.filter(o => o.value !== SortOptions.level && o.value !== SortOptions.attack), attr: {name}, selectedOptions: [$data.observableValue()]">
                                                         <option data-bind="text: $data.text, value: $data.value"></option>
                                                     </select>
                                                     <div class="input-group-append bg-primary text-light">
@@ -55393,8 +55475,8 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                         Unfortunately, you don't have any Pokémon of level 100 to breed.
                                     </button>
                                     <!-- ko if: App.game.party.hasMaxLevelPokemon() -->
-                                    <ul class="row justify-content-center w-100 p-0 m-0" data-bind="foreach: lazyLoad($element, PartyController.getHatcherySortedList, { pageSize: 60, reset: modalUtils.observableState.breedingModalObservable })">
-                                        <li class="col-sm-4 col-md-3 col-lg-2 pokedexEntry" data-bind="visible: $data.isHatchable(), style:{background: PokedexHelper.getBackgroundColors($data.name)}, class: App.game.breeding.hasFreeEggSlot() || App.game.breeding.hasFreeQueueSlot() ? '' : 'disabled'">
+                                    <ul class="row justify-content-center w-100 p-0 m-0" data-bind="foreach: lazyLoad($element, BreedingController.hatcherySortedFilteredList, { pageSize: 60, reset: BreedingController.resetHatcheryView })">
+                                        <li class="col-sm-4 col-md-3 col-lg-2 pokedexEntry" data-bind="if: $data.matchesHatcheryFilters(), visible: $data.isHatchableFiltered(), style:{background: PokedexHelper.getBackgroundColors($data.name)}, class: App.game.breeding.hasFreeEggSlot() || App.game.breeding.hasFreeQueueSlot() ? '' : 'disabled'">
                                             <div class="breedingListShiny" data-bind="visible: App.game.party.alreadyCaughtPokemon($data.id, true)">✨</div>
                                             <img class="breeding-shadow-icon shadow-icon" src="assets/images/status/shadow.svg" data-bind="visible: $data.shadow == GameConstants.ShadowStatus.Shadow"/>
                                             <img class="breeding-shadow-icon shadow-icon" src="assets/images/status/purified.svg" data-bind="visible: $data.shadow == GameConstants.ShadowStatus.Purified"/>
@@ -57823,7 +57905,110 @@ aria-labelledby="badgeCaseModalLabel">
                           <!-- /ko -->
                         </table>
                       </td>
-                    </tr>
+                    </tr>  
+                    <tr>
+                      <td class="p-0" colspan="2">
+                        <table class="table table-striped table-hover table-bordered table-sm m-0">
+                          <tr class="text-light">
+                            <th class="bg-dark">Wandering Pokémon</th>
+                          </tr>
+                          <tr>
+                            <th data-bind="text: 'Attracted by all Berries'">Base Wanderers</th>
+                            <td style="position: absolute; right: 0;"
+                            data-bind="visible: App.game.keyItems.hasKeyItem(KeyItemType.Pokerus_virus),
+                            tooltip: {
+                              title: 'These Pokémon do not gain EVs when attracted to the Farm.',
+                              trigger: 'hover',
+                              placement:'top',
+                              html: true,
+                            }">ⓘ</td>
+                          </tr>
+                          <tr id="wanderRow">
+                            <td id="wanderPokemonList">
+                              <ul class="list-inline">
+                              <!-- ko foreach: Berry.baseWander -->
+                              <li class="list-inline-item no-pokerus">
+                                <img class="dungeon-pokemon-preview" src="" data-bind="attr:{ src: `assets/images/${(App.game.party.alreadyCaughtPokemonByName($data, true) ? 'shiny' : '')}pokemon/${pokemonList.find((p) => p.name == $data).id}.png` },
+                                css: { 'dungeon-pokemon-locked': !App.game.party.alreadyCaughtPokemonByName(pokemonList.find((p) => p.name == $data).name) }" onerror="this.src='assets/images/pokemon/0.png';"/>
+                                <sup class="shiny" data-bind="visible: App.game.party.alreadyCaughtPokemonByName($data, true)">✨</sup>
+                                <img class="lock" src="assets/images/breeding/lock.svg" data-bind="hidden: PokemonHelper.calcNativeRegion(pokemonList.find((p) => p.name == $data).id) <= player.highestRegion(),
+                                tooltip: {
+                                  title: `Reach ${GameConstants.camelCaseToString(GameConstants.Region[PokemonHelper.calcNativeRegion(pokemonList.find((p) => p.name == $data).id)])} to attract this Pokémon!`,
+                                    placement: 'top',
+                                    trigger: 'hover'
+                                }">
+                                </li>
+                              <!-- /ko -->
+                              </ul>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th colspan="2" data-bind="text: `Attracted to ${BerryColor[App.game.farming.berryData[$data].color]}-Colored Berries`">Color Wanderers</th>
+                          </tr>
+                          <tr id="wanderRow">
+                            <td id="wanderPokemonList">
+                              <ul class="list-inline">
+                              <!-- ko foreach: Berry.colorWander[App.game.farming.berryData[$data].color] -->
+                              <li class="list-inline-item">
+                                <!-- ko if: App.game.party.getPokemon(pokemonMap[$data].id)?.pokerus -->
+                                <img class="dungeon-pokemon-pkrs" src="" data-bind="
+                                attr:{ src: `assets/images/breeding/pokerus/${GameConstants.Pokerus[App.game.party.getPokemon(pokemonMap[$data].id)?.pokerus]}.png` },
+                                tooltip: {
+                                    title: `EVs: ${App.game.party.getPokemonByName(pokemonList.find((p) => p.name == $data).name).evs().toLocaleString('en-US')}`,
+                                    placement: 'bottom',
+                                    trigger: 'hover'
+                                }" />
+                                <!-- /ko -->
+                                <img class="dungeon-pokemon-preview" src="" data-bind="attr:{ src: `assets/images/${(App.game.party.alreadyCaughtPokemonByName($data, true) ? 'shiny' : '')}pokemon/${pokemonList.find((p) => p.name == $data).id}.png` },
+                                css: { 'dungeon-pokemon-locked': !App.game.party.alreadyCaughtPokemonByName(pokemonList.find((p) => p.name == $data).name) }" onerror="this.src='assets/images/pokemon/0.png';"/>
+                                <sup class="shiny" data-bind="visible: App.game.party.alreadyCaughtPokemonByName($data, true)">✨</sup>
+                                <img class="lock" src="assets/images/breeding/lock.svg" data-bind="hidden: PokemonHelper.calcNativeRegion(pokemonList.find((p) => p.name == $data).id) <= player.highestRegion(),
+                                tooltip: {
+                                  title: `Reach ${GameConstants.camelCaseToString(GameConstants.Region[PokemonHelper.calcNativeRegion(pokemonList.find((p) => p.name == $data).id)])} to attract this Pokémon!`,
+                                    placement: 'top',
+                                    trigger: 'hover'
+                                }">
+                                </li>
+                              <!-- /ko -->
+                              </ul>
+                            </td>
+                          </tr>
+                          <!-- ko if: App.game.farming.berryData[$data].wander.filter((w) => !Berry.baseWander.some((b) => w === b) && !Berry.colorWander[App.game.farming.berryData[$data].color].some((b) => w === b)) != "" -->
+                          <tr>
+                            <th colspan="2" data-bind="text: `Attracted to ${BerryType[$data]} Berry`">Specific Wanderers</th>
+                          </tr>
+                          <tr id="wanderRow">
+                            <td id="wanderPokemonList">
+                              <ul class="list-inline">
+                              <!-- ko foreach: App.game.farming.berryData[$data].wander.filter((w) => !Berry.baseWander.some((b) => w === b) && !Berry.colorWander[App.game.farming.berryData[$data].color].some((b) => w === b)) -->
+                              <li class="list-inline-item">
+                                <!-- ko if: App.game.party.getPokemon(pokemonMap[$data].id)?.pokerus -->
+                                <img class="dungeon-pokemon-pkrs" src="" data-bind="
+                                attr:{ src: `assets/images/breeding/pokerus/${GameConstants.Pokerus[App.game.party.getPokemon(pokemonMap[$data].id)?.pokerus]}.png` },
+                                tooltip: {
+                                    title: `EVs: ${App.game.party.getPokemonByName(pokemonList.find((p) => p.name == $data).name).evs().toLocaleString('en-US')}`,
+                                    placement: 'bottom',
+                                    trigger: 'hover'
+                                }" />
+                                <!-- /ko -->
+                                <img class="dungeon-pokemon-preview" src="" data-bind="attr:{ src: `assets/images/${(App.game.party.alreadyCaughtPokemonByName($data, true) ? 'shiny' : '')}pokemon/${pokemonList.find((p) => p.name == $data).id}.png` },
+                                css: { 'dungeon-pokemon-locked': !App.game.party.alreadyCaughtPokemonByName(pokemonList.find((p) => p.name == $data).name) }" onerror="this.src='assets/images/pokemon/0.png';"/>
+                                <sup class="shiny" data-bind="visible: App.game.party.alreadyCaughtPokemonByName($data, true)">✨</sup>
+                                <img class="lock" src="assets/images/breeding/lock.svg" data-bind="hidden: PokemonHelper.calcNativeRegion(pokemonList.find((p) => p.name == $data).id) <= player.highestRegion(),
+                                tooltip: {
+                                  title: `Reach ${GameConstants.camelCaseToString(GameConstants.Region[PokemonHelper.calcNativeRegion(pokemonList.find((p) => p.name == $data).id)])} to attract this Pokémon!`,
+                                    placement: 'top',
+                                    trigger: 'hover'
+                                }">
+                                </li>
+                              <!-- /ko -->
+                              </ul>
+                            </td>
+                          </tr>
+                          <!-- /ko -->
+                        </table>
+                      </td>
+                    </tr>              
                   </tbody>
                   <!-- ko if: FarmController.getHint(+$data) !== ""-->
                   <thead>
