@@ -1205,7 +1205,7 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
                 <img src="" data-bind="attr: { src: ItemList[GameConstants.zCrystalItemType[App.game.zMoves.type()]].image,  }">
               </td>
               <td class="p-0 bg-secondary" colspan="4" rowspan="2">
-                <p class="mb-0" data-bind="text: `${App.game.zMoves.getMultiplier() < 1 ? '' : '+'}${(App.game.zMoves.getMultiplier() - 1) * 100}% Attack to all your ${PokemonType[App.game.zMoves.type()]}-type Pokémon`">bonus</p>
+                <p class="mb-0" data-bind="text: `${App.game.zMoves.getMultiplier() < 1 ? '' : '+'}${(App.game.zMoves.getMultiplier() - 1).toLocaleString('en-US', { style: 'percent' })} Attack to all your ${PokemonType[App.game.zMoves.type()]}-type Pokémon`">bonus</p>
               </td>
             </tr>
             <tr></tr>
@@ -2064,7 +2064,7 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
                 }" />
           </li>
           <!-- /ko -->
-          <!-- ko if: player.town().dungeon.allAvailableShadowPokemon().some(p => App.game.party.getPokemonByName(p)?.shadow < GameConstants.ShadowStatus.Shadow) -->
+          <!-- ko if: player.town().dungeon.allAvailableShadowPokemon().some(p => (App.game.party.getPokemonByName(p)?.shadow ?? GameConstants.ShadowStatus.None) < GameConstants.ShadowStatus.Shadow) -->
           <li class="list-inline-item">
             <img class="boss" src="assets/images/status/shadow.svg"/>
             <img class="dungeon-pokemon-preview dungeon-pokemon-locked" src="assets/images/npcs/specialNPCs/Mysterious Trainer.png"/>
@@ -56467,7 +56467,7 @@ aria-labelledby="hallOfFameModalLabel" aria-hidden="true">
                    <strong>There are a few things you should know before you depart:</strong><br/>
                    You will gain <strong data-bind="text: App.game.breeding.queueSlotsGainedFromRegion(player.highestRegion())"></strong> queue slots in the Hatchery.<br/><br/>
                    <!-- ko if: App.game.challenges.list.regionalAttackDebuff.active() -->
-                   When Pokémon are in a Region they're not native to, they will only retain <strong data-bind="text: App.game.party.getRegionAttackMultiplier(player.highestRegion() + 1).toLocaleString(undefined,{style: 'percent'})"></strong> of their total attack.<br/><br/>
+                   When Pokémon are in a Region they're not native to, they will only retain <strong data-bind="text: App.game.party.getRegionAttackMultiplier(player.highestRegion() + 1).toLocaleString('en-US',{style: 'percent'})"></strong> of their total attack.<br/><br/>
                    <!-- /ko -->
                    <!-- ko if: player.highestRegion() - 2 >= GameConstants.Region.kanto -->
                    Dungeons in the <strong data-bind="text: GameConstants.camelCaseToString(GameConstants.Region[player.highestRegion() - 2])"></strong> Region will be significantly less likely to drop Epic, Legendary, and Mythic loot.<br /><br/>
@@ -57289,9 +57289,9 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                             <div class="dropdown-menu text-center p-0">
                                                 <p class="small py-2 m-0">Set Trade Amount</p>
                                                 <div class="dropdown-divider m-0"></div>
-                                                <!-- ko foreach: [10, 25, 50, 75, 100] -->
-                                                <button class="dropdown-item small py-1" type="button" data-bind="text: `${$data}%`,
-                                                    click: () => { App.game.underground.tradeAmount(Math.floor(player.getUndergroundItemAmount($parent.item1.id) * ($data / 100) / $parent.amount1)) }"></button>
+                                                <!-- ko foreach: [0.1, 0.25, 0.5, 0.75, 1] -->
+                                                <button class="dropdown-item small py-1" type="button" data-bind="text: `${$data.toLocaleString('en-US', { style: 'percent' })}`,
+                                                    click: () => { App.game.underground.tradeAmount(Math.floor(player.getUndergroundItemAmount($parent.item1.id) * ($data) / $parent.amount1)) }"></button>
                                                 <!-- /ko -->
                                             </div>
                                         </div>
@@ -57499,7 +57499,7 @@ aria-labelledby="pokedexModalLabel">
 
                         <!-- ko if: PokedexHelper.filteredList().length != 0 -->
                         <div class="pokedex-border-bottom pt-2">
-                            <h4 data-bind="text: `Showing ${PokedexHelper.filteredList().length} Pokémon`"></h4>
+                            <h4 data-bind="text: `Showing ${PokedexHelper.filteredList().length.toLocaleString('en-US')} Pokémon`"></h4>
                         </div>
                         <!-- /ko -->
                     </div>
@@ -57686,7 +57686,7 @@ aria-labelledby="pokedexModalLabel">
 
                         <!-- ko if: PokedexHelper.filteredList().length != 0 -->
                         <div class="pokedex-border-bottom pt-2 d-lg-none d-block">
-                            <h4 data-bind="text: `Showing ${PokedexHelper.filteredList().length} Pokémon`"></h4>
+                            <h4 data-bind="text: `Showing ${PokedexHelper.filteredList().length.toLocaleString('en-US')} Pokémon`"></h4>
                         </div>
                         <!-- /ko -->
                         <div class="scrolling-div-pokedex">
@@ -59876,26 +59876,31 @@ aria-labelledby="badgeCaseModalLabel">
                                 <img class='fit-width' src="assets/images/safari/area1.png" />
                             </div>
 
-                            <div style="position: relative; overflow-x: hidden;">
-                                <div id="safariBody"
-                                    class='container-fluid'
-                                    data-bind="visible: Safari.inProgress()">
+                            <div class='container-fluid' data-bind="if: Safari.inProgress()" style="overflow-x: auto; padding: 0px;">
+                                <div id="safariBody" style="position: relative; width: max-content; overflow-x: hidden;">
+                                    <div data-bind="foreach: Safari.grid, childrenComplete: () => Safari.addPlayer()">
+                                        <div class="row flex-nowrap" data-bind="foreach: $data" style="margin: 0 -1px !important;">
+                                            <div class="safariSquare" data-bind="attr: { id: `safari-${$parentContext.$index()}-${$context.$index()}` }, style: { 'background-image': `url('assets/images/safari/tiles/${GameConstants.SafariTile[$data]}.png')`, 'z-index': ([GameConstants.SafariTile.treeTopL, GameConstants.SafariTile.treeTopC, GameConstants.SafariTile.treeTopR].includes($data) ? '3' : 'auto') } ">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="sprite" style="position: absolute;"></div>
+                                    <!-- ko foreach: Safari.pokemonGrid -->
+                                        <div class="pokemonSprite walkDown" data-bind="css: { shiny: $data.shiny },
+                                        style: {
+                                            backgroundImage: `${$data.shiny ? 'url(\'assets/images/dynamic-background/pokemon/sparkle.png\'), ' : ''}url('assets/images/dynamic-background/pokemon/${Math.floor($data.id).toString().padStart(3, '0')}${$data.shiny ? 's' : ''}.png')`,
+                                            top: `${32 * $data.y - 8}px`,
+                                            left: `${32 * $data.x - 4}px`,
+                                        }"></div>
+                                    <!-- /ko -->
+                                    <!-- ko foreach: Safari.itemGrid -->
+                                        <div class="safari-item" data-bind="
+                                        style: {
+                                            top: `${32 * $data.y}px`,
+                                            left: `${32 * $data.x}px`,
+                                        }"></div>
+                                    <!-- /ko -->
                                 </div>
-                                <!-- ko foreach: Safari.pokemonGrid -->
-                                    <div class="pokemonSprite walkDown" data-bind="css: { shiny: $data.shiny },
-                                    style: {
-                                        backgroundImage: `${$data.shiny ? 'url(\'assets/images/dynamic-background/pokemon/sparkle.png\'), ' : ''}url('assets/images/dynamic-background/pokemon/${Math.floor($data.id).toString().padStart(3, '0')}${$data.shiny ? 's' : ''}.png')`,
-                                        top: `${32 * $data.y - 8}px`,
-                                        left: `${32 * $data.x - 4}px`,
-                                    }"></div>
-                                <!-- /ko -->
-                                <!-- ko foreach: Safari.itemGrid -->
-                                    <div class="safari-item" data-bind="
-                                    style: {
-                                        top: `${32 * $data.y}px`,
-                                        left: `${32 * $data.x}px`,
-                                    }"></div>
-                                <!-- /ko -->
                             </div>
                         </div>
                     </div>
