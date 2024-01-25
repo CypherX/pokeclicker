@@ -18,6 +18,7 @@ class ShopHandler {
 
     public static setSelected(i: number) {
         this.selected(i);
+        this.resetAmount();
     }
 
     public static buyItem() {
