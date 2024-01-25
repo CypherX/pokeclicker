@@ -43,7 +43,18 @@ class ShopHandler {
         this.shopObservable().amountInput().val(newVal > 1 ? newVal : 1).change();
     }
 
-    public static maxAmount() {
+    public static async maxAmount(shouldConfirm = true) {
+        if (shouldConfirm) {
+            if (!await Notifier.confirm({
+                title: 'Purchase Max Amount',
+                message: 'Set the purchase amount to the max number that you can afford of the currently selected item.',
+                type: NotificationConstants.NotificationOption.warning,
+                confirm: 'OK',
+            })) {
+                return;
+            }
+        }
+
         const item: Item = this.shopObservable().items[ShopHandler.selected()];
 
         if (!item || !item.isAvailable()) {
