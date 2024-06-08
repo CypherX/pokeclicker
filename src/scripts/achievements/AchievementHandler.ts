@@ -155,7 +155,12 @@ class AchievementHandler {
             if (!achievement.achievable()) {
                 return 0;
             }
-            achievement.bonus = (achievement.bonusWeight / achievement.category.totalWeight) * achievement.category.achievementBonus;
+
+            if (achievement.category.achievementBonus == 0) {
+                achievement.bonus = 0;
+            } else {
+                achievement.bonus = (achievement.bonusWeight / achievement.category.totalWeight) * achievement.category.achievementBonus;
+            }
         });
     }
 
