@@ -12,6 +12,6 @@ export default class UndergroundLayersFullyMinedRequirement extends AchievementR
 
     public hint(): string {
         const suffix = (this.requiredValue > 1) ? 's' : '';
-        return `${this.requiredValue} layer${suffix} need to be fully mined in the Underground.`;
+        return `Fully mine ${this.requiredValue} layer${suffix} in the Underground.`;
     }
 }

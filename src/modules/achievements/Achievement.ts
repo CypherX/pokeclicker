@@ -8,6 +8,7 @@ import AchievementRequirement from '../requirements/AchievementRequirement';
 import { LogBookTypes } from '../logbook/LogBookTypes';
 import { createLogContent } from '../logbook/helpers';
 import AchievementCategory from './AchievementCategory';
+import { ExtraAchievementCategories } from '../GameConstants';
 
 export default class Achievement {
     public isCompleted: KnockoutComputed<boolean> = ko.pureComputed(() => this.achievable() && (this.unlocked() || this.property.isCompleted()));
@@ -16,8 +17,8 @@ export default class Achievement {
     public unlocked : KnockoutObservable<boolean> = ko.observable(false);
 
     constructor(
-        public name: string,
-        public description: string,
+        protected _name: string,
+        protected _description: string,
         public property: AchievementRequirement,
         public bonusWeight: number,
         public category: AchievementCategory,
@@ -26,8 +27,9 @@ export default class Achievement {
 
     public check() {
         if (this.isCompleted() && !this.unlocked()) {
+            const isSecret = this.category.name == ExtraAchievementCategories[ExtraAchievementCategories.secret];
             Notifier.notify({
-                title: `[Achievement] ${this.name}`,
+                title: `[${isSecret ? 'Secret ' : ''}Achievement] ${this.name}`,
                 message: this.description,
                 type: NotificationConstants.NotificationOption.warning,
                 timeout: 1e4,
@@ -64,5 +66,13 @@ export default class Achievement {
             return this.achievableFunction();
         }
         return true;
+    }
+
+    get name(): string {
+        return this._name;
+    }
+
+    get description(): string {
+        return this._description;
     }
 }

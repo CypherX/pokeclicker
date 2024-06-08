@@ -138,6 +138,9 @@ import UndergroundItem from './underground/UndergroundItem';
 import UndergroundItems from './underground/UndergroundItems';
 import UndergroundLayersMinedRequirement from './requirements/UndergroundLayersMinedRequirement';
 import UndergroundLayersFullyMinedRequirement from './requirements/UndergroundLayersFullyMinedRequirement';
+import CaptureSpecificPokemonRequirement from './requirements/CaptureSpecificPokemonRequirement';
+import PokemonAttackRequirement from './requirements/PokemonAttackRequirement';
+import ClearAnyDungeonRequirement from './requirements/ClearAnyDungeonRequirement';
 import WeatherRequirement from './requirements/WeatherRequirement';
 import MegaEvolveRequirement from './requirements/MegaEvolveRequirement';
 import { SortModules, SortSaves } from './Sortable';
@@ -145,6 +148,7 @@ import KeyItemController from './keyItems/KeyItemController';
 import KeyItem from './keyItems/KeyItem';
 import KeyItems from './keyItems/KeyItems';
 import Achievement from './achievements/Achievement';
+import SecretAchievement from './achievements/SecretAchievement';
 import Gems from './gems/Gems';
 import GemDeals from './gems/GemDeals';
 import FluteEffectRunner from './gems/FluteEffectRunner';
@@ -351,6 +355,9 @@ Object.assign(<any>window, {
     UndergroundItems,
     UndergroundLayersMinedRequirement,
     UndergroundLayersFullyMinedRequirement,
+    CaptureSpecificPokemonRequirement,
+    PokemonAttackRequirement,
+    ClearAnyDungeonRequirement,
     WeatherRequirement,
     MegaEvolveRequirement,
     SortModules,
@@ -359,6 +366,7 @@ Object.assign(<any>window, {
     KeyItem,
     KeyItems,
     Achievement,
+    SecretAchievement,
     Gems,
     GemDeals,
     FluteEffectRunner,

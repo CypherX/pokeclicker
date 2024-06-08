@@ -1,8 +1,8 @@
 import { AchievementOption } from '../GameConstants';
 import { ItemList } from '../items/ItemList';
-import Requirement from './Requirement';
+import AchievementRequirement from './AchievementRequirement';
 
-export default class ItemRequirement extends Requirement {
+export default class ItemRequirement extends AchievementRequirement {
     constructor(amount: number, public itemName: string, option = AchievementOption.more) {
         super(amount, option);
     }

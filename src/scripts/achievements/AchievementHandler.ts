@@ -138,7 +138,14 @@ class AchievementHandler {
         });
     }
 
-    public static addAchievement(name: string, description: string, property: AchievementRequirement, bonus: number, category: GameConstants.Region | GameConstants.ExtraAchievementCategories = GameConstants.ExtraAchievementCategories.global, achievableFunction: () => boolean | null = null) {
+    public static addAchievement(
+        name: string,
+        description: string,
+        property: AchievementRequirement,
+        bonus: number,
+        category: GameConstants.Region | GameConstants.ExtraAchievementCategories = GameConstants.ExtraAchievementCategories.global,
+        achievableFunction: () => boolean | null = null
+    ) {
         let categoryObj : AchievementCategory;
         // ExtraAchievementCategory always starts at finals index
         if (category >= GameConstants.Region.final) {
@@ -148,6 +155,15 @@ class AchievementHandler {
         }
         categoryObj.totalWeight += bonus;
         AchievementHandler.achievementList.push(new Achievement(name, description, property, bonus, categoryObj, achievableFunction));
+    }
+
+    public static addSecretAchievement(
+        name: string,
+        description: string,
+        property: AchievementRequirement,
+        hint: string
+    ) {
+        AchievementHandler.achievementList.push(new SecretAchievement(name, description, property, hint));
     }
 
     public static calculateBonus(): void {
@@ -455,12 +471,53 @@ class AchievementHandler {
         AchievementHandler.addAchievement('Go, Go, Mega Force!', 'Obtain 25 Mega Stones.', new TotalMegaStoneObtainedRequirement(25), 7, GameConstants.Region.kalos);
         AchievementHandler.addAchievement('Y\'all got any more of them Mega Stones?', `Obtain all ${totalMegaStones} Mega Stones.`, new TotalMegaStoneObtainedRequirement(totalMegaStones), 10, GameConstants.Region.kalos);
 
-        AchievementHandler.addAchievement(
+        AchievementHandler.addSecretAchievement(
             'The Kids Yearn for the Mines',
-            'Fully mine an Underground layer.',
+            'Fully mine an Underground layer',
             new UndergroundLayersFullyMinedRequirement(1),
-            0,
-            GameConstants.ExtraAchievementCategories.secret
+            'Thorough miner'
+        );
+
+        AchievementHandler.addSecretAchievement(
+            'Take Out The Trash',
+            'Capture 1,000 wild Garbodor',
+            new CaptureSpecificPokemonRequirement('Garbodor', 1000, false),
+            'Clean up the streets'
+        );
+
+        AchievementHandler.addSecretAchievement(
+            'Rats!',
+            'Defeated Youngster Joey',
+            new TemporaryBattleRequirement('Youngster Joey'),
+            'Take on the ultimate challenge'
+        );
+
+        AchievementHandler.addSecretAchievement(
+            'Karpal Tunnel',
+            'Reach 1,000,000 attack with Magikarp',
+            new PokemonAttackRequirement('Magikarp', 1000000),
+            'The Strongest Fish'
+        );
+
+        AchievementHandler.addSecretAchievement(
+            'You Can Stop Now',
+            'Acquire 1,000 Wishing Pieces',
+            new ItemRequirement(1000, 'Wishing_Piece'),
+            'You wish'
+        );
+
+        AchievementHandler.addSecretAchievement(
+            'Smell Ya Later!',
+            'Defeat Champion Blue 1,000,000 times',
+            new ClearGymRequirement(1000000, GameConstants.getGymIndex('Champion Blue')),
+            'Blue is my favorite color'
+        );
+
+        AchievementHandler.addSecretAchievement(
+            'What can I say? I Like Dungeons!',
+            'Clear any dungeon 10,000 times',
+            new ClearAnyDungeonRequirement(10000),
+            'idk'
         );
 
         /*
