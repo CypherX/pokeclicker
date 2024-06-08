@@ -8,13 +8,13 @@ import AchievementRequirement from '../requirements/AchievementRequirement';
 import { LogBookTypes } from '../logbook/LogBookTypes';
 import { createLogContent } from '../logbook/helpers';
 import AchievementCategory from './AchievementCategory';
-import { ExtraAchievementCategories } from '../GameConstants';
 
 export default class Achievement {
     public isCompleted: KnockoutComputed<boolean> = ko.pureComputed(() => this.achievable() && (this.unlocked() || this.property.isCompleted()));
     public getProgressText: KnockoutComputed<string> = ko.pureComputed(() => `${this.getProgress().toLocaleString('en-US')} / ${this.property.requiredValue.toLocaleString('en-US')}`);
     public bonus = 0;
     public unlocked : KnockoutObservable<boolean> = ko.observable(false);
+    protected notificationTitle: string = 'Achievement';
 
     constructor(
         protected _name: string,
@@ -27,9 +27,8 @@ export default class Achievement {
 
     public check() {
         if (this.isCompleted() && !this.unlocked()) {
-            const isSecret = this.category.name == ExtraAchievementCategories[ExtraAchievementCategories.secret];
             Notifier.notify({
-                title: `[${isSecret ? 'Secret ' : ''}Achievement] ${this.name}`,
+                title: `[${this.notificationTitle}] ${this.name}`,
                 message: this.description,
                 type: NotificationConstants.NotificationOption.warning,
                 timeout: 1e4,
