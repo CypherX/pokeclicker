@@ -2358,6 +2358,7 @@ export enum ExtraAchievementCategories {
     sevii,
     orre,
     magikarpJump,
+    secret, // secret should be last
 }
 export const DayCycleStartHours: Record<DayCyclePart, number> = {
     [DayCyclePart.Dawn]: 5,

@@ -194,6 +194,11 @@ class AchievementHandler {
         }
         const categories = GameHelper.enumStrings(GameConstants.Region).filter(r => r != 'none' && r != 'final').map(r => new AchievementCategory(r, 100, () => player.highestRegion() >= GameConstants.Region[r]));
         categories.push(new AchievementCategory(GameConstants.ExtraAchievementCategories[GameConstants.ExtraAchievementCategories.global], 150, () => true));
+        categories.push(new AchievementCategory(
+            GameConstants.ExtraAchievementCategories[GameConstants.ExtraAchievementCategories.secret],
+            0,
+            () => AchievementHandler.achievementList.some(a => a.category.name == GameConstants.ExtraAchievementCategories[GameConstants.ExtraAchievementCategories.secret] && a.unlocked())
+        ));
         categories.push(new AchievementCategory(GameConstants.ExtraAchievementCategories[GameConstants.ExtraAchievementCategories.sevii], 50, () => SubRegions.isSubRegionUnlocked(GameConstants.Region.kanto, GameConstants.KantoSubRegions.Sevii123)));
         categories.push(new AchievementCategory(GameConstants.ExtraAchievementCategories[GameConstants.ExtraAchievementCategories.orre], 75, () => SubRegions.isSubRegionUnlocked(GameConstants.Region.hoenn, GameConstants.HoennSubRegions.Orre)));
         categories.push(new AchievementCategory(GameConstants.ExtraAchievementCategories[GameConstants.ExtraAchievementCategories.magikarpJump], 25, () => SubRegions.isSubRegionUnlocked(GameConstants.Region.alola, GameConstants.AlolaSubRegions.MagikarpJump)));
@@ -444,6 +449,14 @@ class AchievementHandler {
         AchievementHandler.addAchievement('What a neat rock!', 'Obtain your first Mega Stone.', new TotalMegaStoneObtainedRequirement(1), 5, GameConstants.Region.kalos);
         AchievementHandler.addAchievement('Go, Go, Mega Force!', 'Obtain 25 Mega Stones.', new TotalMegaStoneObtainedRequirement(25), 7, GameConstants.Region.kalos);
         AchievementHandler.addAchievement('Y\'all got any more of them Mega Stones?', `Obtain all ${totalMegaStones} Mega Stones.`, new TotalMegaStoneObtainedRequirement(totalMegaStones), 10, GameConstants.Region.kalos);
+
+        AchievementHandler.addAchievement(
+            'The Kids Yearn for the Mines',
+            'Fully mine an Underground layer.',
+            new UndergroundLayersFullyMinedRequirement(1),
+            0,
+            GameConstants.ExtraAchievementCategories.secret
+        );
 
         /*
          * REGIONAL

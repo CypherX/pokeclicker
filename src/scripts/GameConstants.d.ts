@@ -810,7 +810,8 @@ namespace GameConstants {
         global,
         sevii,
         orre,
-        magikarpJump
+        magikarpJump,
+        secret,
     }
     declare const DayCycleStartHours: Record<DayCyclePart, number> = {
         [DayCyclePart.Dawn]: 5,

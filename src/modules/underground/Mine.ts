@@ -457,6 +457,10 @@ export class Mine {
             if (this.skipsRemaining() < this.maxSkips) {
                 GameHelper.incrementObservable(this.skipsRemaining);
             }
+
+            if (Mine.grid.flat().every((tile) => tile() === 0)) {
+                GameHelper.incrementObservable(App.game.statistics.undergroundLayersFullyMined);
+            }
         }
     }
 

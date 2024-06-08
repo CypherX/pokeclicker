@@ -137,6 +137,7 @@ import UndergroundItemValueType from './enums/UndergroundItemValueType';
 import UndergroundItem from './underground/UndergroundItem';
 import UndergroundItems from './underground/UndergroundItems';
 import UndergroundLayersMinedRequirement from './requirements/UndergroundLayersMinedRequirement';
+import UndergroundLayersFullyMinedRequirement from './requirements/UndergroundLayersFullyMinedRequirement';
 import WeatherRequirement from './requirements/WeatherRequirement';
 import MegaEvolveRequirement from './requirements/MegaEvolveRequirement';
 import { SortModules, SortSaves } from './Sortable';
@@ -349,6 +350,7 @@ Object.assign(<any>window, {
     UndergroundItem,
     UndergroundItems,
     UndergroundLayersMinedRequirement,
+    UndergroundLayersFullyMinedRequirement,
     WeatherRequirement,
     MegaEvolveRequirement,
     SortModules,

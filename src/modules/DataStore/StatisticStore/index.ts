@@ -85,6 +85,7 @@ export default class Statistics implements Saveable {
     // Underground
     undergroundItemsFound: KnockoutObservable<number>;
     undergroundLayersMined: KnockoutObservable<number>;
+    undergroundLayersFullyMined: KnockoutObservable<number>;
     undergroundDailyDealTrades: KnockoutObservable<number>;
     // Farm
     totalManualHarvests: KnockoutObservable<number>;
@@ -225,6 +226,7 @@ export default class Statistics implements Saveable {
         'totalShadowGenderlessPokemonDefeated',
         'undergroundItemsFound',
         'undergroundLayersMined',
+        'undergroundLayersFullyMined',
         'undergroundDailyDealTrades',
         'totalManualHarvests',
         'totalBerriesHarvested',
