@@ -471,83 +471,6 @@ class AchievementHandler {
         AchievementHandler.addAchievement('Go, Go, Mega Force!', 'Obtain 25 Mega Stones.', new TotalMegaStoneObtainedRequirement(25), 7, GameConstants.Region.kalos);
         AchievementHandler.addAchievement('Y\'all got any more of them Mega Stones?', `Obtain all ${totalMegaStones} Mega Stones.`, new TotalMegaStoneObtainedRequirement(totalMegaStones), 10, GameConstants.Region.kalos);
 
-        AchievementHandler.addSecretAchievement(
-            'The Kids Yearn for the Mines',
-            'Fully mine an Underground layer.',
-            new UndergroundLayersFullyMinedRequirement(1),
-            'Thorough miner'
-        );
-
-        AchievementHandler.addSecretAchievement(
-            'Take Out The Trash',
-            'Capture 1,000 wild Garbodor.',
-            new CaptureSpecificPokemonRequirement('Garbodor', 1000, false),
-            'Clean up the streets'
-        );
-
-        AchievementHandler.addSecretAchievement(
-            'Rats!',
-            'Defeated Youngster Joey.',
-            new TemporaryBattleRequirement('Youngster Joey'),
-            'Take on the ultimate challenge'
-        );
-
-        AchievementHandler.addSecretAchievement(
-            'Karpal Tunnel',
-            'Reach 1,000,000 attack with Magikarp.',
-            new PokemonAttackRequirement('Magikarp', 1e6),
-            'The Strongest Fish'
-        );
-
-        AchievementHandler.addSecretAchievement(
-            'You Can Stop Now',
-            'Acquire 1,000 Wishing Pieces.',
-            new ItemRequirement(1000, 'Wishing_Piece'),
-            'You wish'
-        );
-
-        AchievementHandler.addSecretAchievement(
-            'Smell Ya Later!',
-            'Defeat Champion Blue 1,000,000 times.',
-            new ClearGymRequirement(1e6, GameConstants.getGymIndex('Champion Blue')),
-            'Blue is my favorite color'
-        );
-
-        AchievementHandler.addSecretAchievement(
-            'Aren\'t Dungeons Fun?',
-            'Clear any dungeon 10,000 times.',
-            new ClearAnyDungeonRequirement(10000),
-            'Shrink me baby one more time'
-        );
-
-        AchievementHandler.addSecretAchievement(
-            'Super Spreader',
-            'Reach a 2x EV bonus with any Pokémon.',
-            new EVBonusRequirement(2),
-            'Some Effort required'
-        );
-
-        AchievementHandler.addSecretAchievement(
-            'Error: Pokémon storage full',
-            'Reach a 3x EV bonus with any Pokémon.',
-            new EVBonusRequirement(3),
-            'Too much Effort'
-        );
-
-        AchievementHandler.addSecretAchievement(
-            'Ready For The Next Region',
-            'Have 1,000,000,000 Attack.',
-            new AttackRequirement(1e9),
-            'Breed more'
-        );
-
-        AchievementHandler.addSecretAchievement(
-            'Touch Grass',
-            'Have the game open for an entire year.',
-            new TimePlayedRequirement(GameConstants.DAY * 365 / 1000),
-            'Play the game'
-        );
-
         /*
          * REGIONAL
          */
@@ -682,6 +605,110 @@ class AchievementHandler {
         AchievementHandler.addAchievement('Twenty Thousands Karps Under the Seas', 'Catch all unique Shiny Magikarp forms.', new CaughtUniquePokemonByFilterRequirement(karpDexFilter, 'Catch all unique Shiny Magikarp forms.', karpAmount, true), 1.5, GameConstants.ExtraAchievementCategories.magikarpJump);
 
         addGymAchievements(GameConstants.RegionGyms[GameConstants.Region.final + 2], GameConstants.ExtraAchievementCategories.orre, 'Orre');
+
+        // Secret achievements
+        AchievementHandler.addSecretAchievement(
+            'The Kids Yearn for the Mines',
+            'Fully mine an Underground layer.',
+            new UndergroundLayersFullyMinedRequirement(1),
+            'Thorough miner'
+        );
+
+        AchievementHandler.addSecretAchievement(
+            'Take Out The Trash',
+            'Capture 1,000 wild Garbodor.',
+            new CaptureSpecificPokemonRequirement('Garbodor', 1000, false),
+            'Clean up the streets'
+        );
+
+        AchievementHandler.addSecretAchievement(
+            'Rats!',
+            'Defeated Youngster Joey.',
+            new TemporaryBattleRequirement('Youngster Joey'),
+            'Take on the ultimate challenge'
+        );
+
+        AchievementHandler.addSecretAchievement(
+            'Karpal Tunnel',
+            'Reach 1,000,000 attack with Magikarp.',
+            new PokemonAttackRequirement('Magikarp', 1e6),
+            'The Strongest Fish'
+        );
+
+        AchievementHandler.addSecretAchievement(
+            'You Can Stop Now',
+            'Acquire 1,000 Wishing Pieces.',
+            new ItemRequirement(1000, 'Wishing_Piece'),
+            'You wish'
+        );
+
+        AchievementHandler.addSecretAchievement(
+            'What do I do with all of these?',
+            'Have a total of 100 Light Balls.',
+            new ItemRequirement(100, 'Light_Ball'),
+            'Pikachu\'s favorite toy'
+        );
+
+        AchievementHandler.addSecretAchievement(
+            'Smell Ya Later!',
+            'Defeat Champion Blue 1,000,000 times.',
+            new ClearGymRequirement(1e6, GameConstants.getGymIndex('Champion Blue')),
+            'Blue is my favorite color'
+        );
+
+        AchievementHandler.addSecretAchievement(
+            'Aren\'t Dungeons Fun?',
+            'Clear any dungeon 10,000 times.',
+            new ClearAnyDungeonRequirement(10000),
+            'Shrink me baby one more time'
+        );
+
+        AchievementHandler.addSecretAchievement(
+            'Super Spreader',
+            'Reach a 2x EV bonus with any Pokémon.',
+            new EVBonusRequirement(2),
+            'Some Effort required'
+        );
+
+        AchievementHandler.addSecretAchievement(
+            'Error: Pokémon storage full',
+            'Reach a 3x EV bonus with any Pokémon.',
+            new EVBonusRequirement(3),
+            'Too much Effort'
+        );
+
+        AchievementHandler.addSecretAchievement(
+            'Ready For The Next Region',
+            'Have 1,000,000,000 Attack.',
+            new AttackRequirement(1e9),
+            'Breed more'
+        );
+
+        AchievementHandler.addSecretAchievement(
+            'Touch Grass',
+            'Have the game open for an entire year.',
+            new TimePlayedRequirement(GameConstants.DAY * 365 / 1000),
+            'Play the game'
+        );
+
+        AchievementHandler.addSecretAchievement(
+            'Ultimate Baker',
+            'Have all Battle Café flavors resistant to Pokérus.',
+            new PokerusStatusByFilterRequirement(alcremieDexFilter, alcremieAmount, GameConstants.Pokerus.Resistant),
+            '' // need hint
+        );
+
+        // Special Furfrou forms
+        // TODO Uncomment when Furfrou (Heart) is obtainable
+        /*const furfrouId = pokemonMap.Furfrou.id;
+        const furfrouDexFilter = (p: PartyPokemon) => Math.floor(p.id) === furfrouId && p.id > furfrouId;
+        const furfrouAmount = pokemonList.reduce((count, p) => count + +(Math.floor(p.id) === furfrouId && p.id > furfrouId), 0);
+        AchievementHandler.addSecretAchievement(
+            'Dog Breeder',
+            'Have all special Furfrou forms resistant to Pokérus.',
+            new PokerusStatusByFilterRequirement(furfrouDexFilter, furfrouAmount, GameConstants.Pokerus.Resistant),
+            '' // need hint
+        );*/
 
         // load filters
         this.load();
