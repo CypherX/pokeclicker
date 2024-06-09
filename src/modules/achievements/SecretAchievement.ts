@@ -13,11 +13,11 @@ export default class SecretAchievement extends Achievement {
         this.notificationTitle = 'Secret Achievement';
     }
 
-    get name(): string {
-        return this.unlocked() ? this._name : '???';
-    }
-
     get description(): string {
         return this.unlocked() ? this._description : `Hint: ${this._hint}`;
+    }
+
+    get displayName(): string {
+        return this.unlocked() ? this.name : '???';
     }
 }

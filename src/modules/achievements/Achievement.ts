@@ -17,7 +17,7 @@ export default class Achievement {
     protected notificationTitle: string = 'Achievement';
 
     constructor(
-        protected _name: string,
+        public name: string,
         protected _description: string,
         public property: AchievementRequirement,
         public bonusWeight: number,
@@ -67,11 +67,11 @@ export default class Achievement {
         return true;
     }
 
-    get name(): string {
-        return this._name;
-    }
-
     get description(): string {
         return this._description;
+    }
+
+    get displayName(): string {
+        return this.name;
     }
 }
