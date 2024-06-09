@@ -473,51 +473,79 @@ class AchievementHandler {
 
         AchievementHandler.addSecretAchievement(
             'The Kids Yearn for the Mines',
-            'Fully mine an Underground layer',
+            'Fully mine an Underground layer.',
             new UndergroundLayersFullyMinedRequirement(1),
             'Thorough miner'
         );
 
         AchievementHandler.addSecretAchievement(
             'Take Out The Trash',
-            'Capture 1,000 wild Garbodor',
+            'Capture 1,000 wild Garbodor.',
             new CaptureSpecificPokemonRequirement('Garbodor', 1000, false),
             'Clean up the streets'
         );
 
         AchievementHandler.addSecretAchievement(
             'Rats!',
-            'Defeated Youngster Joey',
+            'Defeated Youngster Joey.',
             new TemporaryBattleRequirement('Youngster Joey'),
             'Take on the ultimate challenge'
         );
 
         AchievementHandler.addSecretAchievement(
             'Karpal Tunnel',
-            'Reach 1,000,000 attack with Magikarp',
-            new PokemonAttackRequirement('Magikarp', 1000000),
+            'Reach 1,000,000 attack with Magikarp.',
+            new PokemonAttackRequirement('Magikarp', 1e6),
             'The Strongest Fish'
         );
 
         AchievementHandler.addSecretAchievement(
             'You Can Stop Now',
-            'Acquire 1,000 Wishing Pieces',
+            'Acquire 1,000 Wishing Pieces.',
             new ItemRequirement(1000, 'Wishing_Piece'),
             'You wish'
         );
 
         AchievementHandler.addSecretAchievement(
             'Smell Ya Later!',
-            'Defeat Champion Blue 1,000,000 times',
-            new ClearGymRequirement(1000000, GameConstants.getGymIndex('Champion Blue')),
+            'Defeat Champion Blue 1,000,000 times.',
+            new ClearGymRequirement(1e6, GameConstants.getGymIndex('Champion Blue')),
             'Blue is my favorite color'
         );
 
         AchievementHandler.addSecretAchievement(
-            'What can I say? I Like Dungeons!',
-            'Clear any dungeon 10,000 times',
+            'Aren\'t Dungeons Fun?',
+            'Clear any dungeon 10,000 times.',
             new ClearAnyDungeonRequirement(10000),
-            'idk'
+            'Shrink me baby one more time'
+        );
+
+        AchievementHandler.addSecretAchievement(
+            'Super Spreader',
+            'Reach a 2x EV bonus with any Pokémon.',
+            new EVBonusRequirement(2),
+            'Some Effort required'
+        );
+
+        AchievementHandler.addSecretAchievement(
+            'Error: Pokémon storage full',
+            'Reach a 3x EV bonus with any Pokémon.',
+            new EVBonusRequirement(3),
+            'Too much Effort'
+        );
+
+        AchievementHandler.addSecretAchievement(
+            'Ready For The Next Region',
+            'Have 1,000,000,000 Attack.',
+            new AttackRequirement(1e9),
+            'Breed more'
+        );
+
+        AchievementHandler.addSecretAchievement(
+            'Touch Grass',
+            'Have the game open for an entire year.',
+            new TimePlayedRequirement(GameConstants.DAY * 365 / 1000),
+            'Play the game'
         );
 
         /*

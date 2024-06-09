@@ -141,6 +141,8 @@ import UndergroundLayersFullyMinedRequirement from './requirements/UndergroundLa
 import CaptureSpecificPokemonRequirement from './requirements/CaptureSpecificPokemonRequirement';
 import PokemonAttackRequirement from './requirements/PokemonAttackRequirement';
 import ClearAnyDungeonRequirement from './requirements/ClearAnyDungeonRequirement';
+import EVBonusRequirement from './requirements/EVBonusRequirement';
+import TimePlayedRequirement from './requirements/TimePlayedRequirement';
 import WeatherRequirement from './requirements/WeatherRequirement';
 import MegaEvolveRequirement from './requirements/MegaEvolveRequirement';
 import { SortModules, SortSaves } from './Sortable';
@@ -358,6 +360,8 @@ Object.assign(<any>window, {
     CaptureSpecificPokemonRequirement,
     PokemonAttackRequirement,
     ClearAnyDungeonRequirement,
+    EVBonusRequirement,
+    TimePlayedRequirement,
     WeatherRequirement,
     MegaEvolveRequirement,
     SortModules,
