@@ -72,7 +72,8 @@ class AchievementHandler {
             a.achievable() &&
             (this.filter.status() == -2 || a.unlocked() === !!this.filter.status()) &&
             (this.filter.type()   == -2 || a.property.achievementType === this.filter.type()) &&
-            (this.filter.category() == 'all' || a.category.name === this.filter.category())
+            (this.filter.category() == 'all' || a.category.name === this.filter.category()) &&
+            (a.category.name != 'secret' || this.filter.category() == 'secret')
         )));
         this.calculateNumberOfTabs();
         if (!retainPage) {
@@ -698,7 +699,7 @@ class AchievementHandler {
             '' // need hint
         );
 
-        // Special Furfrou forms
+        // Special Furfrou forms resisted
         // TODO Uncomment when Furfrou (Heart) is obtainable
         /*const furfrouId = pokemonMap.Furfrou.id;
         const furfrouDexFilter = (p: PartyPokemon) => Math.floor(p.id) === furfrouId && p.id > furfrouId;
