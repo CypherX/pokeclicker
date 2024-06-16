@@ -10,7 +10,7 @@ export default class EVBonusRequirement extends AchievementRequirement {
         requiredBonus: number,
         option: GameConstants.AchievementOption = GameConstants.AchievementOption.more,
     ) {
-        super(requiredBonus, option, GameConstants.AchievementType.Attack);
+        super(requiredBonus, option);
     }
 
     public getProgress() {
