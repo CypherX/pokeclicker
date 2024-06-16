@@ -11,6 +11,7 @@ export default class SecretAchievement extends Achievement {
     ) {
         super(name, description, property, 0, AchievementHandler.getAchievementCategoryByExtraCategory(ExtraAchievementCategories.secret), null);
         this.notificationTitle = 'Secret Achievement';
+        this.notificationTimeout = 3e4;
     }
 
     get description(): string {

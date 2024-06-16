@@ -15,6 +15,7 @@ export default class Achievement {
     public bonus = 0;
     public unlocked : KnockoutObservable<boolean> = ko.observable(false);
     protected notificationTitle: string = 'Achievement';
+    protected notificationTimeout: number = 1e4;
 
     constructor(
         public name: string,
@@ -27,11 +28,12 @@ export default class Achievement {
 
     public check() {
         if (this.isCompleted() && !this.unlocked()) {
+            this.unlocked(true);
             Notifier.notify({
                 title: `[${this.notificationTitle}] ${this.name}`,
                 message: this.description,
                 type: NotificationConstants.NotificationOption.warning,
-                timeout: 1e4,
+                timeout: this.notificationTimeout,
                 sound: NotificationConstants.NotificationSound.General.achievement,
                 setting: NotificationConstants.NotificationSetting.General.achievement_complete,
             });
@@ -39,7 +41,6 @@ export default class Achievement {
                 LogBookTypes.ACHIEVE,
                 createLogContent.earnedAchievement({ name: this.name }),
             );
-            this.unlocked(true);
             if (this === App.game.achievementTracker.trackedAchievement()) {
                 App.game.achievementTracker.nextAchievement();
             }
