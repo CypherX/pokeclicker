@@ -693,6 +693,15 @@ class AchievementHandler {
         );
 
         AchievementHandler.addSecretAchievement(
+            'Park Ranger',
+            'Reach the max Safari level',
+            new SafariLevelRequirement(40),
+            'The most eggciting grind'
+        );
+
+
+
+        AchievementHandler.addSecretAchievement(
             'Ultimate Baker',
             'Have all Battle Café flavors resistant to Pokérus.',
             new PokerusStatusByFilterRequirement(alcremieDexFilter, alcremieAmount, GameConstants.Pokerus.Resistant),
