@@ -22,6 +22,9 @@ class PokemonFactory {
         } else {
             name = Rand.fromArray(RouteHelper.getAvailablePokemonList(route, region));
         }
+
+        name = PokemonFactory.generateAlternateEncounter(name);
+
         const basePokemon = PokemonHelper.getPokemonByName(name);
         const id = basePokemon.id;
         const routeAvgHp = (region, route) => {
@@ -383,6 +386,17 @@ class PokemonFactory {
         const catchChance = PokemonFactory.catchRateHelper(pokemonData.catchRate + 25, true);
         const wanderer = new WandererPokemon(pokemon, berry.type, catchChance, shiny);
         return wanderer;
+    }
+
+    public static generateAlternateEncounter(pokemonName: PokemonNameType) {
+        const encounters = pokemonMap[pokemonName].alternateEncounters?.filter((encounter) => encounter.isUnlocked());
+        if (!encounters?.length) {
+            return pokemonName;
+        }
+
+        const pokemon = [pokemonName, ...encounters.map((encounter) => encounter.pokemonName)];
+        const weights = [1, ...encounters.map((encounter) => encounter.weight)];
+        return Rand.fromWeightedArray(pokemon, weights);
     }
 }
 

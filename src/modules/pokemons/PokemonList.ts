@@ -37,6 +37,8 @@ import WeatherType from '../weather/WeatherType';
 import { PokemonNameType } from './PokemonNameType';
 import { setPokemonMap } from './mapProvider';
 import DayCyclePart from '../dayCycle/DayCyclePart';
+import AlternateEncounter from './AlternateEncounter';
+import MaxRegionRequirement from '../requirements/MaxRegionRequirement';
 
 export const pokemonBabyPrevolutionMap: { [name: string]: PokemonNameType } = {};
 
@@ -103,7 +105,8 @@ export type PokemonListData = {
         type?: number;
         femaleRatio?: number;
         visualDifference?: boolean;
-    }
+    };
+    alternateEncounters?: AlternateEncounter[];
 };
 
 function createPokemonArray<T extends readonly PokemonListData[] & Array<{ name: V }>, V extends string>(...args: T) {
@@ -25857,6 +25860,30 @@ export const pokemonList = createPokemonArray(
         },
         'eggCycles': 20,
         'evolutions': [StoneEvolution('Sinistea', 'Polteageist', StoneType.Cracked_pot)],
+        'levelType': LevelType.mediumfast,
+        'exp': 62,
+        'catchRate': 120,
+        'gender': {
+            'type': Genders.Genderless,
+        },
+        'alternateEncounters': [
+            new AlternateEncounter('Sinistea (Authentic)', 0.5, new MaxRegionRequirement(Region.galar)),
+        ],
+    },
+    {
+        'id': 854.01,
+        'name': 'Sinistea (Authentic)',
+        'type': [PokemonType.Ghost],
+        'base': {
+            'hitpoints': 40,
+            'attack': 45,
+            'specialAttack': 74,
+            'defense': 45,
+            'specialDefense': 54,
+            'speed': 50,
+        },
+        'eggCycles': 20,
+        //'evolutions': [StoneEvolution('Sinistea', 'Polteageist', StoneType.Cracked_pot)],
         'levelType': LevelType.mediumfast,
         'exp': 62,
         'catchRate': 120,

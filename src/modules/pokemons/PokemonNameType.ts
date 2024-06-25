@@ -1346,6 +1346,7 @@ export type PokemonNameType
     | 'Clobbopus'
     | 'Grapploct'
     | 'Sinistea'
+    | 'Sinistea (Authentic)'
     | 'Polteageist'
     | 'Hatenna'
     | 'Hattrem'
