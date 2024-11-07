@@ -724,9 +724,16 @@ class AchievementHandler {
 
         AchievementHandler.addSecretAchievement(
             'Park Ranger',
-            'Reach the max Safari level',
+            'Reach the max Safari level.',
             new SafariLevelRequirement(40),
             'The most eggciting grind'
+        );
+
+        AchievementHandler.addSecretAchievement(
+            'Need a name',
+            'Have all Special Events active simultaneously.',
+            new AllSpecialEventsActiveRequirement(),
+            'Need a hint'
         );
 
 

@@ -145,6 +145,7 @@ import PokemonAttackRequirement from './requirements/PokemonAttackRequirement';
 import ClearAnyDungeonRequirement from './requirements/ClearAnyDungeonRequirement';
 import EVBonusRequirement from './requirements/EVBonusRequirement';
 import TimePlayedRequirement from './requirements/TimePlayedRequirement';
+import AllSpecialEventsActiveRequirement from './requirements/AllSpecialEventsActiveRequirement';
 import WeatherRequirement from './requirements/WeatherRequirement';
 import MegaEvolveRequirement from './requirements/MegaEvolveRequirement';
 import { SortModules, SortSaves } from './Sortable';
@@ -373,6 +374,7 @@ Object.assign(<any>window, {
     ClearAnyDungeonRequirement,
     EVBonusRequirement,
     TimePlayedRequirement,
+    AllSpecialEventsActiveRequirement,
     WeatherRequirement,
     MegaEvolveRequirement,
     SortModules,
