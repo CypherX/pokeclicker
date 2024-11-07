@@ -669,14 +669,14 @@ class AchievementHandler {
         AchievementHandler.addSecretAchievement(
             'You Can Stop Now',
             'Acquire 1,000 Wishing Pieces.',
-            new ItemRequirement(1000, 'Wishing_Piece'),
+            new ItemOwnedRequirement('Wishing_Piece', 1000),
             'You wish'
         );
 
         AchievementHandler.addSecretAchievement(
             'What do I do with all of these?',
             'Have a total of 100 Light Balls.',
-            new ItemRequirement(100, 'Light_Ball'),
+            new ItemOwnedRequirement('Light_Ball', 100),
             'Pikachu\'s favorite toy'
         );
 
