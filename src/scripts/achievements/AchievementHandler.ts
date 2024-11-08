@@ -730,12 +730,18 @@ class AchievementHandler {
         );
 
         AchievementHandler.addSecretAchievement(
-            'Need a name',
+            'How did we get here?',
             'Have all Special Events active simultaneously.',
             new AllSpecialEventsActiveRequirement(),
             'Need a hint'
         );
 
+        AchievementHandler.addSecretAchievement(
+            'Ready for Every Encounter',
+            'Have at least 20 Pokéball Filters at one time.',
+            new PokeballFilterCountRequirement(20),
+            'Ready for every encounter.'
+        );
 
 
         AchievementHandler.addSecretAchievement(
