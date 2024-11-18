@@ -300,7 +300,6 @@ export type TmpPartyControllerType = {
 };
 
 export type TmpSpecialEventsType = {
-    events: SpecialEvent[],
     getEvent: (eventName: SpecialEventTitleType) => any
 };
 

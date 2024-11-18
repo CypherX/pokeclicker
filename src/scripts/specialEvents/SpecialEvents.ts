@@ -21,23 +21,20 @@ class SpecialEvents implements Feature, TmpSpecialEventsType {
 
     constructor() {
         this.addEvents();
-    }
-
-    initialize(): void {
-        this.events.forEach(event => event.initialize());
 
         this.activeEventCount = ko.pureComputed(() => {
             return this.events.filter((event) => event.isActive()).length;
         });
 
-        const eventsActiveCountSub = this.activeEventCount.subscribe((value) => {
-            if (value >= this.events.length && App.game.statistics.allEventsActivated() !== 1) {
-                App.game.statistics.allEventsActivated(1);
-            }
-            if (App.game.statistics.allEventsActivated()) {
-                eventsActiveCountSub.dispose();
+        this.activeEventCount.subscribe((value) => {
+            if (value > App.game.statistics.highestNumEventsActive()) {
+                App.game.statistics.highestNumEventsActive(value);
             }
         });
+    }
+
+    initialize(): void {
+        this.events.forEach(event => event.initialize());
     }
 
     fromJSON(json: any): void {

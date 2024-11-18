@@ -731,8 +731,9 @@ class AchievementHandler {
 
         AchievementHandler.addSecretAchievement(
             'How did we get here?',
-            'Have all Special Events active simultaneously.',
-            new AllSpecialEventsActiveRequirement(),
+            'Have 9 Special Events active simultaneously.',
+            // If the required number of active events is increased the achievement will revert to incomplete
+            new TotalSpecialEventsActiveRequirement(9),
             'Need a hint'
         );
 
