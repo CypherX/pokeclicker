@@ -149,6 +149,7 @@ import TotalSpecialEventsActiveRequirement from './requirements/TotalSpecialEven
 import PokeballFilterCountRequirement from './requirements/PokeballFilterCountRequirement';
 import WeatherRequirement from './requirements/WeatherRequirement';
 import MegaEvolveRequirement from './requirements/MegaEvolveRequirement';
+import PokemonAttackRequirement from './requirements/PokemonAttackRequirement';
 import { SortModules, SortSaves } from './Sortable';
 import KeyItemController from './keyItems/KeyItemController';
 import KeyItem from './keyItems/KeyItem';
@@ -379,6 +380,7 @@ Object.assign(<any>window, {
     PokeballFilterCountRequirement,
     WeatherRequirement,
     MegaEvolveRequirement,
+    PokemonAttackRequirement,
     SortModules,
     SortSaves,
     KeyItemController,

@@ -1,22 +1,36 @@
-import * as GameConstants from '../GameConstants';
+import { AchievementOption } from '../GameConstants';
+import { pokemonMap } from '../pokemons/PokemonList';
 import { PokemonNameType } from '../pokemons/PokemonNameType';
-import AchievementRequirement from './AchievementRequirement';
+import Requirement from './Requirement';
 
-export default class PokemonAttackRequirement extends AchievementRequirement {
-    constructor(
-        private pokemon: PokemonNameType,
-        requiredAttack: number,
-        option: GameConstants.AchievementOption = GameConstants.AchievementOption.more,
-    ) {
-        super(requiredAttack, option, GameConstants.AchievementType.Attack);
+export default class PokemonAttackRequirement extends Requirement {
+    constructor(public pokemon: PokemonNameType, attackMultiplier: number, option: AchievementOption) {
+        super(attackMultiplier, option);
     }
 
-    public getProgress() {
-        const attack = App.game.party.getPokemonByName(this.pokemon)?.attack ?? 0;
-        return Math.min(attack, this.requiredValue);
+    getProgress(): number {
+        const partyPokemon = App.game.party.getPokemonByName(this.pokemon);
+        const partyPokemonAttackRatio = Math.trunc(partyPokemon?.attack / pokemonMap[this.pokemon].attack);
+
+        switch (this.option) {
+            case AchievementOption.less:
+            case AchievementOption.more: return Math.min(partyPokemonAttackRatio, this.requiredValue);
+            case AchievementOption.equal:
+            default: return partyPokemonAttackRatio;
+        }
+
+
     }
 
-    public hint(): string {
-        return `${this.pokemon} needs ${this.requiredValue} or more Attack`;
+    hint(): string {
+        if (this.getProgress() == this.requiredValue) {
+            return 'Level up to evolve.';
+        } else {
+            const attackRequired = pokemonMap[this.pokemon].attack * this.requiredValue;
+            const comparisonOperator = this.option === AchievementOption.less ? 'less than' :
+                this.option === AchievementOption.more ? 'more than' :
+                    'exactly';
+            return `${this.pokemon} needs ${comparisonOperator} ${attackRequired.toLocaleString('en-US')} attack.`;
+        }
     }
 }
