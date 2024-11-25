@@ -141,7 +141,6 @@ import UndergroundLevelRequirement from './requirements/UndergroundLevelRequirem
 import UndergroundUseToolRequirement from './requirements/UndergroundUseToolRequirement';
 import UndergroundLayersFullyMinedRequirement from './requirements/UndergroundLayersFullyMinedRequirement';
 import CaptureSpecificPokemonRequirement from './requirements/CaptureSpecificPokemonRequirement';
-import PokemonAttackRequirement from './requirements/PokemonAttackRequirement';
 import ClearAnyDungeonRequirement from './requirements/ClearAnyDungeonRequirement';
 import EVBonusRequirement from './requirements/EVBonusRequirement';
 import TimePlayedRequirement from './requirements/TimePlayedRequirement';
@@ -372,7 +371,6 @@ Object.assign(<any>window, {
     UndergroundUseToolRequirement,
     UndergroundLayersFullyMinedRequirement,
     CaptureSpecificPokemonRequirement,
-    PokemonAttackRequirement,
     ClearAnyDungeonRequirement,
     EVBonusRequirement,
     TimePlayedRequirement,
