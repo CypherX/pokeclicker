@@ -674,10 +674,10 @@ class AchievementHandler {
         );
 
         AchievementHandler.addSecretAchievement(
-            'What do I do with all of these?',
+            'You are my best friend',
             'Have a total of 100 Light Balls.',
             new ItemOwnedRequirement('Light_Ball', 100),
-            'Pikachu\'s favorite toy'
+            'Red is my favorite color'
         );
 
         AchievementHandler.addSecretAchievement(
@@ -738,12 +738,32 @@ class AchievementHandler {
         );
 
         AchievementHandler.addSecretAchievement(
-            'Ready for Every Encounter',
+            'Ready for every encounter',
             'Have at least 20 Pokéball Filters at one time.',
             new PokeballFilterCountRequirement(20),
             'Ready for every encounter.'
         );
 
+        AchievementHandler.addSecretAchievement(
+            'I can do this all day',
+            'Complete stage 10,000 in the Battle Frontier.',
+            new BattleFrontierHighestStageRequirement(10000),
+            'A million paycheck'
+        );
+
+        AchievementHandler.addSecretAchievement(
+            'All I see is rock',
+            'Get at least 1 Underground Helper to level 100.',
+            new UndergroundHelperRequirement(1, 100),
+            'You are my favorite for sure'
+        );
+
+        AchievementHandler.addSecretAchievement(
+            'Have you tried lemongrass?',
+            'Defeat 1,000,000 pure Bug-type Pokémon.',
+            new DefeatedPokemonTypeRequirement(PokemonType.Bug, 1e6, true),
+            'Pest control'
+        );
 
         AchievementHandler.addSecretAchievement(
             'Ultimate Baker',

@@ -11,6 +11,6 @@ export default class TimePlayedRequirement extends AchievementRequirement {
     }
 
     public hint(): string {
-        return `Be in-game for a total of ${this.requiredValue} seconds.`;
+        return `Be in-game for a total of ${this.requiredValue.toLocaleString('en-US')} seconds.`;
     }
 }

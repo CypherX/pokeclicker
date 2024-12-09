@@ -146,6 +146,7 @@ import EVBonusRequirement from './requirements/EVBonusRequirement';
 import TimePlayedRequirement from './requirements/TimePlayedRequirement';
 import TotalSpecialEventsActiveRequirement from './requirements/TotalSpecialEventsActiveRequirement';
 import PokeballFilterCountRequirement from './requirements/PokeballFilterCountRequirement';
+import DefeatedPokemonTypeRequirement from './requirements/DefeatedPokemonTypeRequirement';
 import WeatherRequirement from './requirements/WeatherRequirement';
 import MegaEvolveRequirement from './requirements/MegaEvolveRequirement';
 import PokemonAttackRequirement from './requirements/PokemonAttackRequirement';
@@ -376,6 +377,7 @@ Object.assign(<any>window, {
     TimePlayedRequirement,
     TotalSpecialEventsActiveRequirement,
     PokeballFilterCountRequirement,
+    DefeatedPokemonTypeRequirement,
     WeatherRequirement,
     MegaEvolveRequirement,
     PokemonAttackRequirement,
