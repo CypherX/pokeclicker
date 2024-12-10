@@ -8,8 +8,9 @@ export default class SecretAchievement extends Achievement {
         description: string,
         property: AchievementRequirement,
         private _hint: string,
+        persist: boolean = false,
     ) {
-        super(name, description, property, 0, AchievementHandler.getAchievementCategoryByExtraCategory(ExtraAchievementCategories.secret), null);
+        super(name, description, property, 0, AchievementHandler.getAchievementCategoryByExtraCategory(ExtraAchievementCategories.secret), null, persist);
         this.notificationTitle = 'Secret Achievement';
         this.notificationTimeout = 3e4;
     }

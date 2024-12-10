@@ -18,12 +18,6 @@ export default class SpecialEvents implements Feature {
         this.activeEventCount = ko.pureComputed(() => {
             return this.events.filter((event) => event.isActive()).length;
         });
-
-        this.activeEventCount.subscribe((value) => {
-            if (value > App.game.statistics.highestNumEventsActive()) {
-                App.game.statistics.highestNumEventsActive(value);
-            }
-        });
     }
 
     public newEvent(title: SpecialEventTitleType, description: string, startTime: Date, startFunction: EventCallback, endTime: Date, endFunction: EventCallback, hideFromEventCalendar = false) {

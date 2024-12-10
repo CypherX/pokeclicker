@@ -7,7 +7,7 @@ export default class TotalSpecialEventsActiveRequirement extends AchievementRequ
     }
 
     public getProgress() {
-        return Math.min(App.game.statistics.highestNumEventsActive(), this.requiredValue);
+        return Math.min(App.game.specialEvents.activeEventCount(), this.requiredValue);
     }
 
     public hint(): string {

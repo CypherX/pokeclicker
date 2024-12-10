@@ -138,8 +138,8 @@ class AchievementHandler {
     }
 
     public static toJSON(): string[] {
-        // Saves only achievements which have already been completed but currently don't have their requirements met
-        const storage = AchievementHandler.achievementList.filter(a => a.unlocked() && !a.property.isCompleted()).map(a => a.name);
+        // Saves only achievements which have already been completed but currently don't have their requirements met, or that have the persist flag set
+        const storage = AchievementHandler.achievementList.filter(a => a.unlocked() && (a.persist || !a.property.isCompleted())).map(a => a.name);
         return storage;
     }
 
@@ -172,9 +172,10 @@ class AchievementHandler {
         name: string,
         description: string,
         property: AchievementRequirement,
-        hint: string
+        hint: string,
+        persist = false
     ) {
-        AchievementHandler.achievementList.push(new SecretAchievement(name, description, property, hint));
+        AchievementHandler.achievementList.push(new SecretAchievement(name, description, property, hint, persist));
     }
 
     public static calculateBonus(): void {
@@ -732,9 +733,9 @@ class AchievementHandler {
         AchievementHandler.addSecretAchievement(
             'How did we get here?',
             'Have 9 Special Events active simultaneously.',
-            // If the required number of active events is increased the achievement will revert to incomplete
             new TotalSpecialEventsActiveRequirement(9),
-            'Fully booked'
+            'Fully booked',
+            true
         );
 
         AchievementHandler.addSecretAchievement(
@@ -770,6 +771,14 @@ class AchievementHandler {
             'Catch 111 Hoopa.',
             new CaptureSpecificPokemonRequirement('Hoopa', 111, false),
             'You said a ton, right?'
+        );
+
+        AchievementHandler.addSecretAchievement(
+            'One-person band',
+            'Have all 6 Flutes active for 60 minutes.',
+            new AllFlutesTimeActiveRequirement(60),
+            '6-4-60',
+            true
         );
 
         AchievementHandler.addSecretAchievement(
