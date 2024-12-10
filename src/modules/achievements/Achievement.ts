@@ -30,18 +30,7 @@ export default class Achievement {
     public check(): boolean {
         if (this.isCompleted() && !this.unlocked()) {
             this.unlocked(true);
-            Notifier.notify({
-                title: `[${this.notificationTitle}] ${this.name}`,
-                message: this.description,
-                type: NotificationConstants.NotificationOption.warning,
-                timeout: this.notificationTimeout,
-                sound: NotificationConstants.NotificationSound.General.achievement,
-                setting: NotificationConstants.NotificationSetting.General.achievement_complete,
-            });
-            App.game.logbook.newLog(
-                LogBookTypes.ACHIEVE,
-                createLogContent.earnedAchievement({ name: this.name }),
-            );
+            this.notifyUnlocked();
             if (this === App.game.achievementTracker.trackedAchievement()) {
                 App.game.achievementTracker.nextAchievement();
             }
@@ -50,6 +39,21 @@ export default class Achievement {
             return true;
         }
         return false;
+    }
+
+    public notifyUnlocked() {
+        Notifier.notify({
+            title: `[${this.notificationTitle}] ${this.name}`,
+            message: this.description,
+            type: NotificationConstants.NotificationOption.warning,
+            timeout: this.notificationTimeout,
+            sound: NotificationConstants.NotificationSound.General.achievement,
+            setting: NotificationConstants.NotificationSetting.General.achievement_complete,
+        });
+        App.game.logbook.newLog(
+            LogBookTypes.ACHIEVE,
+            createLogContent.earnedAchievement({ name: this.name }),
+        );
     }
 
     public getProgress() {

@@ -149,6 +149,7 @@ import TotalSpecialEventsActiveRequirement from './requirements/TotalSpecialEven
 import PokeballFilterCountRequirement from './requirements/PokeballFilterCountRequirement';
 import DefeatedPokemonTypeRequirement from './requirements/DefeatedPokemonTypeRequirement';
 import AllFlutesTimeActiveRequirement from './requirements/AllFlutesTimeActiveRequirement';
+import DummyRequirement from './requirements/DummyRequirement';
 import WeatherRequirement from './requirements/WeatherRequirement';
 import MegaEvolveRequirement from './requirements/MegaEvolveRequirement';
 import PokemonAttackRequirement from './requirements/PokemonAttackRequirement';
@@ -382,6 +383,7 @@ Object.assign(<any>window, {
     PokeballFilterCountRequirement,
     DefeatedPokemonTypeRequirement,
     AllFlutesTimeActiveRequirement,
+    DummyRequirement,
     WeatherRequirement,
     MegaEvolveRequirement,
     PokemonAttackRequirement,

@@ -749,7 +749,7 @@ class AchievementHandler {
             'I can do this all day',
             'Complete stage 10,000 in the Battle Frontier.',
             new BattleFrontierHighestStageRequirement(10000),
-            'A million paycheck'
+            'A million paycheck' // stage 10k awards 1m BP
         );
 
         AchievementHandler.addSecretAchievement(
@@ -770,7 +770,7 @@ class AchievementHandler {
             'There is no bottle',
             'Catch 111 Hoopa.',
             new CaptureSpecificPokemonRequirement('Hoopa', 111, false),
-            'You said a ton, right?'
+            'You said a ton, right?' // Reference to the Catch 100 Hoopa quest step, 111 Hoopa weigh 999kg total, ~ 1 ton
         );
 
         AchievementHandler.addSecretAchievement(
@@ -778,6 +778,22 @@ class AchievementHandler {
             'Have all 6 Flutes active for 60 minutes.',
             new AllFlutesTimeActiveRequirement(60),
             '6-4-60',
+            true
+        );
+
+        AchievementHandler.addSecretAchievement(
+            'A cat named Cat',
+            'Give a Pokémon a very unoriginal nickname.',
+            new DummyRequirement(),
+            'Breakfast at Tiffany\'s', // This movie has a cat named "Cat"
+            true
+        );
+
+        AchievementHandler.addSecretAchievement(
+            'Picky Quester',
+            'Refresh the Quest List without completing any quests.',
+            new DummyRequirement(),
+            'I don\'t want to do any of these',
             true
         );
 
@@ -811,6 +827,20 @@ class AchievementHandler {
         multiplier.addBonus('money', () => 1 + this.achievementBonus(), multiplierSource);
         multiplier.addBonus('dungeonToken', () => 1 + this.achievementBonus(), multiplierSource);
         multiplier.addBonus('clickAttack', () => 1 + this.achievementBonus(), multiplierSource);
+    }
+
+    static unlockAchievement(achievementName: string) {
+        const achievement = AchievementHandler.findByName(achievementName);
+        if (!achievement) {
+            console.warn(`Achievement not found: ${achievementName}`);
+            return;
+        }
+
+        if (!achievement.unlocked()) {
+            achievement.unlocked(true);
+            achievement.notifyUnlocked();
+            AchievementHandler.updateAchievementBonus();
+        }
     }
 
     static load() {
