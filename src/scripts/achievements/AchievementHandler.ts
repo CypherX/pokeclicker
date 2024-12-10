@@ -719,7 +719,7 @@ class AchievementHandler {
             'Touch Grass',
             'Have the game open for an entire year.',
             new TimePlayedRequirement(GameConstants.DAY * 365 / 1000),
-            'Play the game'
+            'You\'ll get it eventually'
         );
 
         AchievementHandler.addSecretAchievement(
@@ -734,7 +734,7 @@ class AchievementHandler {
             'Have 9 Special Events active simultaneously.',
             // If the required number of active events is increased the achievement will revert to incomplete
             new TotalSpecialEventsActiveRequirement(9),
-            'Need a hint'
+            'Fully booked'
         );
 
         AchievementHandler.addSecretAchievement(
@@ -766,10 +766,17 @@ class AchievementHandler {
         );
 
         AchievementHandler.addSecretAchievement(
+            'There is no bottle',
+            'Catch 111 Hoopa.',
+            new CaptureSpecificPokemonRequirement('Hoopa', 111, false),
+            'You said a ton, right?'
+        );
+
+        AchievementHandler.addSecretAchievement(
             'Ultimate Baker',
             'Have all Battle Café flavors resistant to Pokérus.',
             new PokerusStatusByFilterRequirement(alcremieDexFilter, alcremieAmount, GameConstants.Pokerus.Resistant),
-            '' // need hint
+            'The cake is not a lie'
         );
 
         // Special Furfrou forms resisted
