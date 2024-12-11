@@ -7,7 +7,7 @@ export default class PokemonAttackRequirement extends AchievementRequirement {
     constructor(
         public pokemon: PokemonNameType,
         attackValue: number,
-        private isMultipler: boolean = false,
+        private isMultiplier: boolean = false,
         option: AchievementOption = AchievementOption.more,
     ) {
         super(attackValue, option, AchievementType.Attack);
@@ -15,7 +15,7 @@ export default class PokemonAttackRequirement extends AchievementRequirement {
 
     getProgress(): number {
         let currentValue = App.game.party.getPokemonByName(this.pokemon)?.attack ?? 0;
-        if (this.isMultipler) {
+        if (this.isMultiplier) {
             currentValue = Math.trunc(currentValue / pokemonMap[this.pokemon].attack);
         }
 
@@ -27,7 +27,7 @@ export default class PokemonAttackRequirement extends AchievementRequirement {
             return 'Level up to evolve.';
         }
 
-        const attackRequired = this.isMultipler ? pokemonMap[this.pokemon].attack * this.requiredValue : this.requiredValue;
+        const attackRequired = this.isMultiplier ? pokemonMap[this.pokemon].attack * this.requiredValue : this.requiredValue;
         const comparisonOperator = this.option === AchievementOption.less ? 'less than' :
             this.option === AchievementOption.more ? 'more than' : 'exactly';
 
