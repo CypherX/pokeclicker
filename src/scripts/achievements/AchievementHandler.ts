@@ -648,8 +648,8 @@ class AchievementHandler {
 
         AchievementHandler.addSecretAchievement(
             'Take Out The Trash',
-            'Capture 1,000 wild Garbodor.',
-            new CaptureSpecificPokemonRequirement('Garbodor', 1000, false),
+            'Capture a total of 1,000 wild Trubbish and Garbodor.',
+            new CaptureSpecificPokemonRequirement(['Trubbish', 'Garbodor'], 10000, false),
             'Clean up the streets'
         );
 
@@ -769,7 +769,7 @@ class AchievementHandler {
         AchievementHandler.addSecretAchievement(
             'There is no bottle',
             'Catch 111 Hoopa.',
-            new CaptureSpecificPokemonRequirement('Hoopa', 111, false),
+            new CaptureSpecificPokemonRequirement(['Hoopa'], 111, false),
             'You said a ton, right?' // Reference to the Catch 100 Hoopa quest step, 111 Hoopa weigh 999kg total, ~ 1 ton
         );
 
