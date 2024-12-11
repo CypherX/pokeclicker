@@ -649,7 +649,7 @@ class AchievementHandler {
         AchievementHandler.addSecretAchievement(
             'Take Out The Trash',
             'Capture a total of 1,000 wild Trubbish and Garbodor.',
-            new CaptureSpecificPokemonRequirement(['Trubbish', 'Garbodor'], 10000, false),
+            new CaptureSpecificPokemonRequirement(['Trubbish', 'Garbodor'], 1000, false),
             'Clean up the streets'
         );
 
