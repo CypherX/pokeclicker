@@ -804,6 +804,30 @@ class AchievementHandler {
             'The cake is not a lie'
         );
 
+        AchievementHandler.addSecretAchievement(
+            'One column to rule them all',
+            'Have all movable UI modules in one column',
+            new CustomRequirement(ko.pureComputed((): boolean => {
+                const settings = [
+                    'modules.left-column', 'modules.left-column-2', 'modules.middle-top-sort-column',
+                    'modules.middle-bottom-sort-column', 'modules.right-column', 'modules.right-column-2',
+                ];
+
+                const usedColumns = settings.filter((setting) => {
+                    const modules: string[] = Settings.getSetting(setting)?.observableValue()?.split('|').filter((module: string) => module?.trim());
+                    if (!modules?.length) {
+                        return false;
+                    }
+
+                    return modules.filter((module) => $(`#${module}`).is(':visible')).length > 0;
+                });
+
+                return usedColumns.length === 1;
+            }), true, ''),
+            'There can be only one',
+            true
+        );
+
         // Special Furfrou forms resisted
         // TODO Uncomment when Furfrou (Heart) is obtainable
         /*const furfrouId = pokemonMap.Furfrou.id;
