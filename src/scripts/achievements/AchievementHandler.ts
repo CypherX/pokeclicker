@@ -798,6 +798,14 @@ class AchievementHandler {
         );
 
         AchievementHandler.addSecretAchievement(
+            'Lucky Loot',
+            'Obtain Mythic-tier loot from a debuffed dungeon. Loot that ignores debuff does not count.',
+            new DummyRequirement(),
+            'Debuffed? I didn\'t notice.',
+            true
+        );
+
+        AchievementHandler.addSecretAchievement(
             'Ultimate Baker',
             'Have all Battle Café flavors resistant to Pokérus.',
             new PokerusStatusByFilterRequirement(alcremieDexFilter, alcremieAmount, GameConstants.Pokerus.Resistant),
