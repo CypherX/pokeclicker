@@ -97,6 +97,8 @@ export default class Statistics implements Saveable {
     totalMulchesUsed: KnockoutObservable<number>;
     totalShovelsUsed: KnockoutObservable<number>;
     berryDailyDealTrades: KnockoutObservable<number>;
+    farmWandererFarmPointsObtained: KnockoutObservable<number>;
+    farmWandererDungeonTokensObtained: KnockoutObservable<number>;
     // Battle Frontier
     battleFrontierTotalStagesCompleted: KnockoutObservable<number>;
     battleFrontierHighestStageCompleted: KnockoutObservable<number>;
@@ -237,6 +239,8 @@ export default class Statistics implements Saveable {
         'totalMulchesUsed',
         'totalShovelsUsed',
         'berryDailyDealTrades',
+        'farmWandererFarmPointsObtained',
+        'farmWandererDungeonTokensObtained',
         'battleFrontierTotalStagesCompleted',
         'battleFrontierHighestStageCompleted',
         'safariTimesEntered',

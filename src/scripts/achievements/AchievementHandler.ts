@@ -806,6 +806,13 @@ class AchievementHandler {
         );
 
         AchievementHandler.addSecretAchievement(
+            'Wandering Wallets',
+            'Earn 1,000,000,000 Dungeon Tokens from catching Farm Wanderers.',
+            new StatisticRequirement('farmWandererDungeonTokensObtained', 1e9),
+            'Money does not grow on trees'
+        );
+
+        AchievementHandler.addSecretAchievement(
             'Ultimate Baker',
             'Have all Battle Café flavors resistant to Pokérus.',
             new PokerusStatusByFilterRequirement(alcremieDexFilter, alcremieAmount, GameConstants.Pokerus.Resistant),
