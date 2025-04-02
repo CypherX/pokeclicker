@@ -59,7 +59,8 @@ class Party implements Feature {
         shiny = false,
         suppressNewCatchNotification = false,
         gender: GameConstants.BattlePokemonGender = PokemonFactory.generateGenderById(id),
-        shadow: GameConstants.ShadowStatus = GameConstants.ShadowStatus.None
+        shadow: GameConstants.ShadowStatus = GameConstants.ShadowStatus.None,
+        pokerus: GameConstants.Pokerus = GameConstants.Pokerus.Uninfected
     ) {
         const isShadow = shadow === GameConstants.ShadowStatus.Shadow;
         PokemonHelper.incrementPokemonStatistics(id, GameConstants.PokemonStatisticsType.Captured, shiny, gender, shadow);
