@@ -45,7 +45,7 @@ class PokemonFactory {
         if (shiny) {
             Notifier.notify({
                 message: `✨ You encountered a shiny ${PokemonHelper.displayName(name)()}! ✨`,
-                pokemonImage: PokemonHelper.getImage(id, shiny, basePokemon.gender),
+                pokemonImage: PokemonHelper.getImage(id, shiny, basePokemon.gender, GameConstants.ShadowStatus.None),
                 type: NotificationConstants.NotificationOption.warning,
                 sound: NotificationConstants.NotificationSound.General.shiny_long,
                 setting: NotificationConstants.NotificationSetting.General.encountered_shiny,
@@ -55,7 +55,7 @@ class PokemonFactory {
         if (roaming) {
             Notifier.notify({
                 message: `You encountered a roaming ${name}!`,
-                pokemonImage: PokemonHelper.getImage(id, shiny, basePokemon.gender),
+                pokemonImage: PokemonHelper.getImage(id, shiny, basePokemon.gender, GameConstants.ShadowStatus.None),
                 type: NotificationConstants.NotificationOption.warning,
                 sound: NotificationConstants.NotificationSound.General.roaming,
                 setting: NotificationConstants.NotificationSetting.General.encountered_roaming,
@@ -179,7 +179,7 @@ class PokemonFactory {
         if (shiny) {
             Notifier.notify({
                 message: `✨ You encountered a shiny ${PokemonHelper.displayName(name)()}! ✨`,
-                pokemonImage: PokemonHelper.getImage(id, shiny, basePokemon.gender),
+                pokemonImage: PokemonHelper.getImage(id, shiny, basePokemon.gender, GameConstants.ShadowStatus.None),
                 type: NotificationConstants.NotificationOption.warning,
                 sound: NotificationConstants.NotificationSound.General.shiny_long,
                 setting: NotificationConstants.NotificationSetting.General.encountered_shiny,
@@ -232,7 +232,7 @@ class PokemonFactory {
         if (shiny) {
             Notifier.notify({
                 message: `✨ You encountered a shiny ${PokemonHelper.displayName(name)()}! ✨`,
-                pokemonImage: PokemonHelper.getImage(id, shiny, basePokemon.gender),
+                pokemonImage: PokemonHelper.getImage(id, shiny, basePokemon.gender, GameConstants.ShadowStatus.None),
                 type: NotificationConstants.NotificationOption.warning,
                 sound: NotificationConstants.NotificationSound.General.shiny_long,
                 setting: NotificationConstants.NotificationSetting.General.encountered_shiny,
