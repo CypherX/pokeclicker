@@ -8,6 +8,7 @@ class SafariPokemon implements PokemonInterface {
     baseEscapeFactor: number;
     gender: GameConstants.BattlePokemonGender;
     shadow = GameConstants.ShadowStatus.None;
+    pokerus = GameConstants.Pokerus.Uninfected;
 
     // Used for overworld sprites
     x = 0;
@@ -30,9 +31,11 @@ class SafariPokemon implements PokemonInterface {
         this.type1 = data.type1;
         this.type2 = data.type2;
         this.shiny = PokemonFactory.generateShiny(GameConstants.SHINY_CHANCE_SAFARI);
+        this.pokerus = PokemonFactory.generatePokerus(GameConstants.WILD_POKERUS_CHANCE_SAFARI);
         this._displayName = PokemonHelper.displayName(name);
         this.gender = PokemonFactory.generateGender(data.gender.femaleRatio, data.gender.type);
         PokemonHelper.incrementPokemonStatistics(this.id, GameConstants.PokemonStatisticsType.Encountered, this.shiny, this.gender, GameConstants.ShadowStatus.None);
+
         // Shiny
         if (this.shiny) {
             Notifier.notify({
@@ -43,6 +46,18 @@ class SafariPokemon implements PokemonInterface {
                 setting: NotificationConstants.NotificationSetting.General.encountered_shiny,
             });
         }
+
+        // Wild Pokerus
+        if (this.pokerus > GameConstants.Pokerus.Uninfected) {
+            Notifier.notify({
+                message: `The wild ${PokemonHelper.displayName(name)()} is infected with Pokérus!`,
+                pokemonImage: PokemonHelper.getImage(this.id, this.shiny, this.gender),
+                type: NotificationConstants.NotificationOption.warning,
+                sound: NotificationConstants.NotificationSound.General.shiny_long,
+                setting: NotificationConstants.NotificationSetting.General.encountered_shiny,
+            });
+        }
+
         this.baseCatchFactor = data.catchRate * 1 / 6;
         this.baseEscapeFactor = 30;
         this._angry = ko.observable(0);

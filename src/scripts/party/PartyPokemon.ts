@@ -72,7 +72,8 @@ class PartyPokemon implements Saveable {
         public eggCycles: number,
         shiny = false,
         public gender,
-        shadow: GameConstants.ShadowStatus
+        shadow: GameConstants.ShadowStatus,
+        pokerus: GameConstants.Pokerus = GameConstants.Pokerus.Uninfected
     ) {
         this.vitaminsUsed = Object.fromEntries(GameHelper.enumNumbers(GameConstants.VitaminType).map((vitamin) => {
             return [vitamin, ko.observable(0).extend({ numeric: 0 })];
@@ -84,7 +85,7 @@ class PartyPokemon implements Saveable {
         this._attackBonusAmount = ko.observable(0).extend({ numeric: 0 });
         this._category = ko.observableArray([0]);
         this._translatedName = PokemonHelper.displayName(name);
-        this._pokerus = ko.observable(GameConstants.Pokerus.Uninfected).extend({ numeric: 0 });
+        this._pokerus = ko.observable(pokerus).extend({ numeric: 0 });
         this._effortPoints = ko.observable(0).extend({ numeric: 0 });
         this.evs = ko.pureComputed(() => {
             return Math.floor(this.calculateEVs());
@@ -149,7 +150,7 @@ class PartyPokemon implements Saveable {
     });
 
     public canCatchPokerus(): boolean {
-        return App.game.keyItems.hasKeyItem(KeyItemType.Pokerus_virus);
+        return App.game.keyItems.hasKeyItem(KeyItemType.Pokerus_virus) && !App.game.challenges.list.wildPokerus.active();
     }
 
     public calculatePokerusTypes(): Set<number> {

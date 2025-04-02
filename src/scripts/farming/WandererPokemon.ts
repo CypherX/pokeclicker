@@ -9,6 +9,7 @@ class WandererPokemon {
         public berry: BerryType,
         public catchRate: number,
         public shiny = false,
+        public pokerus = GameConstants.Pokerus.Uninfected,
         distractTime = 0
     ) {
         this.catching = ko.observable(false);

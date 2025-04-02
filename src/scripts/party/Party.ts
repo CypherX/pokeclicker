@@ -50,13 +50,13 @@ class Party implements Feature {
 
     }
 
-    gainPokemonByName(name: PokemonNameType, shiny = false, suppressNotification = false, gender = undefined, shadow = GameConstants.ShadowStatus.None) {
+    gainPokemonByName(name: PokemonNameType, shiny = false, suppressNotification = false, gender = undefined, shadow = GameConstants.ShadowStatus.None, pokerus = GameConstants.Pokerus.Uninfected) {
         const pokemon = pokemonMap[name];
-        this.gainPokemonById(pokemon.id, shiny, suppressNotification, gender, shadow);
+        this.gainPokemonById(pokemon.id, shiny, suppressNotification, gender, shadow, pokerus);
     }
 
-    gainPokemonById(id: number, shiny = false, suppressNotification = false, gender: GameConstants.BattlePokemonGender = PokemonFactory.generateGenderById(id), shadow = GameConstants.ShadowStatus.None) {
-        this.gainPokemon(PokemonFactory.generatePartyPokemon(id, shiny, gender, shadow), suppressNotification);
+    gainPokemonById(id: number, shiny = false, suppressNotification = false, gender: GameConstants.BattlePokemonGender = PokemonFactory.generateGenderById(id), shadow = GameConstants.ShadowStatus.None, pokerus = GameConstants.Pokerus.Uninfected) {
+        this.gainPokemon(PokemonFactory.generatePartyPokemon(id, shiny, gender, shadow, pokerus), suppressNotification);
     }
 
     gainPokemon(pokemon: PartyPokemon, suppressNotification = false) {

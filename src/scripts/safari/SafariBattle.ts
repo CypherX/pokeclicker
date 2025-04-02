@@ -180,7 +180,7 @@ class SafariBattle {
             GameHelper.incrementObservable(App.game.statistics.safariShinyPokemonCaptured, 1);
         }
         const pokemonID = PokemonHelper.getPokemonByName(SafariBattle.enemy.name).id;
-        App.game.party.gainPokemonById(pokemonID, SafariBattle.enemy.shiny);
+        App.game.party.gainPokemonById(pokemonID, SafariBattle.enemy.shiny, false, PokemonFactory.generateGenderById(pokemonID), GameConstants.ShadowStatus.None, SafariBattle.enemy.pokerus);
         const partyPokemon = App.game.party.getPokemon(pokemonID);
         partyPokemon.effortPoints += App.game.party.calculateEffortPoints(partyPokemon, SafariBattle.enemy.shiny, GameConstants.ShadowStatus.None, GameConstants.SAFARI_EP_YIELD);
         switch (player.region) {

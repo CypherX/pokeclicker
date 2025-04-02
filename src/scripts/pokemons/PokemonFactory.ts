@@ -40,6 +40,7 @@ class PokemonFactory {
         const shiny: boolean = this.generateShiny(GameConstants.SHINY_CHANCE_BATTLE);
         const gender = this.generateGender(basePokemon.gender.femaleRatio, basePokemon.gender.type);
         const encounterType = roaming ? EncounterType.roamer : EncounterType.route;
+        const pokerus = this.generatePokerus(GameConstants.WILD_POKERUS_CHANCE_BATTLE);
 
         if (shiny) {
             Notifier.notify({
@@ -50,6 +51,7 @@ class PokemonFactory {
                 setting: NotificationConstants.NotificationSetting.General.encountered_shiny,
             });
         }
+
         if (roaming) {
             Notifier.notify({
                 message: `You encountered a roaming ${name}!`,
@@ -71,8 +73,19 @@ class PokemonFactory {
                 })
             );
         }
+
+        if (pokerus > GameConstants.Pokerus.Uninfected) {
+            Notifier.notify({
+                message: `The wild ${PokemonHelper.displayName(name)()} is infected with Pokérus!`,
+                pokemonImage: PokemonHelper.getImage(id, shiny, basePokemon.gender),
+                type: NotificationConstants.NotificationOption.warning,
+                sound: NotificationConstants.NotificationSound.General.shiny_long,
+                setting: NotificationConstants.NotificationSetting.General.encountered_shiny,
+            });
+        }
+
         const ep = GameConstants.BASE_EP_YIELD * (roaming ? GameConstants.ROAMER_EP_MODIFIER : 1);
-        return new BattlePokemon(name, id, basePokemon.type1, basePokemon.type2, maxHealth, level, catchRate, exp, new Amount(money, GameConstants.Currency.money), shiny, 1, gender, GameConstants.ShadowStatus.None, encounterType, heldItem, ep);
+        return new BattlePokemon(name, id, basePokemon.type1, basePokemon.type2, maxHealth, level, catchRate, exp, new Amount(money, GameConstants.Currency.money), shiny, 1, gender, GameConstants.ShadowStatus.None, encounterType, heldItem, ep, pokerus);
     }
 
     public static routeLevel(route: number, region: GameConstants.Region): number {
@@ -121,9 +134,16 @@ class PokemonFactory {
         return false;
     }
 
-    public static generatePartyPokemon(id: number, shiny = false, gender = GameConstants.BattlePokemonGender.NoGender, shadow = GameConstants.ShadowStatus.None): PartyPokemon {
+    public static generatePokerus(chance: number): GameConstants.Pokerus {
+        if (!App.game.challenges.list.wildPokerus.active()) {
+            return GameConstants.Pokerus.Uninfected;
+        }
+        return Rand.chance(chance) ? GameConstants.Pokerus.Contagious : GameConstants.Pokerus.Uninfected;
+    }
+
+    public static generatePartyPokemon(id: number, shiny = false, gender = GameConstants.BattlePokemonGender.NoGender, shadow = GameConstants.ShadowStatus.None, pokerus = GameConstants.Pokerus.Uninfected): PartyPokemon {
         const dataPokemon = PokemonHelper.getPokemonById(id);
-        return new PartyPokemon(dataPokemon.id, dataPokemon.name, dataPokemon.evolutions, dataPokemon.attack, dataPokemon.eggCycles, shiny, gender, shadow);
+        return new PartyPokemon(dataPokemon.id, dataPokemon.name, dataPokemon.evolutions, dataPokemon.attack, dataPokemon.eggCycles, shiny, gender, shadow, pokerus);
     }
 
     /**
@@ -153,7 +173,9 @@ class PokemonFactory {
         const money = 0;
         const heldItem = this.generateHeldItem(basePokemon.heldItem, GameConstants.DUNGEON_HELD_ITEM_MODIFIER);
         const shiny: boolean = this.generateShiny(GameConstants.SHINY_CHANCE_DUNGEON);
+        const pokerus = this.generatePokerus(GameConstants.WILD_POKERUS_CHANCE_DUNGEON);
         const gender = this.generateGender(basePokemon.gender.femaleRatio, basePokemon.gender.type);
+
         if (shiny) {
             Notifier.notify({
                 message: `✨ You encountered a shiny ${PokemonHelper.displayName(name)()}! ✨`,
@@ -164,9 +186,19 @@ class PokemonFactory {
             });
         }
 
+        if (pokerus > GameConstants.Pokerus.Uninfected) {
+            Notifier.notify({
+                message: `The wild ${PokemonHelper.displayName(name)()} is infected with Pokérus!`,
+                pokemonImage: PokemonHelper.getImage(id, shiny, basePokemon.gender),
+                type: NotificationConstants.NotificationOption.warning,
+                sound: NotificationConstants.NotificationSound.General.shiny_long,
+                setting: NotificationConstants.NotificationSetting.General.encountered_shiny,
+            });
+        }
+
         const ep = GameConstants.BASE_EP_YIELD * (mimic ? GameConstants.DUNGEON_BOSS_EP_MODIFIER : GameConstants.DUNGEON_EP_MODIFIER);
         const et = mimic ? EncounterType.mimic : EncounterType.dungeon;
-        return new BattlePokemon(name, id, basePokemon.type1, basePokemon.type2, maxHealth, level, catchRate, exp, new Amount(money, GameConstants.Currency.money), shiny, GameConstants.DUNGEON_GEMS, gender, GameConstants.ShadowStatus.None, et, heldItem, ep);
+        return new BattlePokemon(name, id, basePokemon.type1, basePokemon.type2, maxHealth, level, catchRate, exp, new Amount(money, GameConstants.Currency.money), shiny, GameConstants.DUNGEON_GEMS, gender, GameConstants.ShadowStatus.None, et, heldItem, ep, pokerus);
     }
 
     public static generateDungeonTrainerPokemon(pokemon: GymPokemon, chestsOpened: number, baseHealth: number, level: number, isBoss: boolean, trainerPokemon = 1): BattlePokemon {
@@ -194,7 +226,9 @@ class PokemonFactory {
         const money = 0;
         const heldItem = this.generateHeldItem(basePokemon.heldItem, GameConstants.DUNGEON_BOSS_HELD_ITEM_MODIFIER);
         const shiny: boolean = this.generateShiny(GameConstants.SHINY_CHANCE_DUNGEON);
+        const pokerus = this.generatePokerus(GameConstants.WILD_POKERUS_CHANCE_DUNGEON);
         const gender = this.generateGender(basePokemon.gender.femaleRatio, basePokemon.gender.type);
+
         if (shiny) {
             Notifier.notify({
                 message: `✨ You encountered a shiny ${PokemonHelper.displayName(name)()}! ✨`,
@@ -204,8 +238,19 @@ class PokemonFactory {
                 setting: NotificationConstants.NotificationSetting.General.encountered_shiny,
             });
         }
+
+        if (pokerus > GameConstants.Pokerus.Uninfected) {
+            Notifier.notify({
+                message: `The wild ${PokemonHelper.displayName(name)()} is infected with Pokérus!`,
+                pokemonImage: PokemonHelper.getImage(id, shiny, basePokemon.gender),
+                type: NotificationConstants.NotificationOption.warning,
+                sound: NotificationConstants.NotificationSound.General.shiny_long,
+                setting: NotificationConstants.NotificationSetting.General.encountered_shiny,
+            });
+        }
+
         const ep = GameConstants.BASE_EP_YIELD * GameConstants.DUNGEON_BOSS_EP_MODIFIER;
-        return new BattlePokemon(name, id, basePokemon.type1, basePokemon.type2, maxHealth, bossPokemon.level, catchRate, exp, new Amount(money, GameConstants.Currency.money), shiny, GameConstants.DUNGEON_BOSS_GEMS, gender, GameConstants.ShadowStatus.None, EncounterType.dungeonBoss, heldItem, ep);
+        return new BattlePokemon(name, id, basePokemon.type1, basePokemon.type2, maxHealth, bossPokemon.level, catchRate, exp, new Amount(money, GameConstants.Currency.money), shiny, GameConstants.DUNGEON_BOSS_GEMS, gender, GameConstants.ShadowStatus.None, EncounterType.dungeonBoss, heldItem, ep, pokerus);
     }
 
     public static generateTemporaryBattlePokemon(battle: TemporaryBattle, index: number): BattlePokemon {
@@ -384,8 +429,9 @@ class PokemonFactory {
         const pokemon = Rand.fromWeightedArray(availablePokemon, weights);
         const pokemonData = pokemonMap[pokemon];
         const shiny = PokemonFactory.generateShiny(GameConstants.SHINY_CHANCE_FARM);
+        const pokerus = PokemonFactory.generatePokerus(GameConstants.WILD_POKERUS_CHANCE_FARM);
         const catchChance = PokemonFactory.catchRateHelper(pokemonData.catchRate + 25, true);
-        const wanderer = new WandererPokemon(pokemon, berry.type, catchChance, shiny);
+        const wanderer = new WandererPokemon(pokemon, berry.type, catchChance, shiny, pokerus);
         return wanderer;
     }
 }

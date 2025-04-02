@@ -2294,7 +2294,7 @@ class Farming implements Feature {
             0, 100);
         if (Rand.chance(catchChance / 100)) { // Successfully caught
             App.game.oakItems.use(OakItemType.Magic_Ball);
-            App.game.party.gainPokemonByName(wanderer.name, wanderer.shiny);
+            App.game.party.gainPokemonByName(wanderer.name, wanderer.shiny, false, PokemonFactory.generateGenderById(pokemonMap[wanderer.name].id), GameConstants.ShadowStatus.None, wanderer.pokerus);
 
             // EV
             const partyPokemon = App.game.party.getPokemonByName(wanderer.name);
