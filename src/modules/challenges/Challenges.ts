@@ -17,6 +17,7 @@ export default class Challenges implements Saveable {
         disableVitamins: new Challenge('No Vitamins', 'Disables the usage of Vitamins'),
         slowEVs: new Challenge('Slow EVs', 'Gain EVs 10x slower'),
         realEvolutions: new Challenge('Real Evolution', 'Your Pokémon go away when they evolve'),
+        wildPokerus: new Challenge('Wild Pokérus', 'Pokérus can be found in the wild and cannot be spread in the hatchery'),
     };
 
     fromJSON(json): void {
