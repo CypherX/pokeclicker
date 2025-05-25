@@ -74,8 +74,7 @@ class AchievementHandler {
             a.achievable() &&
             (this.filter.status() == -2 || a.unlocked() === !!this.filter.status()) &&
             (this.filter.type()   == -2 || a.property.achievementType === this.filter.type()) &&
-            (this.filter.category() == 'all' || a.category.name === this.filter.category()) &&
-            (a.category.name != 'secret' || this.filter.category() == 'secret')
+            (this.filter.category() == 'all' || a.category.name === this.filter.category())
         )));
         this.calculateNumberOfTabs();
         if (!retainPage) {
