@@ -843,6 +843,13 @@ class AchievementHandler {
             true
         );
 
+        AchievementHandler.addSecretAchievement(
+            'Window Shopping',
+            'Encounter 1,000 shiny Trainer Pokémon',
+            new StatisticRequirement('totalShinyTrainerPokemonSeen', 1000),
+            'Glowing with envy'
+        );
+
         // Special Furfrou forms resisted
         // TODO Uncomment when Furfrou (Heart) is obtainable
         /*const furfrouId = pokemonMap.Furfrou.id;

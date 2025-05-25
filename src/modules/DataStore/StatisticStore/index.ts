@@ -81,6 +81,8 @@ export default class Statistics implements Saveable {
     totalShadowFemalePokemonDefeated: KnockoutObservable<number>;
     totalShadowGenderlessPokemonCaptured: KnockoutObservable<number>;
     totalShadowGenderlessPokemonDefeated: KnockoutObservable<number>;
+
+    totalShinyTrainerPokemonSeen: KnockoutObservable<number>;
     // Underground
     undergroundItemsFound: KnockoutObservable<number>;
     undergroundLayersMined: KnockoutObservable<number>;
@@ -203,6 +205,7 @@ export default class Statistics implements Saveable {
         'totalShadowFemalePokemonDefeated',
         'totalShadowGenderlessPokemonCaptured',
         'totalShadowGenderlessPokemonDefeated',
+        'totalShinyTrainerPokemonSeen',
         'undergroundItemsFound',
         'undergroundLayersMined',
         'undergroundLayersFullyMined',
