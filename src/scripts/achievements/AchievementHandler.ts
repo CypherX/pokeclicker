@@ -821,7 +821,7 @@ class AchievementHandler {
 
         AchievementHandler.addSecretAchievement(
             'One column to rule them all',
-            'Have all movable UI modules in one column',
+            'Have all movable UI modules in one column.',
             new CustomRequirement(ko.pureComputed((): boolean => {
                 const settings = [
                     'modules.left-column', 'modules.left-column-2', 'modules.middle-top-sort-column',
@@ -845,9 +845,16 @@ class AchievementHandler {
 
         AchievementHandler.addSecretAchievement(
             'Window Shopping',
-            'Encounter 1,000 shiny Trainer Pokémon',
+            'Encounter 1,000 shiny Trainer Pokémon.',
             new StatisticRequirement('totalShinyTrainerPokemonSeen', 1000),
             'Glowing with envy'
+        );
+
+        AchievementHandler.addSecretAchievement(
+            'A Glimmer of Luck',
+            'Catch a shiny Pokémon in a Safari Zone with your last ball.',
+            new DummyRequirement(),
+            'One ball left, one chance to make it shine'
         );
 
         // Special Furfrou forms resisted
