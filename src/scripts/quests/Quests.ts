@@ -25,6 +25,10 @@ class Quests implements Saveable {
         // Minimum of 1, Maximum of 4
         return Math.min(4, Math.max(1, Math.floor((this.level() + 5) / 5)));
     });
+    public usedRerolls = ko.observable(0);
+    public totalRerolls = ko.pureComputed((): number => {
+        return 1 + Math.floor(this.level() / 10);
+    });
 
     // Get current quests by status
     public completedQuests: KnockoutComputed<Array<Quest>> = ko.pureComputed(() => {
@@ -47,10 +51,6 @@ class Quests implements Saveable {
         if (Quests.getQuestSortStatus(quest1) < Quests.getQuestSortStatus(quest2)) {
             return -1;
         } else if (Quests.getQuestSortStatus(quest1) > Quests.getQuestSortStatus(quest2)) {
-            return 1;
-        } else if (quest1.pointsReward > quest2.pointsReward) {
-            return -1;
-        } else if (quest1.pointsReward < quest2.pointsReward) {
             return 1;
         }
 
@@ -203,6 +203,7 @@ class Quests implements Saveable {
 
             this.freeRefresh(false);
             GameHelper.incrementObservable(this.refreshes);
+            this.usedRerolls(0);
             this.generateQuestList();
         } else {
             Notifier.notify({
@@ -295,6 +296,30 @@ class Quests implements Saveable {
         return QuestLineHelper.isQuestLineCompleted('Tutorial Quests');
     }
 
+    public rerollQuest(quest: Quest) {
+        if (!this.canRerollQuest(quest)) {
+            return;
+        }
+
+        const currentQuestTypes = App.game.quests.questList().map((q) => q.constructor);
+        const availableQuestTypes = Object.entries(QuestHelper.quests)
+            .filter(([key, quest]) => !currentQuestTypes.includes(quest) && quest.canComplete())
+            .map(([key]) => key);
+        const questType = Rand.fromArray(availableQuestTypes);
+        const newQuest = QuestHelper.createQuest(questType);
+        console.log(newQuest.description);
+        this.questList.replace(quest, newQuest);
+        GameHelper.incrementObservable(this.usedRerolls, 1);
+    }
+
+    public canRerollQuest(quest: Quest): boolean {
+        if (quest.inProgress() || quest.claimed()) {
+            return false;
+        }
+
+        return this.usedRerolls() < this.totalRerolls();
+    }
+
     loadQuestList(questList) {
         // Sanity Check
         this.questList.removeAll();
@@ -356,6 +381,7 @@ class Quests implements Saveable {
             freeRefresh: this.freeRefresh(),
             questList: this.questList().map(quest => quest.toJSON()),
             questLines: this.questLines().filter(q => q.state()),
+            usedRerolls: this.usedRerolls(),
         };
     }
 
@@ -392,5 +418,7 @@ class Quests implements Saveable {
         if (json.questLines) {
             this.loadQuestLines(json.questLines);
         }
+
+        this.usedRerolls(json.usedRerolls || 0);
     }
 }
