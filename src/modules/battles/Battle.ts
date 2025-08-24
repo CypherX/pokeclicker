@@ -27,6 +27,9 @@ export default class Battle {
     static lastClickAttack = Date.now();
     static route;
 
+    static clicks: Array<number> = [];
+    static cps = ko.observable(0);
+
     /**
      * Probably not needed right now, but might be if we add more logic to a gameTick.
      */
@@ -63,6 +66,11 @@ export default class Battle {
             return;
         }
         this.lastClickAttack = now;
+
+        this.clicks.push(now);
+        this.clicks = this.clicks.filter(ts => now - ts <= 1000);
+        this.cps(this.clicks.length);
+
         if (!this.enemyPokemon()?.isAlive()) {
             return;
         }

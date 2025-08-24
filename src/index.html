@@ -267,7 +267,7 @@
                                             trigger: 'hover'
                                         }">
                                             Click Attack:
-                                            <span data-bind="text: App.game.party.calculateClickAttack().toLocaleString('en-US')"></span>
+                                            <span data-bind="text: `${App.game.party.calculateClickAttack().toLocaleString('en-US')} (cps: ${Battle.cps()})`"></span>
                                         </span>
                                     </td>
                                   </tr>
