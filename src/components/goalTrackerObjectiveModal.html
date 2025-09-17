@@ -1,0 +1,64 @@
+<div class="modal" id="goalTrackerObjectiveModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-scrollable modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Configure Objective</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-left" data-bind="with: App.game.goalTracker.selectedObjective">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" class="form-control" data-bind="textInput: $data.name" />
+                </div>
+                <div class="form-group">
+                    <label>Type</label>
+                    <select class="form-control" data-bind="
+                        options: GameHelper.enumSelectOption(ObjectiveType),
+                        value: $data.type,
+                        optionsText: 'name',
+                        optionsValue: 'value',
+                        optionsCaption: ''"></select>
+                </div>
+                <!-- ko with: $data.config, as: 'config' -->
+                <hr class="my-2 bg-secondary" />
+                <div data-bind="foreach: { data: $parent.getOptions, as: 'option' }">
+                    <div class="form-group" data-bind="with: option.values(config), as: 'values'">
+                        <label data-bind="text: option.label"></label>
+                        <!-- ko if: Array.isArray(values) -->
+                        <select class="form-control" data-bind="
+                            options: values,
+                            value: config[option.key],
+                            optionsText: 'name',
+                            optionsValue: 'value',
+                            optionsCaption: ''"></select>
+                        <!-- /ko -->
+                        <!-- ko ifnot: Array.isArray(values) -->
+                        <select class="form-control" data-bind="value: config[option.key]">
+                            <option data-bind="value: undefined"></option>
+                            <!-- ko foreach: Object.entries(values) -->
+                            <optgroup data-bind="attr: { label: $data[0] }, foreach: $data[1]">
+                                <option data-bind="text: $data.name, value: $data.value"></option>
+                            </optgroup>
+                            <!-- /ko -->
+                        </select>
+                        <!-- /ko -->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Goal Amount</label>
+                    <input type="number" class="form-control" data-bind="value: $parent.targetAmount" />
+                    <small class="form-text text-muted">
+                        Current Amount:
+                        <span data-bind="text: $parent.isConfigured() ? $parent.getProgress().toLocaleString('en-US') : 'N/A'"></span>
+                    </small>
+                </div>
+                <!-- /ko -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

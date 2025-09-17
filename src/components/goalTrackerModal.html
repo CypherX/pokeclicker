@@ -1,0 +1,62 @@
+<div class="modal fade" id="goalTrackerModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-scrollable modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Goal Tracker</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <button class="btn btn-primary my-2 mr-2" onclick="App.game.goalTracker.createGoal()">
+                    Create New Goal
+                </button>
+
+                <div id="pokeballFilterConfigs" class="px-3"
+                    data-bind="sortable: {
+                        foreach: App.game.goalTracker.goals,
+                        getDataId: (goal) => goal.uuid,
+                        options: {
+                            group: 'goalTrackerGoals',
+                            draggable: '.pokeballFilterWrapper',
+                            handle: '.pokeballFilterDragHandle',
+                            dataIdAttr: 'data-key',
+                        }
+                    }">
+                    <div class="pokeballFilterWrapper w-100">
+                        <div class="pokeballFilterDragHandle bg-dark text-white"></div>
+                        <div class="pokeballFilter w-100" style="border-right-width: 1px;">
+                            <div class="pokeballFilterHeader">
+                                <input class="form-control" data-bind="textInput: $data.name"></span>
+                            </div>
+                            <div class="bg-secondary py-1">Objectives</div>
+                            <div class="small p-1">
+                                <!--<div class="text-muted mb-1">No current objectives.</div>-->
+                                <div class="text-left" data-bind="foreach: $data.objectives">
+                                    <div class="border-bottom border-secondary mb-1">
+                                        <div data-bind="text: name" data-bind="click: () => { App.game.goalTracker.selectedObjective($data); $('#goalTrackerObjectiveModal').modal('show'); }"></div>
+                                        <div class="text-danger" data-bind="hidden: isConfigured">Not configured!</div>
+                                        <div data-bind="visible: isConfigured">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-primary btn-sm btn-block" data-bind="click: () => { $data.createObjective() }">New Objective</button>
+                            </div>
+                        </div>
+                        <!--<div class="pokeballFilterDelete">
+                            <button class="btn bg-danger text-white deleteButton"
+                                data-bind="click: () => App.game.pokeballFilters.deleteFilter($data)">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>-->
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

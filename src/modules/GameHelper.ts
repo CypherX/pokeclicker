@@ -254,4 +254,18 @@ export default class GameHelper {
 
         return (editables.includes(localName) || activeEl.isContentEditable);
     }
+
+    public static getAncestorChain(obj: any): Set<string> {
+        const chain = new Set<string>();
+        let proto = Object.getPrototypeOf(obj);
+
+        while (proto) {
+            if (proto && proto.constructor?.name !== 'Object') {
+                chain.add(proto.constructor?.name);
+            }
+            proto = Object.getPrototypeOf(proto);
+        }
+
+        return chain;
+    }
 }
