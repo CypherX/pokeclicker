@@ -102,6 +102,7 @@ export type TmpPurifyChamberType = any;
 export type TmpWeatherAppType = any;
 export type TmpZMovesType = any;
 export type TmpHeldItemType = any;
+export type TmpGoalTrackerType = any;
 
 export type TmpGameType = {
     gameState: GameConstants.GameState;
@@ -138,6 +139,7 @@ export type TmpGameType = {
     purifyChamber: TmpPurifyChamberType;
     weatherApp: TmpWeatherAppType;
     zMoves: TmpZMovesType;
+    goalTracker: TmpGoalTrackerType;
 
     // functions
     load: () => void;

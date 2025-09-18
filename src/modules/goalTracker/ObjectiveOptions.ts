@@ -1,95 +1,32 @@
+import GameHelper from '../GameHelper';
+import { camelCaseToString } from '../GameConstants';
+import { ItemList } from '../items/ItemList';
+import { ItemNameType } from '../items/ItemNameType';
+import { pokemonMap } from '../pokemons/PokemonList';
+import { PokemonNameType } from '../pokemons/PokemonNameType';
+import { SortOptions, SortOptionConfigs } from '../settings/SortOptions';
+import { Observable, PureComputed } from 'knockout';
 
-class Objective {
-    private _type = ko.observable<ObjectiveType>(undefined);
-    //public config: ObjectiveConfig = undefined;
-    public _config = ko.observable<ObjectiveConfig>(undefined);
-    private _name: KnockoutObservable<string>;
-    private _targetAmount = ko.observable(0).extend({ numeric: 0 });
-
-    constructor(
-        //type: ObjectiveType = undefined
-        name: string
-    ) {
-        //this._type(type);
-        //const def = objectiveOptions[type];
-        //this.config = def.createConfig();
-
-        this._name = ko.observable(name);
-
-        this._type.subscribe((type) => {
-            this.config = objectiveOptions[type]?.createConfig();
-        });
-    }
-
-    public getProgress = ko.pureComputed(() => {
-        return objectiveOptions[this.type]?.getProgress(this.config)?.() ?? 0;
-    });
-
-    public getOptions = ko.pureComputed(() => {
-        return objectiveOptions[this.type]?.options ?? [];
-    });
-
-    public isConfigured = ko.pureComputed(() => {
-        if (!this.config) {
-            return false;
-        }
-
-        return Object.values(this.config).every(obs => obs() !== undefined);
-    });
-
-    get type(): ObjectiveType {
-        return this._type();
-    }
-
-    set type(value: ObjectiveType) {
-        this._type(value);
-    }
-
-    get config(): ObjectiveConfig {
-        return this._config();
-    }
-
-    set config(value: ObjectiveConfig) {
-        this._config(value);
-    }
-
-    get name(): string {
-        return this._name();
-    }
-
-    set name(value: string) {
-        this._name(value);
-    }
-
-    get targetAmount(): number {
-        return this._targetAmount();
-    }
-
-    set targetAmount(value: number) {
-        this._targetAmount(value);
-    }
-
-    fromJSON(json: Record<string, any>): void {
-
-    }
-}
-
-enum ObjectiveType {
+export enum ObjectiveType {
     Item,
     Pokemon,
     Statistic,
 }
 
 interface ItemObjectiveConfig {
-    item: KnockoutObservable<ItemNameType>;
+    item: Observable<ItemNameType>;
 }
 
 interface PokemonObjectiveConfig {
-    pokemon: KnockoutObservable<PokemonNameType>;
-    property: KnockoutObservable<string>;
+    pokemon: Observable<PokemonNameType>;
+    property: Observable<string>;
 }
 
-type ObjectiveConfig = ItemObjectiveConfig | PokemonObjectiveConfig;
+interface StatisticObjectiveConfig {
+    statistic: Observable<string>;
+}
+
+export type ObjectiveConfig = ItemObjectiveConfig | PokemonObjectiveConfig | StatisticObjectiveConfig;
 
 /*interface ObjectiveOption<T extends keyof ObjectiveConfig = string> {
     label: string;
@@ -102,7 +39,17 @@ interface ObjectiveTypeDefinition<TConfig extends ObjectiveConfig> {
     getProgress: (config: TConfig) => KnockoutComputed<number>;
 }*/
 
-const objectiveOptions = {
+interface ObjectiveOption<TConfig> {
+    options: {
+        key: string;
+        label: string;
+        values: () => PureComputed<{ name: string; value: any }[] | Record<string, { name: string; value: any }[]>>;
+    }[];
+    getProgress: (config: TConfig) => PureComputed<number>;
+    createConfig: () => TConfig;
+}
+
+export const objectiveOptions: Record<ObjectiveType, ObjectiveOption<ObjectiveConfig>> = {
     [ObjectiveType.Item]: {
         options: [
             {
@@ -143,7 +90,7 @@ const objectiveOptions = {
                 return ItemList[config.item()]?.getBagAmount() ?? 0;
             });
         },
-        createConfig: (): ItemObjectiveConfig => ({ item: ko.observable(undefined) }),
+        createConfig: (): ItemObjectiveConfig => ({ item: ko.observable<ItemNameType>(undefined) }),
     },
     [ObjectiveType.Pokemon]: {
         options: [
@@ -198,8 +145,26 @@ const objectiveOptions = {
                 return 0;
             });
         },
-        createConfig: (): PokemonObjectiveConfig => ({ pokemon: ko.observable(undefined), property: ko.observable(undefined) }),
+        createConfig: (): PokemonObjectiveConfig => ({ pokemon: ko.observable<PokemonNameType>(undefined), property: ko.observable<string>(undefined) }),
+    },
+    [ObjectiveType.Statistic]: {
+        options: [
+            {
+                key: 'statistic',
+                label: 'Statistic',
+                values: () => ko.pureComputed(() => {
+                    return App.game.statistics.observables
+                        .sort((a, b) => a.localeCompare(b))
+                        .map(s => ({ name: camelCaseToString(s), value: s }));
+                }),
+            },
+        ],
+        getProgress: (config: StatisticObjectiveConfig) => {
+            return ko.pureComputed((): number => {
+                const statistic = config.statistic();
+                return App.game.statistics[statistic]?.() ?? 0;
+            });
+        },
+        createConfig: (): StatisticObjectiveConfig => ({ statistic: ko.observable<string>(undefined) }),
     },
 };
-
-
