@@ -1,87 +1,80 @@
-import GameHelper from '../GameHelper';
+import { Observable, PureComputed } from 'knockout';
 import { camelCaseToString } from '../GameConstants';
 import { ItemList } from '../items/ItemList';
 import { ItemNameType } from '../items/ItemNameType';
 import { pokemonMap } from '../pokemons/PokemonList';
 import { PokemonNameType } from '../pokemons/PokemonNameType';
 import { SortOptions, SortOptionConfigs } from '../settings/SortOptions';
-import { Observable, PureComputed } from 'knockout';
+import { itemCategoryDefinitions, itemsByCategory, ItemCategory } from './ItemCategories';
 
 export enum ObjectiveType {
+    // eslint-disable-next-line @typescript-eslint/no-shadow
     Item,
     Pokemon,
     Statistic,
 }
 
-interface ItemObjectiveConfig {
+export interface ItemObjectiveConfig {
+    category: Observable<string>;
     item: Observable<ItemNameType>;
 }
 
-interface PokemonObjectiveConfig {
+export interface PokemonObjectiveConfig {
     pokemon: Observable<PokemonNameType>;
     property: Observable<string>;
 }
 
-interface StatisticObjectiveConfig {
+export interface StatisticObjectiveConfig {
     statistic: Observable<string>;
 }
 
 export type ObjectiveConfig = ItemObjectiveConfig | PokemonObjectiveConfig | StatisticObjectiveConfig;
 
-/*interface ObjectiveOption<T extends keyof ObjectiveConfig = string> {
-    label: string;
-    values: KnockoutObservableArray<string>;
-    key: T; // key of config property
-}
-
-interface ObjectiveTypeDefinition<TConfig extends ObjectiveConfig> {
-    options: ObjectiveOption<keyof TConfig>[];
-    getProgress: (config: TConfig) => KnockoutComputed<number>;
-}*/
+export type ObjectiveTypeToConfig = {
+    [ObjectiveType.Item]: ItemObjectiveConfig;
+    [ObjectiveType.Pokemon]: PokemonObjectiveConfig;
+    [ObjectiveType.Statistic]: StatisticObjectiveConfig;
+};
 
 interface ObjectiveOption<TConfig> {
     options: {
-        key: string;
-        label: string;
-        values: () => PureComputed<{ name: string; value: any }[] | Record<string, { name: string; value: any }[]>>;
-    }[];
+        [K in keyof TConfig]: {
+            key: K;
+            label: string;
+            values: (config?: TConfig) => PureComputed<{ name: string; value: any }[] | Record<string, { name: string; value: any }[]>>;
+        }
+    }[keyof TConfig][];
     getProgress: (config: TConfig) => PureComputed<number>;
     createConfig: () => TConfig;
 }
 
-export const objectiveOptions: Record<ObjectiveType, ObjectiveOption<ObjectiveConfig>> = {
+export const objectiveOptions: {
+    [K in ObjectiveType]: ObjectiveOption<ObjectiveTypeToConfig[K]>;
+} = {
     [ObjectiveType.Item]: {
         options: [
             {
+                key: 'category',
+                label: 'Category',
+                values: () => ko.pureComputed(() => {
+                    return itemCategoryDefinitions
+                        .filter(def => itemsByCategory()[def.key].length > 0)
+                        .map(def => ({ name: def.label, value: def.key }))
+                        .sort((a, b) => a.name.localeCompare(b.name));
+                }),
+            },
+            {
                 key: 'item',
                 label: 'Item',
-                values: () => ko.pureComputed(() => {
-                    const itemTypes = {
-                        'Battle Items': ['BattleItem'],
-                        'Eggs': ['EggItem'],
-                        'Energy Restores': ['EnergyRestore'],
-                        'Evolution Items': ['EvolutionStone'],
-                        'Held Items': ['HeldItem'],
-                        'Mega Stones': ['MegaStoneItem'],
-                        'Mulch': ['MulchItem'],
-                        'Poké Balls': ['PokeballItem'],
-                        'Shovels': ['ShovelItem', 'MulchShovelItem'],
-                        'Treasure Items': ['TreasureItem'],
-                        'Vitamins': ['Vitamin'],
-                    };
+                values: (config: ItemObjectiveConfig) => ko.pureComputed(() => {
+                    const category = config.category();
+                    if (!category) {
+                        return [];
+                    }
 
-                    const itemList = Object.values(ItemList)
+                    return itemsByCategory()[category]
                         .sort((a, b) => a.displayName.localeCompare(b.displayName))
-                        .reduce((obj, item) => {
-                            const ancestorChain = GameHelper.getAncestorChain(item);
-                            const category = Object.keys(itemTypes).find((key) => itemTypes[key].some((type) => ancestorChain.has(type)));
-                            if (category) {
-                                obj[category].push({ name: item.displayName, value: item.name });
-                            }
-                            return obj;
-                        }, Object.fromEntries(Object.keys(itemTypes).map(key => [key, []])));
-
-                    return itemList;
+                        .map(item => ({ name: item.displayName, value: item.name }));
                 }),
             },
         ],
@@ -90,7 +83,7 @@ export const objectiveOptions: Record<ObjectiveType, ObjectiveOption<ObjectiveCo
                 return ItemList[config.item()]?.getBagAmount() ?? 0;
             });
         },
-        createConfig: (): ItemObjectiveConfig => ({ item: ko.observable<ItemNameType>(undefined) }),
+        createConfig: (): ItemObjectiveConfig => ({ category: ko.observable<ItemCategory>(undefined), item: ko.observable<ItemNameType>(undefined) }),
     },
     [ObjectiveType.Pokemon]: {
         options: [

@@ -103,6 +103,7 @@ export type TmpWeatherAppType = any;
 export type TmpZMovesType = any;
 export type TmpHeldItemType = any;
 export type TmpGoalTrackerType = any;
+export type TmpEvolutionStoneType = any;
 
 export type TmpGameType = {
     gameState: GameConstants.GameState;

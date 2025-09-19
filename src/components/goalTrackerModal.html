@@ -26,10 +26,16 @@
                     <div class="pokeballFilterWrapper w-100">
                         <div class="pokeballFilterDragHandle bg-dark text-white"></div>
                         <div class="pokeballFilter w-100" style="border-right-width: 1px;">
-                            <div class="pokeballFilterHeader">
-                                <input class="form-control" data-bind="textInput: $data.name"></span>
+                            <div class="pokeballFilterHeader px-2">
+                                <div class="flex-grow-1 mr-1">
+                                    <input class="form-control form-control-sm" data-bind="textInput: $data.name"></span>
+                                </div>
+                                <button class="btn bg-danger btn-sm text-white deleteButton"
+                                    data-bind="click: () => App.game.goalTracker.deleteGoal($data)">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                             </div>
-                            <div class="bg-secondary py-1">Objectives</div>
+                            <div class="bg-secondary small py-1">Objectives</div>
                             <div class="small p-2">
                                 <div class="text-left" data-bind="foreach: $data.objectives">
                                     <div class="border-bottom border-secondary mb-2 pb-1">

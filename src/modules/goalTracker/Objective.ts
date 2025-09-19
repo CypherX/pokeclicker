@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { ObjectiveConfig, objectiveOptions, ObjectiveType } from './ObjectiveOptions';
 
 export default class Objective {
@@ -8,7 +7,7 @@ export default class Objective {
     private _targetAmount = ko.observable(0).extend({ numeric: 0 });
 
     getProgress = ko.pureComputed(() => {
-        return objectiveOptions[this.type]?.getProgress(this._config())?.() ?? 0;
+        return objectiveOptions[this.type]?.getProgress(this._config() as any)?.() ?? 0; // "as any" fuck you typescript
     });
 
     getOptions = ko.pureComputed(() => {
@@ -26,24 +25,13 @@ export default class Objective {
         name: string = 'New Objective',
     ) {
         this._name = ko.observable(name);
-
-        // fix this
-        /*this._type.subscribe((type) => {
-            this.config = objectiveOptions[type]?.createConfig();
-        });*/
     }
 
     progressText(): string {
-        if (!this.isConfigured()) {
-            return '0 / 0';
-        }
         return `${this.getProgress().toLocaleString('en-US')} / ${this.targetAmount.toLocaleString('en-US')}`;
     }
 
     progressPercent(): number {
-        if (!this.isConfigured()) {
-            return 0;
-        }
         return Math.floor((this.getProgress() / this.targetAmount) * 100) / 100;
     }
 
@@ -53,6 +41,7 @@ export default class Objective {
 
     set type(value: ObjectiveType) {
         this._type(value);
+        this.config = objectiveOptions[value]?.createConfig();
     }
 
     get config(): ObjectiveConfig {
@@ -84,7 +73,6 @@ export default class Objective {
         for (const key of Object.keys(this.config)) {
             config[key] = this.config[key]();
         }
-
         return {
             type: this.type,
             config: config,
@@ -95,27 +83,17 @@ export default class Objective {
 
 
     fromJSON(json: Record<string, any>): void {
-        console.log('json');
-        console.log(json);
         this._type(json.type);
         this._name(json.name);
         this._targetAmount(json.targetAmount ?? 0);
 
         const config = objectiveOptions[this.type]?.createConfig();
-        console.log(config);
-
         for (const key of Object.keys(config)) {
-            console.log(key);
             if (json.config[key] !== undefined) {
-                console.log('in config');
                 config[key](json.config[key]);
-                console.log(`set value ${json.config[key]}`);
-                console.log(`${config[key]()}`);
             }
         }
 
         this._config(config);
-        console.log('this config');
-        console.log(JSON.stringify(this._config));
     }
 }
