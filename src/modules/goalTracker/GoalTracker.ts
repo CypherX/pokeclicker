@@ -3,6 +3,7 @@ import NotificationOption from '../notifications/NotificationOption';
 import Notifier from '../notifications/Notifier';
 import Goal from './Goal';
 import Objective from './Objective';
+import { objectiveOptions, ObjectiveType } from './ObjectiveOptions';
 
 export default class GoalTracker implements Feature {
     name = 'Goal Tracker';
@@ -35,6 +36,10 @@ export default class GoalTracker implements Feature {
         })) {
             this.goals.remove(goal);
         }
+    }
+
+    static getObjectiveTypeLabel(type: ObjectiveType) {
+        return objectiveOptions[type]?.label ?? ObjectiveType[type];
     }
 
     toJSON(): Record<string, any> {

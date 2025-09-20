@@ -20,4 +20,5 @@ declare global {
     const BagHandler: TempTypes.TmpBagHandlerType;
     const HeldItem: TempTypes.TmpHeldItemType;
     const EvolutionStone: TempTypes.TmpEvolutionStoneType;
+    const GymList: TempTypes.TmpGymListType;
 }

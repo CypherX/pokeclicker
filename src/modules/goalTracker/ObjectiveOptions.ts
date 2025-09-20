@@ -1,19 +1,24 @@
 import { Observable, PureComputed } from 'knockout';
-import { camelCaseToString } from '../GameConstants';
+import { camelCaseToString, Currency, getGymIndex, Region, RegionGyms } from '../GameConstants';
 import { ItemList } from '../items/ItemList';
 import { ItemNameType } from '../items/ItemNameType';
 import { pokemonMap } from '../pokemons/PokemonList';
 import { PokemonNameType } from '../pokemons/PokemonNameType';
 import { SortOptions, SortOptionConfigs } from '../settings/SortOptions';
-import { itemCategoryDefinitions, itemsByCategory, ItemCategory } from './ItemCategories';
+import { itemCategoryDefinitions, itemsByCategory } from './ItemCategories';
 import BerryType from '../enums/BerryType';
+import GameHelper from '../GameHelper';
+import SubRegions from '../subRegion/SubRegions';
 
 export enum ObjectiveType {
     // eslint-disable-next-line @typescript-eslint/no-shadow
     Item,
     Pokemon,
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    Currency,
     Statistic,
     Berry,
+    GymClears,
 }
 
 export interface ItemObjectiveConfig {
@@ -26,6 +31,10 @@ export interface PokemonObjectiveConfig {
     property: Observable<string>;
 }
 
+export interface CurrencyObjectiveConfig {
+    currency: Observable<Currency>;
+}
+
 export interface StatisticObjectiveConfig {
     statistic: Observable<string>;
 }
@@ -34,25 +43,35 @@ export interface BerryObjectiveConfig {
     berry: Observable<BerryType>;
 }
 
+export interface GymClearObjectiveConfig {
+    region: Observable<Region>;
+    gymTown: Observable<string>;
+}
+
 export type ObjectiveConfig =
     | ItemObjectiveConfig
     | PokemonObjectiveConfig
+    | CurrencyObjectiveConfig
     | StatisticObjectiveConfig
-    | BerryObjectiveConfig;
+    | BerryObjectiveConfig
+    | GymClearObjectiveConfig;
 
 export type ObjectiveTypeToConfig = {
     [ObjectiveType.Item]: ItemObjectiveConfig;
     [ObjectiveType.Pokemon]: PokemonObjectiveConfig;
+    [ObjectiveType.Currency]: CurrencyObjectiveConfig;
     [ObjectiveType.Statistic]: StatisticObjectiveConfig;
     [ObjectiveType.Berry]: BerryObjectiveConfig;
+    [ObjectiveType.GymClears]: GymClearObjectiveConfig;
 };
 
 interface ObjectiveOption<TConfig> {
+    label?: string,
     options: {
         [K in keyof TConfig]: {
             key: K;
             label: string;
-            values: (config?: TConfig) => PureComputed<{ name: string; value: any }[] | Record<string, { name: string; value: any }[]>>;
+            values: (config?: TConfig) => PureComputed<{ name: string; value: any }[]>;
         }
     }[keyof TConfig][];
     getProgress: (config: TConfig) => PureComputed<number>;
@@ -94,7 +113,7 @@ export const objectiveOptions: {
                 return ItemList[config.item?.()]?.getBagAmount() ?? 0;
             });
         },
-        createConfig: (): ItemObjectiveConfig => ({ category: ko.observable<ItemCategory>(undefined), item: ko.observable<ItemNameType>(undefined) }),
+        createConfig: (): ItemObjectiveConfig => ({ category: ko.observable(), item: ko.observable() }),
     },
     [ObjectiveType.Pokemon]: {
         options: [
@@ -149,7 +168,26 @@ export const objectiveOptions: {
                 return 0;
             });
         },
-        createConfig: (): PokemonObjectiveConfig => ({ pokemon: ko.observable<PokemonNameType>(undefined), property: ko.observable<string>(undefined) }),
+        createConfig: (): PokemonObjectiveConfig => ({ pokemon: ko.observable(), property: ko.observable() }),
+    },
+    [ObjectiveType.Currency]: {
+        options: [
+            {
+                key: 'currency',
+                label: 'Currency',
+                values: () => ko.pureComputed(() => {
+                    return GameHelper.enumNumbers(Currency)
+                        .map((c) => ({ name: camelCaseToString(Currency[c]), value: c }));
+                }),
+            },
+        ],
+        getProgress: (config: CurrencyObjectiveConfig) => {
+            return ko.pureComputed((): number => {
+                const currency = config.currency?.();
+                return App.game.wallet.currencies[currency]?.() ?? 0;
+            });
+        },
+        createConfig: (): CurrencyObjectiveConfig => ({ currency: ko.observable() }),
     },
     [ObjectiveType.Statistic]: {
         options: [
@@ -169,7 +207,7 @@ export const objectiveOptions: {
                 return App.game.statistics[statistic]?.() ?? 0;
             });
         },
-        createConfig: (): StatisticObjectiveConfig => ({ statistic: ko.observable<string>(undefined) }),
+        createConfig: (): StatisticObjectiveConfig => ({ statistic: ko.observable() }),
     },
     [ObjectiveType.Berry]: {
         options: [
@@ -189,6 +227,46 @@ export const objectiveOptions: {
                 return App.game.farming.berryList[berry]?.() ?? 0;
             });
         },
-        createConfig: (): BerryObjectiveConfig => ({ berry: ko.observable<BerryType>(undefined) }),
+        createConfig: (): BerryObjectiveConfig => ({ berry: ko.observable() }),
+    },
+    [ObjectiveType.GymClears]: {
+        label: 'Gym Clears',
+        options: [
+            {
+                key: 'region',
+                label: 'Region',
+                values: () => ko.pureComputed(() => {
+                    return GameHelper.enumNumbers(Region)
+                        .filter((r) => (r <= player.highestRegion() && r > Region.none))
+                        .map((r) => ({ name: camelCaseToString(Region[r]), value: r }));
+                }),
+            },
+            {
+                key: 'gymTown',
+                label: 'Gym',
+                values: (config: GymClearObjectiveConfig) => ko.pureComputed(() => {
+                    const region = config.region?.();
+                    if (region === undefined) {
+                        return [];
+                    }
+
+                    const gymList = Object.values(GymList)
+                        .filter((gym) => gym.parent?.region === region && (gym.parent?.subRegion === 0 || SubRegions.isSubRegionUnlocked(region, gym.parent.subRegion)))
+                        .map((gym) => gym.town);
+
+                    return gymList.map((gymTown) => ({
+                        name: `${GymList[gymTown].leaderName} - ${GymList[gymTown].parent.name}`,
+                        value: gymTown,
+                    }));
+                }),
+            },
+        ],
+        getProgress: (config: GymClearObjectiveConfig) => {
+            return ko.pureComputed((): number => {
+                const gymTown = config.gymTown?.();
+                return App.game.statistics.gymsDefeated[getGymIndex(gymTown)]();
+            });
+        },
+        createConfig: (): GymClearObjectiveConfig => ({ region: ko.observable(), gymTown: ko.observable() }),
     },
 };

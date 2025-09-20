@@ -17,7 +17,7 @@
                     <select class="form-control" data-bind="
                         options: GameHelper.enumSelectOption(ObjectiveType),
                         value: $data.type,
-                        optionsText: 'name',
+                        optionsText: (item) => GoalTracker.getObjectiveTypeLabel(item.value),
                         optionsValue: 'value',
                         optionsCaption: ''"></select>
                 </div>
@@ -25,25 +25,15 @@
                 <hr class="my-2 bg-secondary" />
                 <div data-bind="foreach: { data: $parent.getOptions, as: 'option' }">
                     <div class="form-group" data-bind="with: option.values(config), as: 'values'">
-                        <label data-bind="text: option.label"></label>
-                        <!-- ko if: Array.isArray(values) -->
-                        <select class="form-control" data-bind="
-                            options: values,
-                            value: config[option.key],
-                            optionsText: 'name',
-                            optionsValue: 'value',
-                            optionsCaption: ''"></select>
-                        <!-- /ko -->
-                        <!-- ko ifnot: Array.isArray(values) -->
-                        <select class="form-control" data-bind="value: config[option.key]">
-                            <option data-bind="value: undefined"></option>
-                            <!-- ko foreach: Object.entries(values) -->
-                            <optgroup data-bind="attr: { label: $data[0] }, foreach: $data[1]">
-                                <option data-bind="text: $data.name, value: $data.value"></option>
-                            </optgroup>
-                            <!-- /ko -->
-                        </select>
-                        <!-- /ko -->
+                        <div data-bind="visible: values.length">
+                            <label data-bind="text: option.label"></label>
+                            <select class="form-control" data-bind="
+                                options: values,
+                                value: config[option.key],
+                                optionsText: 'name',
+                                optionsValue: 'value',
+                                optionsCaption: ''"></select>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">

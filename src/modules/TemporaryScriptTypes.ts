@@ -231,6 +231,8 @@ export type TmpDungeonRunnerType = {
 
 export type TmpGymType = {
     town: string;
+    parent?: TmpTownType;
+    leaderName: string;
 };
 
 export type TmpGymRunnerType = {
@@ -374,4 +376,10 @@ export type TmpTemporaryBattleType = {
 
 export type TmpTownType = {
     name: string;
+    region: GameConstants.Region;
+    subRegion: GameConstants.SubRegions;
+};
+
+export type TmpGymListType = {
+    [townName: string]: TmpGymType
 };
