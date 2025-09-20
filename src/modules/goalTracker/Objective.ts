@@ -1,3 +1,4 @@
+import GameHelper from '../GameHelper';
 import { ObjectiveConfig, objectiveOptions, ObjectiveType } from './ObjectiveOptions';
 
 export default class Objective {
@@ -5,6 +6,8 @@ export default class Objective {
     public _config = ko.observable<ObjectiveConfig | undefined>(undefined);
     private _name: KnockoutObservable<string>;
     private _targetAmount = ko.observable(0).extend({ numeric: 0 });
+
+    public uuid: string;
 
     getProgress = ko.pureComputed(() => {
         return objectiveOptions[this.type]?.getProgress(this._config() as any)?.() ?? 0; // "as any" fuck you typescript
@@ -25,6 +28,8 @@ export default class Objective {
         name: string = 'New Objective',
     ) {
         this._name = ko.observable(name);
+
+        this.uuid = GameHelper.randomUUID();
     }
 
     progressText(): string {

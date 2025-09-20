@@ -34,6 +34,7 @@ export const itemCategoryDefinitions: ItemCategoryDefinition[] = [
     { key: 'shard', label: 'Shard', validator: (i) => i instanceof TreasureItem && i.valueType === UndergroundItemValueType.Shard },
     { key: 'heldItem', label: 'Held Item', validator: (i) => i instanceof HeldItem },
     { key: 'evolutionStone', label: 'Evolution Stone', validator: (i) => i instanceof EvolutionStone },
+    //{ key: 'quest', label: 'Quest', validator: (i) => i.name === 'Wishing_Piece' },
 ];
 
 export type ItemCategory = typeof itemCategoryDefinitions[number]['key'];
