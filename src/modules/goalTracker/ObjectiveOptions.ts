@@ -6,12 +6,14 @@ import { pokemonMap } from '../pokemons/PokemonList';
 import { PokemonNameType } from '../pokemons/PokemonNameType';
 import { SortOptions, SortOptionConfigs } from '../settings/SortOptions';
 import { itemCategoryDefinitions, itemsByCategory, ItemCategory } from './ItemCategories';
+import BerryType from '../enums/BerryType';
 
 export enum ObjectiveType {
     // eslint-disable-next-line @typescript-eslint/no-shadow
     Item,
     Pokemon,
     Statistic,
+    Berry,
 }
 
 export interface ItemObjectiveConfig {
@@ -28,12 +30,21 @@ export interface StatisticObjectiveConfig {
     statistic: Observable<string>;
 }
 
-export type ObjectiveConfig = ItemObjectiveConfig | PokemonObjectiveConfig | StatisticObjectiveConfig;
+export interface BerryObjectiveConfig {
+    berry: Observable<BerryType>;
+}
+
+export type ObjectiveConfig =
+    | ItemObjectiveConfig
+    | PokemonObjectiveConfig
+    | StatisticObjectiveConfig
+    | BerryObjectiveConfig;
 
 export type ObjectiveTypeToConfig = {
     [ObjectiveType.Item]: ItemObjectiveConfig;
     [ObjectiveType.Pokemon]: PokemonObjectiveConfig;
     [ObjectiveType.Statistic]: StatisticObjectiveConfig;
+    [ObjectiveType.Berry]: BerryObjectiveConfig;
 };
 
 interface ObjectiveOption<TConfig> {
@@ -159,5 +170,25 @@ export const objectiveOptions: {
             });
         },
         createConfig: (): StatisticObjectiveConfig => ({ statistic: ko.observable<string>(undefined) }),
+    },
+    [ObjectiveType.Berry]: {
+        options: [
+            {
+                key: 'berry',
+                label: 'Berry',
+                values: () => ko.pureComputed(() => {
+                    return App.game.farming.unlockedBerries
+                        .filter(unlocked => unlocked())
+                        .map((_, i) => ({ name: `#${(i + 1).toString().padStart(2, '0')} - ${BerryType[i]}`, value: i }));
+                }),
+            },
+        ],
+        getProgress: (config: BerryObjectiveConfig) => {
+            return ko.pureComputed((): number => {
+                const berry = config.berry();
+                return App.game.farming.berryList[berry]?.() ?? 0;
+            });
+        },
+        createConfig: (): BerryObjectiveConfig => ({ berry: ko.observable<BerryType>(undefined) }),
     },
 };
