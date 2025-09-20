@@ -373,6 +373,7 @@ Settings.add(new Setting<string>('breedingDisplayTextSetting', 'Display Value',
         new SettingOption('Pokémon ID #', 'dexId'),
         new SettingOption('Vitamins used', 'vitamins'),
         new SettingOption('EVs', 'evs'),
+        new SettingOption('EV Bonus', 'evBonus'),
     ],
     'attack'));
 Settings.add(new Setting<Region>('breedingRegionalAttackDebuffSetting', 'Regional Debuff',

@@ -111,7 +111,7 @@ export const objectiveOptions: {
                 key: 'property',
                 label: 'Property',
                 values: () => ko.pureComputed(() => {
-                    const options = [SortOptions.attackMaxLevel, SortOptions.evs]
+                    const options = [SortOptions.attackMaxLevel, SortOptions.evs, SortOptions.evBonus]
                         .map((option) => ({ name: SortOptionConfigs[option].text, value: SortOptions[option] }));
 
                     options.push(...[
