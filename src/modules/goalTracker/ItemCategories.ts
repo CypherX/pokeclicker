@@ -10,6 +10,7 @@ import TreasureItem from '../items/TreasureItem';
 import Consumable from '../items/Consumable';
 import UndergroundItemValueType from '../enums/UndergroundItemValueType';
 import Vitamin from '../items/Vitamin';
+import { TmpHeldItemType } from '../TemporaryScriptTypes';
 
 interface ItemCategoryDefinition {
     key: string;
@@ -26,13 +27,13 @@ export const itemCategoryDefinitions: ItemCategoryDefinition[] = [
     { key: 'egg', label: 'Egg', validator: (i) => i instanceof EggItem },
     { key: 'vitamin', label: 'Vitamin', validator: (i) => i instanceof Vitamin },
     { key: 'consumable', label: 'Consumable', validator: (i) => i instanceof Consumable },
-    { key: 'treasure', label: 'Treasure', validator: (i) => i instanceof TreasureItem &&
+    { key: 'treasure', label: 'Underground Treasure', validator: (i) => i instanceof TreasureItem &&
         (i.valueType === UndergroundItemValueType.Diamond || i.valueType === UndergroundItemValueType.Special) },
     { key: 'plate', label: 'Gem Plate', validator: (i) => i instanceof TreasureItem && i.valueType === UndergroundItemValueType.Gem },
     { key: 'fossil', label: 'Fossil', validator: (i) => i instanceof TreasureItem &&
         (i.valueType === UndergroundItemValueType.Fossil || i.valueType === UndergroundItemValueType.FossilPiece) },
     { key: 'shard', label: 'Shard', validator: (i) => i instanceof TreasureItem && i.valueType === UndergroundItemValueType.Shard },
-    { key: 'heldItem', label: 'Held Item', validator: (i) => i instanceof HeldItem },
+    { key: 'heldItem', label: 'Held Item', validator: (i) => i instanceof HeldItem && (i as TmpHeldItemType).isUnlocked() },
     { key: 'evolutionStone', label: 'Evolution Stone', validator: (i) => i instanceof EvolutionStone },
     //{ key: 'quest', label: 'Quest', validator: (i) => i.name === 'Wishing_Piece' },
 ];

@@ -78,7 +78,7 @@ export const objectiveOptions: {
                 key: 'item',
                 label: 'Item',
                 values: (config: ItemObjectiveConfig) => ko.pureComputed(() => {
-                    const category = config.category();
+                    const category = config.category?.();
                     if (!category) {
                         return [];
                     }
@@ -91,7 +91,7 @@ export const objectiveOptions: {
         ],
         getProgress: (config: ItemObjectiveConfig) => {
             return ko.pureComputed((): number => {
-                return ItemList[config.item()]?.getBagAmount() ?? 0;
+                return ItemList[config.item?.()]?.getBagAmount() ?? 0;
             });
         },
         createConfig: (): ItemObjectiveConfig => ({ category: ko.observable<ItemCategory>(undefined), item: ko.observable<ItemNameType>(undefined) }),
@@ -131,8 +131,8 @@ export const objectiveOptions: {
         ],
         getProgress: (config: PokemonObjectiveConfig) => {
             return ko.pureComputed((): number => {
-                const pokemonName = config.pokemon();
-                const property = config.property();
+                const pokemonName = config.pokemon?.();
+                const property = config.property?.();
 
                 const statistic = App.game.statistics[property];
                 if (statistic) {
@@ -165,7 +165,7 @@ export const objectiveOptions: {
         ],
         getProgress: (config: StatisticObjectiveConfig) => {
             return ko.pureComputed((): number => {
-                const statistic = config.statistic();
+                const statistic = config.statistic?.();
                 return App.game.statistics[statistic]?.() ?? 0;
             });
         },
