@@ -1,4 +1,7 @@
+import { MINUTE } from '../GameConstants';
 import GameHelper from '../GameHelper';
+import NotificationConstants from '../notifications/NotificationConstants';
+import Notifier from '../notifications/Notifier';
 import { ObjectiveConfig, objectiveOptions, ObjectiveType } from './ObjectiveOptions';
 
 export default class Objective {
@@ -8,6 +11,7 @@ export default class Objective {
     private _targetAmount = ko.observable(0).extend({ numeric: 0 });
 
     public uuid: string;
+    private _notified = false;
 
     getProgress = ko.pureComputed(() => {
         return objectiveOptions[this.type]?.getProgress(this._config() as any)?.() ?? 0; // "as any" fuck you typescript
@@ -24,12 +28,32 @@ export default class Objective {
         return Object.values(this.config).every(obs => obs() !== undefined);
     });
 
+    private isComplete = ko.computed(() => {
+        return this.getProgress() >= this.targetAmount && this.targetAmount > 0;
+    });
+
     constructor(
         name: string = 'New Objective',
     ) {
         this._name = ko.observable(name);
 
         this.uuid = GameHelper.randomUUID();
+
+        this.isComplete.subscribe((complete) => {
+            if (complete && !this._notified) {
+                this._notified = true;
+                Notifier.notify({
+                    title: 'Goal Tracker',
+                    message: `Your "${this.name}" objective is complete!`,
+                    type: NotificationConstants.NotificationOption.primary,
+                    sound: NotificationConstants.NotificationSound.General.goal_objective_complete,
+                    setting: NotificationConstants.NotificationSetting.General.goal_objective_complete,
+                    timeout: 15 * MINUTE,
+                });
+            } else if (!complete && this._notified) {
+                this._notified = false;
+            }
+        });
     }
 
     progressText(): string {
