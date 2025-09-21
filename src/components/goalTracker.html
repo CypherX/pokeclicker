@@ -1,4 +1,4 @@
-<div id="goalTracker" class="card sortable border-secondary mb-3 pokeclicker-optional-module">
+<div id="goalTracker" class="card sortable border-secondary mb-3 pokeclicker-optional-module" data-bind="visible: Settings.getSetting('showGoalTrackerModule').observableValue(), if: Settings.getSetting('showGoalTrackerModule').observableValue()">
     <div class="card-header p-0" data-toggle="collapse" href="#goalTrackerCard">
         <span>Goal Tracker</span>
     </div>
