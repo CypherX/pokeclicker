@@ -381,5 +381,17 @@ export type TmpTownType = {
 };
 
 export type TmpGymListType = {
-    [townName: string]: TmpGymType
+    [townName: string]: TmpGymType;
+};
+
+export type TmpDungeonListType = {
+    [dungeonName: string]: TmpDungeonType
+};
+
+export type TmpDungeonType = {
+    name: string;
+};
+
+export type TmpTownListType = {
+    [name: string]: TmpTownType;
 };

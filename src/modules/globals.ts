@@ -21,4 +21,6 @@ declare global {
     const HeldItem: TempTypes.TmpHeldItemType;
     const EvolutionStone: TempTypes.TmpEvolutionStoneType;
     const GymList: TempTypes.TmpGymListType;
+    const dungeonList: TempTypes.TmpDungeonListType;
+    const TownList: TempTypes.TmpTownListType;
 }

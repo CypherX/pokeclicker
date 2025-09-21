@@ -1,5 +1,5 @@
 import { Observable, PureComputed } from 'knockout';
-import { camelCaseToString, Currency, getGymIndex, Region, RegionGyms } from '../GameConstants';
+import { camelCaseToString, Currency, getDungeonIndex, getGymIndex, Region, RegionGyms } from '../GameConstants';
 import { ItemList } from '../items/ItemList';
 import { ItemNameType } from '../items/ItemNameType';
 import { pokemonMap } from '../pokemons/PokemonList';
@@ -18,7 +18,8 @@ export enum ObjectiveType {
     Currency,
     Statistic,
     Berry,
-    GymClears,
+    GymClear,
+    DungeonClear,
 }
 
 export interface ItemObjectiveConfig {
@@ -48,13 +49,19 @@ export interface GymClearObjectiveConfig {
     gymTown: Observable<string>;
 }
 
+export interface DungeonClearObjectiveConfig {
+    region: Observable<Region>;
+    dungeonName: Observable<string>;
+}
+
 export type ObjectiveConfig =
     | ItemObjectiveConfig
     | PokemonObjectiveConfig
     | CurrencyObjectiveConfig
     | StatisticObjectiveConfig
     | BerryObjectiveConfig
-    | GymClearObjectiveConfig;
+    | GymClearObjectiveConfig
+    | DungeonClearObjectiveConfig;
 
 export type ObjectiveTypeToConfig = {
     [ObjectiveType.Item]: ItemObjectiveConfig;
@@ -62,7 +69,8 @@ export type ObjectiveTypeToConfig = {
     [ObjectiveType.Currency]: CurrencyObjectiveConfig;
     [ObjectiveType.Statistic]: StatisticObjectiveConfig;
     [ObjectiveType.Berry]: BerryObjectiveConfig;
-    [ObjectiveType.GymClears]: GymClearObjectiveConfig;
+    [ObjectiveType.GymClear]: GymClearObjectiveConfig;
+    [ObjectiveType.DungeonClear]: DungeonClearObjectiveConfig;
 };
 
 interface ObjectiveOption<TConfig> {
@@ -229,7 +237,7 @@ export const objectiveOptions: {
         },
         createConfig: (): BerryObjectiveConfig => ({ berry: ko.observable() }),
     },
-    [ObjectiveType.GymClears]: {
+    [ObjectiveType.GymClear]: {
         label: 'Gym Clears',
         options: [
             {
@@ -251,7 +259,7 @@ export const objectiveOptions: {
                     }
 
                     const gymList = Object.values(GymList)
-                        .filter((gym) => gym.parent?.region === region && (gym.parent?.subRegion === 0 || SubRegions.isSubRegionUnlocked(region, gym.parent.subRegion)))
+                        .filter((gym) => gym.parent?.region === region && (gym.parent?.subRegion === 0 || SubRegions.isSubRegionUnlocked(region, gym.parent.subRegion ?? 0)))
                         .map((gym) => gym.town);
 
                     return gymList.map((gymTown) => ({
@@ -268,5 +276,52 @@ export const objectiveOptions: {
             });
         },
         createConfig: (): GymClearObjectiveConfig => ({ region: ko.observable(), gymTown: ko.observable() }),
+    },
+    [ObjectiveType.DungeonClear]: {
+        label: 'Dungeon Clears',
+        options: [
+            {
+                key: 'region',
+                label: 'Region',
+                values: () => ko.pureComputed(() => {
+                    return GameHelper.enumNumbers(Region)
+                        .filter((r) => (r <= player.highestRegion() && r > Region.none))
+                        .map((r) => ({ name: camelCaseToString(Region[r]), value: r }));
+                }),
+            },
+            {
+                key: 'dungeonName',
+                label: 'Dungeon',
+                values: (config: DungeonClearObjectiveConfig) => ko.pureComputed(() => {
+                    const region = config.region?.();
+                    if (region === undefined) {
+                        return [];
+                    }
+
+                    const dungeons = Object.values(dungeonList)
+                        .filter((dungeon) => {
+                            const town = TownList[dungeon.name];
+                            if (town.region !== region) {
+                                return false;
+                            }
+                            const subRegion = town.subRegion ?? 0;
+                            return subRegion === 0 || SubRegions.isSubRegionUnlocked(region, subRegion);
+                        })
+                        .map((dungeon) => dungeon.name);
+
+                    return dungeons.map((dungeonName) => ({
+                        name: dungeonName,
+                        value: dungeonName,
+                    }));
+                }),
+            },
+        ],
+        getProgress: (config: DungeonClearObjectiveConfig) => {
+            return ko.pureComputed((): number => {
+                const dungeonName = config.dungeonName?.();
+                return App.game.statistics.dungeonsCleared[getDungeonIndex(dungeonName)]();
+            });
+        },
+        createConfig: (): DungeonClearObjectiveConfig => ({ region: ko.observable(), dungeonName: ko.observable() }),
     },
 };
