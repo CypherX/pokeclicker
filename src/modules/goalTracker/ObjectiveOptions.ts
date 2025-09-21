@@ -1,5 +1,5 @@
 import { Observable, PureComputed } from 'knockout';
-import { camelCaseToString, Currency, getDungeonIndex, getGymIndex, Region, RegionGyms } from '../GameConstants';
+import { camelCaseToString, Currency, getDungeonIndex, getGymIndex, Region } from '../GameConstants';
 import { ItemList } from '../items/ItemList';
 import { ItemNameType } from '../items/ItemNameType';
 import { pokemonMap } from '../pokemons/PokemonList';
