@@ -9,6 +9,7 @@ import { itemCategoryDefinitions, itemsByCategory } from './ItemCategories';
 import BerryType from '../enums/BerryType';
 import GameHelper from '../GameHelper';
 import SubRegions from '../subRegion/SubRegions';
+import PokemonType from '../enums/PokemonType';
 
 export enum ObjectiveType {
     // eslint-disable-next-line @typescript-eslint/no-shadow
@@ -20,6 +21,7 @@ export enum ObjectiveType {
     Berry,
     GymClear,
     DungeonClear,
+    Gem,
 }
 
 export interface ItemObjectiveConfig {
@@ -54,6 +56,10 @@ export interface DungeonClearObjectiveConfig {
     dungeonName: Observable<string>;
 }
 
+export interface GemObjectiveConfig {
+    gem: Observable<PokemonType>;
+}
+
 export type ObjectiveConfig =
     | ItemObjectiveConfig
     | PokemonObjectiveConfig
@@ -61,7 +67,8 @@ export type ObjectiveConfig =
     | StatisticObjectiveConfig
     | BerryObjectiveConfig
     | GymClearObjectiveConfig
-    | DungeonClearObjectiveConfig;
+    | DungeonClearObjectiveConfig
+    | GemObjectiveConfig;
 
 export type ObjectiveTypeToConfig = {
     [ObjectiveType.Item]: ItemObjectiveConfig;
@@ -70,7 +77,8 @@ export type ObjectiveTypeToConfig = {
     [ObjectiveType.Statistic]: StatisticObjectiveConfig;
     [ObjectiveType.Berry]: BerryObjectiveConfig;
     [ObjectiveType.GymClear]: GymClearObjectiveConfig;
-    [ObjectiveType.DungeonClear]: DungeonClearObjectiveConfig;
+    [ObjectiveType.DungeonClear]: DungeonClearObjectiveConfig
+    [ObjectiveType.Gem] : GemObjectiveConfig;
 };
 
 interface ObjectiveOption<TConfig> {
@@ -231,7 +239,7 @@ export const objectiveOptions: {
         ],
         getProgress: (config: BerryObjectiveConfig) => {
             return ko.pureComputed((): number => {
-                const berry = config.berry();
+                const berry = config.berry?.();
                 return App.game.farming.berryList[berry]?.() ?? 0;
             });
         },
@@ -323,5 +331,25 @@ export const objectiveOptions: {
             });
         },
         createConfig: (): DungeonClearObjectiveConfig => ({ region: ko.observable(), dungeonName: ko.observable() }),
+    },
+    [ObjectiveType.Gem]: {
+        options: [
+            {
+                key: 'gem',
+                label: 'Gem',
+                values: () => ko.pureComputed(() => {
+                    return GameHelper.enumNumbers(PokemonType)
+                        .filter(t => t !== PokemonType.None)
+                        .map(t => ({ name: PokemonType[t], value: t }));
+                }),
+            },
+        ],
+        getProgress: (config: GemObjectiveConfig) => {
+            return ko.pureComputed((): number => {
+                const gem = config.gem?.();
+                return App.game.gems.gemWallet[gem]?.() ?? 0;
+            });
+        },
+        createConfig: (): GemObjectiveConfig => ({ gem: ko.observable() }),
     },
 };
