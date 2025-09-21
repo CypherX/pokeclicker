@@ -29,7 +29,7 @@ export default class Objective {
     });
 
     private isComplete = ko.computed(() => {
-        return this.getProgress() >= this.targetAmount && this.targetAmount > 0;
+        return this.isConfigured() && this.targetAmount > 0 && this.getProgress() >= this.targetAmount;
     });
 
     constructor(
