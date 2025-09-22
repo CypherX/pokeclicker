@@ -24,6 +24,13 @@ export default class Goal {
         $('#goalTrackerObjectiveModal').modal('show');
     }
 
+    duplicateObjective(objective: Objective) {
+        const json = objective.toJSON();
+        const newObjective = new Objective();
+        newObjective.fromJSON(json);
+        this.objectives.push(newObjective);
+    }
+
     async deleteObjective(objective: Objective) {
         if (await Notifier.confirm({
             title: 'Delete objective',

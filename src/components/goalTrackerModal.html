@@ -57,6 +57,8 @@
                                                             App.game.goalTracker.selectedObjective($data);
                                                             $('#goalTrackerObjectiveModal').modal('show');
                                                         }">✎</button>
+                                                    <button type="button" class="btn btn-primary btn-sm px-1 py-0 no-emoji-font" style="width: 25px;" title="Duplicate"
+                                                        data-bind="click: () => { $parent.duplicateObjective($data) }">&#10697;</button>
                                                     <button type="button" class="btn btn-danger btn-sm px-1 py-0" style="width: 25px;" title="Delete Objective"
                                                         data-bind="click: () => $parent.deleteObjective($data)">&times;</button>
                                                 </div>
