@@ -87,6 +87,7 @@ interface ObjectiveOption<TConfig> {
         [K in keyof TConfig]: {
             key: K;
             label: string;
+            searchable?: boolean;
             values: (config?: TConfig) => PureComputed<{ name: string; value: any }[]>;
         }
     }[keyof TConfig][];
@@ -112,6 +113,7 @@ export const objectiveOptions: {
             {
                 key: 'item',
                 label: 'Item',
+                searchable: true,
                 values: (config: ItemObjectiveConfig) => ko.pureComputed(() => {
                     const category = config.category?.();
                     if (!category) {
@@ -136,6 +138,7 @@ export const objectiveOptions: {
             {
                 key: 'pokemon',
                 label: 'Pokémon',
+                searchable: true,
                 values: () => ko.pureComputed(() => {
                     return [...App.game.party.caughtPokemon]
                         .sort((a, b) => a.id - b.id)
@@ -230,6 +233,7 @@ export const objectiveOptions: {
             {
                 key: 'berry',
                 label: 'Berry',
+                searchable: true,
                 values: () => ko.pureComputed(() => {
                     return App.game.farming.unlockedBerries
                         .filter(unlocked => unlocked())
