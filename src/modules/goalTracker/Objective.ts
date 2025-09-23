@@ -48,7 +48,7 @@ export default class Objective {
                     type: NotificationConstants.NotificationOption.primary,
                     sound: NotificationConstants.NotificationSound.General.goal_objective_complete,
                     setting: NotificationConstants.NotificationSetting.General.goal_objective_complete,
-                    timeout: 15 * MINUTE,
+                    timeout: 5 * MINUTE,
                 });
             } else if (!complete && this._notified) {
                 this._notified = false;

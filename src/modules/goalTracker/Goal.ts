@@ -2,6 +2,7 @@ import Notifier from '../notifications/Notifier';
 import NotificationOption from '../notifications/NotificationOption';
 import Objective from './Objective';
 import GameHelper from '../GameHelper';
+import SaveSelector from '../SaveSelector';
 
 export default class Goal {
     private _name: KnockoutObservable<string>;
@@ -39,6 +40,46 @@ export default class Goal {
             confirm: 'Delete',
         })) {
             this.objectives.remove(objective);
+        }
+    }
+
+    exportObjective(objective: Objective) {
+        const json = JSON.stringify(objective.toJSON());
+        navigator.clipboard.writeText(SaveSelector.btoa(json));
+        Notifier.notify({
+            title: 'Objective exported',
+            message: 'The code for this objective has been saved to your clipboard.',
+            type: NotificationOption.info,
+        });
+    }
+
+    async importObjective() {
+        const input = await Notifier.prompt({
+            title: 'Import Objective',
+            message: 'Enter the exported objective code below:',
+            type: NotificationOption.primary,
+            timeout: 1e6,
+        });
+
+        if (input?.trim().length) {
+            try {
+                const json = JSON.parse(SaveSelector.atob(input));
+                const objective = new Objective();
+                objective.fromJSON(json);
+                this.objectives.push(objective);
+
+                Notifier.notify({
+                    title: 'Objective imported!',
+                    message: `The "<strong>${objective.name}</strong>" objective has been imported!`,
+                    type: NotificationOption.success,
+                });
+            } catch (error) {
+                Notifier.notify({
+                    title: 'Import Error',
+                    message: 'Failed to import objective.',
+                    type: NotificationOption.danger,
+                });
+            }
         }
     }
 
