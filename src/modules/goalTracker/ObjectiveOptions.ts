@@ -178,9 +178,9 @@ export const objectiveOptions: {
                     return App.game.statistics[property][id]?.() ?? 0;
                 }
 
+                const partyPokemon = App.game.party.getPokemonByName(pokemonName);
                 const sortOption = SortOptions[property];
-                if (sortOption) {
-                    const partyPokemon = App.game.party.getPokemonByName(pokemonName);
+                if (partyPokemon && sortOption) {
                     return SortOptionConfigs[sortOption].getValue(partyPokemon);
                 }
 
