@@ -166,6 +166,24 @@ export default class SpecialEvents implements Feature {
             new Date(new Date().getFullYear(), 6, 24, 23), () => {
             },
         );
+        /* Pokemon the first movie release date
+        RoamingPokemonList.ts:
+            Bulbausaur (Clone)
+            Charmander (Clone)
+            Squirtle (Clone)
+            Pikachu (Clone)
+        Dungeon.ts:
+            New Island as a dungeon
+            Armored Mewtwo in New Island
+        */
+        this.newEvent('A Pirate\'s Life', 'Pirates are causing trouble all over the Seven Seas.',
+            // Start
+            new Date(new Date().getFullYear(), 0, 1, 1), () => {
+            },
+            // End
+            new Date(new Date().getFullYear(), 11, 31, 23), () => {
+            },
+        );
         // Halloween
         this.newEvent('Halloween!', 'Encounter Spooky Pokémon for a limited time around Kanto, Johto and Hoenn.',
             // Start

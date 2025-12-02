@@ -195,6 +195,8 @@ import EggItem from './items/EggItem';
 import MegaStoneItem from './items/MegaStoneItem';
 import PokeballItem from './items/PokeballItem';
 import QuestItem from './items/QuestItem';
+import EventItem from './items/EventItem';
+import { HeldItem, AttackBonusHeldItem, PokemonRestrictedAttackBonusHeldItem, TypeRestrictedAttackBonusHeldItem, TypeRestrictedExceptionAttackBonusHeldItem, HybridAttackBonusHeldItem, EVsGainedBonusHeldItem, ExpGainedBonusHeldItem  } from './items/HeldItem';
 import Vitamin from './items/Vitamin';
 import VitaminController from './items/VitaminController';
 import Consumable from './items/Consumable';
@@ -229,6 +231,7 @@ import ChristmasPresent from './items/ChristmasPresent';
 import DamageCalculator from './types/DamageCalculator';
 import GameLoadState from './utilities/GameLoadState';
 import GenericDeal, { DealCostOrProfitType } from './deal/GenericDeal';
+import DealHelper from './deal/DealHelper';
 import areaStatus from './enums/AreaStatus';
 import TranslationHelper from './translation/TranslationHelper';
 import * as DownloadUtil from './utilities/DownloadUtil';
@@ -442,6 +445,15 @@ Object.assign(<any>window, {
     MegaStoneItem,
     PokeballItem,
     QuestItem,
+    EventItem,
+    HeldItem,
+    AttackBonusHeldItem,
+    PokemonRestrictedAttackBonusHeldItem,
+    TypeRestrictedAttackBonusHeldItem,
+    TypeRestrictedExceptionAttackBonusHeldItem,
+    HybridAttackBonusHeldItem,
+    EVsGainedBonusHeldItem,
+    ExpGainedBonusHeldItem,
     Vitamin,
     VitaminController,
     Consumable,
@@ -464,6 +476,7 @@ Object.assign(<any>window, {
     UndergroundToolType,
     ShardDeal,
     GenericDeal,
+    DealHelper,
     DealCostOrProfitType,
     EncounterType,
     SafariBaitRequirement,

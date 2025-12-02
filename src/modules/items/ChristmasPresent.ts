@@ -3,12 +3,12 @@ import NotificationConstants from '../notifications/NotificationConstants';
 import Notifier from '../notifications/Notifier';
 import Rand from '../utilities/Rand';
 import Amount from '../wallet/Amount';
-import Item from './Item';
+import EventItem from './EventItem';
 
-export default class ChristmasPresent extends Item {
+export default class ChristmasPresent extends EventItem {
 
     constructor(public size: number = 1) {
-        super('Christmas_present', undefined, undefined, undefined, 'Christmas Present');
+        super('Christmas_present', 'Christmas Present', 'A lovely Christmas Present.', 'Merry Christmas!', undefined, undefined, undefined);
     }
 
     public gain() {

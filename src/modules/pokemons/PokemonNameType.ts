@@ -40,7 +40,7 @@ export type PokemonNameType
     | 'Mega Charizard Y'
     | 'Gigantamax Charizard'
     | 'Charizard (Clone)'
-    | 'Charizard (Captain)'
+    | 'Captain Charizard'
     | 'Squirtle'
     | 'Squirtle (Clone)'
     | 'Squad Leader Squirtle'

@@ -4241,8 +4241,35 @@ class QuestLineHelper {
         App.game.quests.questLines().push(easterQuestLine);
     }
 
+    public static createTreasureMapQuestLine() {
+        SeededRand.seedWithDate(new Date());
+        const treasureMapQuest = new QuestLine('Pirate Treasure Map', 'You obtained a Treasure Map.');
+        const treasureDungeon = SeededRand.fromArray(Object.values(dungeonList).filter(x => x.difficulty == player.highestRegion()));
+        const rewardTotal = 45 + 3 * player.highestRegion();
+        const rewardSilver = Math.floor(rewardTotal / 20);
+        const rewardCopper = rewardTotal - rewardSilver * 10;
+        treasureMapQuest.addQuest(new DefeatDungeonQuest(SeededRand.intBetween(1, treasureDungeon.difficulty), undefined, treasureDungeon.name).withDescription(`The map you obtained says there is a treasure waiting in ${treasureDungeon.name}. Go clear it out.`).withCustomReward(() => {
+            BagHandler.gainItem({ type: ItemType.item, id: 'Relic_silver' }, rewardSilver);
+            BagHandler.gainItem({ type: ItemType.item, id: 'Relic_copper' }, rewardCopper);
+            Notifier.notify({
+                message: `You found the pirate treasure containing ${rewardSilver} Silver Coins and ${rewardCopper} Copper Coins!`,
+                type: NotificationConstants.NotificationOption.success,
+                setting: NotificationConstants.NotificationSetting.Items.dropped_item,
+            });
+        }));
+        App.game.quests.questLines().push(treasureMapQuest);
+    }
+
     public static isQuestLineCompleted(name: QuestLineNameType) {
         return App.game.quests.getQuestLine(name)?.state() == QuestLineState.ended;
+    }
+
+    public static resetQuestLineToInitialState(name: QuestLineNameType) {
+        const questline = App.game.quests.getQuestLine(name);
+        questline.quests().forEach(q => {
+            q.claimed(false);
+            q.createAutoCompleter();
+        });
     }
 
     public static loadQuestLines() {
@@ -4313,6 +4340,7 @@ class QuestLineHelper {
         this.createDrSplashQuestLine();
         this.createMeltanQuestLine();
         this.createRainbowRocketQuestLine();
+        this.createTreasureMapQuestLine();
         // Enforce unique questline names
         const numQuestLines = App.game.quests.questLines().length;
         if (numQuestLines != [...new Set(App.game.quests.questLines().map(ql => ql.name))].length) {

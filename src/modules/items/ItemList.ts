@@ -43,7 +43,7 @@ import UndergroundItemValueType from '../enums/UndergroundItemValueType';
 import TreasureItem from './TreasureItem';
 import { pokemonMap } from '../pokemons/PokemonList';
 import AttackGainConsumable from './AttackGainConsumable';
-// eslint-disable-next-line import/prefer-default-export
+import EventItem from './EventItem';
 export const ItemList: { [name: string]: Item } = {};
 
 ItemList.xAttack         = new BattleItem(BattleItemType.xAttack, '+50% Bonus to Pokémon attack for 30 seconds', 600, undefined, 'X Attack', 'pokemonAttack', 1.5);
@@ -268,6 +268,9 @@ ItemList.Magikarp_Biscuit = new AttackGainConsumable(ConsumableType.Magikarp_Bis
 
 // Miscellaneous
 ItemList.Christmas_present = new ChristmasPresent();
+ItemList.Relic_copper = new EventItem('Relic_copper', 'Copper Coin', 'A copper coin used by pirates.', 'A Pirate\'s Life', undefined, undefined, undefined);
+ItemList.Relic_silver = new EventItem('Relic_silver', 'Silver Coin', 'A silver coin used by pirates.', 'A Pirate\'s Life', undefined, undefined, undefined);
+ItemList.Relic_gold = new EventItem('Relic_gold', 'Gold Coin', 'A gold coin used by pirates.', 'A Pirate\'s Life', undefined, undefined, undefined);
 
 // Underground Items
 // Sellable (Diamonds)
@@ -380,6 +383,7 @@ ItemList.Spiritomb            = new PokemonItem('Spiritomb', 20000, Currency.dia
 // Unova
 ItemList.Zorua                = new PokemonItem('Zorua', 50625);
 ItemList['Meloetta (Pirouette)'] = new PokemonItem('Meloetta (Pirouette)', 200000);
+ItemList['Zorua (Pirate)']     = new PokemonItem('Zorua (Pirate)');
 // Kalos
 ItemList['Furfrou (Debutante)']  = new PokemonItem('Furfrou (Debutante)', 5000000000, Currency.money);
 ItemList['Furfrou (Diamond)']    = new PokemonItem('Furfrou (Diamond)', 300000, Currency.diamond);

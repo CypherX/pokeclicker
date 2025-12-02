@@ -460,7 +460,7 @@ export const pokemonList = createPokemonArray(
         'evolutions': [
             LevelEvolution('Charmeleon', 'Charizard', 36),
             DummyEvolution('Charmeleon', 'Gigantamax Charizard'),
-            DummyEvolution('Charmeleon', 'Charizard (Captain)'),
+            DummyEvolution('Charmeleon', 'Captain Charizard'),
         ],
         'base': {
             'hitpoints': 58,
@@ -601,9 +601,9 @@ export const pokemonList = createPokemonArray(
     },
     {
         'id': 6.05,
-        'name': 'Charizard (Captain)',
+        'name': 'Captain Charizard',
         'catchRate': 45,
-        'type': [PokemonType.Fire, PokemonType.Water],
+        'type': [PokemonType.Fire, PokemonType.Dark],
         'levelType': LevelType.mediumslow,
         'exp': 240,
         'eggCycles': 20,
@@ -618,6 +618,7 @@ export const pokemonList = createPokemonArray(
         'gender': {
             'femaleRatio': 0.125,
         },
+        'heldItem': { type: ItemType.item, id: 'Relic_silver' },
     },
     {
         'id': 7,
@@ -6101,6 +6102,7 @@ export const pokemonList = createPokemonArray(
             'visualDifference': false,
             'femaleRatio': 0,
         },
+        'heldItem': { type: ItemType.item, id: 'Relic_copper' },
     },
     {
         'id': 130,
@@ -6160,6 +6162,7 @@ export const pokemonList = createPokemonArray(
             'visualDifference': false,
             'femaleRatio': 0,
         },
+        'heldItem': { type: ItemType.item, id: 'Relic_copper' },
     },
     {
         'id': 131,
@@ -14632,6 +14635,7 @@ export const pokemonList = createPokemonArray(
         'gender': {
             'femaleRatio': 0.125,
         },
+        'heldItem': { type: ItemType.item, id: 'Relic_silver' },
     },
     {
         'id': 449,
@@ -17874,6 +17878,7 @@ export const pokemonList = createPokemonArray(
         'gender': {
             'femaleRatio': 0.125,
         },
+        'heldItem': { type: ItemType.item, id: 'Relic_copper' },
     },
     {
         'id': 571,
@@ -22244,7 +22249,7 @@ export const pokemonList = createPokemonArray(
     {
         'id': 720.02,
         'name': 'Captain Hoopa',
-        'type': [PokemonType.Dark, PokemonType.Ghost],
+        'type': [PokemonType.Water, PokemonType.Ghost],
         'eggCycles': 120,
         'levelType': LevelType.slow,
         'exp': 270,
@@ -22260,6 +22265,7 @@ export const pokemonList = createPokemonArray(
         'gender': {
             'type': Genders.Genderless,
         },
+        'heldItem': { type: ItemType.item, id: 'Relic_gold' },
     },
     {
         'id': 721,
@@ -23291,7 +23297,7 @@ export const pokemonList = createPokemonArray(
     {
         'id': 761.01,
         'name': 'Bounsweet (Pirate)',
-        'type': [PokemonType.Grass, PokemonType.Water],
+        'type': [PokemonType.Grass, PokemonType.Dark],
         'eggCycles': 20,
         'levelType': LevelType.mediumslow,
         'exp': 42,
@@ -23308,6 +23314,7 @@ export const pokemonList = createPokemonArray(
         'gender': {
             'femaleRatio': 1,
         },
+        'heldItem': { type: ItemType.item, id: 'Relic_silver' },
     },
     {
         'id': 762,
@@ -23333,7 +23340,7 @@ export const pokemonList = createPokemonArray(
     {
         'id': 762.01,
         'name': 'Steenee (Pirate)',
-        'type': [PokemonType.Grass, PokemonType.Water],
+        'type': [PokemonType.Grass, PokemonType.Dark],
         'eggCycles': 20,
         'levelType': LevelType.mediumslow,
         'exp': 102,
@@ -23350,6 +23357,7 @@ export const pokemonList = createPokemonArray(
         'gender': {
             'femaleRatio': 1,
         },
+        'heldItem': { type: ItemType.item, id: 'Relic_silver' },
     },
     {
         'id': 763,
@@ -23374,7 +23382,7 @@ export const pokemonList = createPokemonArray(
     {
         'id': 763.01,
         'name': 'Tsareena (Captain)',
-        'type': [PokemonType.Grass, PokemonType.Water],
+        'type': [PokemonType.Grass, PokemonType.Dark],
         'eggCycles': 20,
         'levelType': LevelType.mediumslow,
         'exp': 230,
@@ -23390,6 +23398,7 @@ export const pokemonList = createPokemonArray(
         'gender': {
             'femaleRatio': 1,
         },
+        'heldItem': { type: ItemType.item, id: 'Relic_silver' },
     },
     {
         'id': 764,
@@ -25051,7 +25060,7 @@ export const pokemonList = createPokemonArray(
     {
         'id': 813.01,
         'name': 'Scorbunny (Pirate)',
-        'type': [PokemonType.Fire, PokemonType.Dark],
+        'type': [PokemonType.Fire, PokemonType.Water],
         'base': {
             'hitpoints': 50,
             'attack': 71,
@@ -25068,6 +25077,7 @@ export const pokemonList = createPokemonArray(
         'gender': {
             'femaleRatio': 0.125,
         },
+        'heldItem': { type: ItemType.item, id: 'Relic_gold' },
     },
     {
         'id': 814,
@@ -25096,7 +25106,7 @@ export const pokemonList = createPokemonArray(
     {
         'id': 814.01,
         'name': 'Raboot (Pirate)',
-        'type': [PokemonType.Fire, PokemonType.Dark],
+        'type': [PokemonType.Fire, PokemonType.Water],
         'base': {
             'hitpoints': 65,
             'attack': 86,
@@ -25115,6 +25125,7 @@ export const pokemonList = createPokemonArray(
         'gender': {
             'femaleRatio': 0.125,
         },
+        'heldItem': { type: ItemType.item, id: 'Relic_gold' },
     },
     {
         'id': 815,
@@ -25139,7 +25150,7 @@ export const pokemonList = createPokemonArray(
     {
         'id': 815.02,
         'name': 'Cinderace (Captain)',
-        'type': [PokemonType.Fire, PokemonType.Dark],
+        'type': [PokemonType.Fire, PokemonType.Water],
         'base': {
             'hitpoints': 80,
             'attack': 116,
@@ -25155,6 +25166,7 @@ export const pokemonList = createPokemonArray(
         'gender': {
             'femaleRatio': 0.125,
         },
+        'heldItem': { type: ItemType.item, id: 'Relic_gold' },
     },
     {
         'id': 815.01,
@@ -28444,7 +28456,7 @@ export const pokemonList = createPokemonArray(
     {
         'id': 888.02,
         'name': 'Captain Zacian',
-        'type': [PokemonType.Poison, PokemonType.Steel],
+        'type': [PokemonType.Dark, PokemonType.Steel],
         'base': {
             'hitpoints': 92,
             'attack': 150,
@@ -28457,7 +28469,7 @@ export const pokemonList = createPokemonArray(
         'levelType': LevelType.slow,
         'exp': 335,
         'catchRate': 10,
-        'heldItem': { type: ItemType.item, id: 'Rusted_Sword' },
+        'heldItem': { type: ItemType.item, id: 'Relic_gold' },
         'gender': {
             'type': Genders.Genderless,
         },
