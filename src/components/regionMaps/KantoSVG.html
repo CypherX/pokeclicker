@@ -866,18 +866,6 @@
         })
         %>
 
-        <!--Gyarados Galleon extension-->
-        <%- include('templates/mapOverlay',
-        { name: "Gyarados Galleon"
-        , x: 95, y: 40
-        , width: 4, height: 9
-        , databind: "click:function(){MapHelper.moveToTown('Gyarados Galleon')}, attr:{ class: MapHelper.calculateTownCssClass('Gyarados Galleon') }"
-        , visible:  "TownList['Gyarados Galleon'].isUnlocked()"
-        , image: "assets/images/map/transparent.png"
-        , connectedToTown: "Gyarados Galleon"
-        })
-        %>
-
         %>
     </g>
 
