@@ -471,17 +471,17 @@ export default class GenericDeal {
         list.push(
             new GenericDeal({
                 costs: [{ type: DealCostOrProfitType.Item, item: ItemList.Relic_copper, amount: 1 }],
-                profits: [{ type: DealCostOrProfitType.Item, item: ItemList.Ultraball, amount: 10, hidePlayerInventory: true }],
+                profits: [{ type: DealCostOrProfitType.Item, item: ItemList.Ultraball, amount: 5, hidePlayerInventory: true }],
             }));
 
         for (let i = 0; i < 2; i++) {
             list.push(new GenericDeal({
-                costs: [{ type: DealCostOrProfitType.Item, item: ItemList.Relic_silver, amount: 6 + SeededRand.intBetween(-2, 2) }],
+                costs: [{ type: DealCostOrProfitType.Item, item: ItemList.Relic_silver, amount: 13 + SeededRand.intBetween(-2, 2) }],
                 profits: [{ type: DealCostOrProfitType.Item, item: DealHelper.randomEvoItem(), amount: 1 }],
             }));
         }
         list.push(new GenericDeal({
-            costs: [{ type: DealCostOrProfitType.Item, item: ItemList.Relic_gold, amount: 1 }],
+            costs: [{ type: DealCostOrProfitType.Item, item: ItemList.Relic_gold, amount: 2 }],
             profits: [{ type: DealCostOrProfitType.Item, item: ItemList.Rare_Candy, amount: 1 }],
         }));
 
@@ -490,7 +490,7 @@ export default class GenericDeal {
         ).slice(0, 3);
         typeBoostItems.forEach((item) => {
             list.push(new GenericDeal({
-                costs: [{ type: DealCostOrProfitType.Item, item: ItemList.Relic_silver, amount: 9 + SeededRand.intBetween(-3, 3) }],
+                costs: [{ type: DealCostOrProfitType.Item, item: ItemList.Relic_silver, amount: 18 + SeededRand.intBetween(-3, 3) }],
                 profits: [{ type: DealCostOrProfitType.Item, item, amount: 1 }],
                 visibleRequirement: new MaxRegionRequirement(Region.johto),
             }));
@@ -502,7 +502,7 @@ export default class GenericDeal {
         pokeballItems.forEach((item) => {
             list.push(new GenericDeal({
                 costs: [{ type: DealCostOrProfitType.Item, item: ItemList.Relic_gold, amount: 10 }],
-                profits: [{ type: DealCostOrProfitType.Item, item, amount: 10 }],
+                profits: [{ type: DealCostOrProfitType.Item, item, amount: 5 }],
                 visibleRequirement: new MaxRegionRequirement(Region.sinnoh),
             }));
         });
@@ -513,7 +513,7 @@ export default class GenericDeal {
             visibleRequirement: new MaxRegionRequirement(Region.unova),
         }));
         list.push(new GenericDeal({
-            costs: [{ type: DealCostOrProfitType.Item, item: ItemList.Relic_gold, amount: 4 }],
+            costs: [{ type: DealCostOrProfitType.Item, item: ItemList.Relic_gold, amount: 8 }],
             profits: [{ type: DealCostOrProfitType.Item, item: ItemList.Power_Bracer, amount: 1 }],
             visibleRequirement: new MaxRegionRequirement(Region.alola),
         }));
@@ -522,7 +522,7 @@ export default class GenericDeal {
             Object.values(ItemList).filter((i) => i instanceof PokemonRestrictedAttackBonusHeldItem && (i as PokemonRestrictedAttackBonusHeldItem).regionUnlocked <= player.highestRegion()),
         ).find(() => true);
         list.push(new GenericDeal({
-            costs: [{ type: DealCostOrProfitType.Item, item: ItemList.Relic_gold, amount: 150 + SeededRand.intBetween(-15, 15) }],
+            costs: [{ type: DealCostOrProfitType.Item, item: ItemList.Relic_gold, amount: 30 + SeededRand.intBetween(-30, 30) }],
             profits: [{ type: DealCostOrProfitType.Item, item: pokemonBoostItem, amount: 1, hidePlayerInventory: true }],
             visibleRequirement: new MaxRegionRequirement(Region.galar),
             tradeRequirement: new CustomRequirement(ko.pureComputed(() => player.amountOfItem(pokemonBoostItem.name)), 0, 'You already own this item.'),

@@ -260,6 +260,8 @@ export const SHADOW_ITEM_CHANCE = 8;
 export const RUST_ITEM_CHANCE = 90;
 export const MANE_ITEM_CHANCE = 10;
 export const CHRISTMAS_ITEM_CHANCE = 10;
+export const LESSER_RELIC_ITEM_CHANCE = 64;
+export const RELIC_GOLD_ITEM_CHANCE = 256;
 export const HELD_MAGIKARP_BISCUIT = 256;
 
 // Gems

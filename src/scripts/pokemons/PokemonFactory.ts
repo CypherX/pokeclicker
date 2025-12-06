@@ -335,7 +335,10 @@ class PokemonFactory {
                 break;
             case 'Relic_copper':
             case 'Relic_silver':
-                chance = 128;
+                chance = GameConstants.LESSER_RELIC_ITEM_CHANCE;
+                break;
+            case 'Relic_gold':
+                chance = GameConstants.RELIC_GOLD_ITEM_CHANCE;
                 break;
         }
 
