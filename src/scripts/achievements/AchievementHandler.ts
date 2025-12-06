@@ -631,8 +631,9 @@ class AchievementHandler {
         addGymAchievements(GameConstants.RegionGyms[GameConstants.Region.final + 1], GameConstants.ExtraAchievementCategories.magikarpJump, 'Magikarp Jump');
         // Magikarp pokédex, highly optional as some forms are End Game farming, so no high bonus
         const magikarpID = pokemonMap.Magikarp.id;
-        const karpDexFilter = (p: PartyPokemon) => Math.floor(p.id) === magikarpID;
-        const karpAmount = pokemonList.reduce((count, p) => count + +(Math.floor(p.id) === magikarpID), 0);
+        const piratekarpID = pokemonMap['Magikarp (Pirate)'].id;
+        const karpDexFilter = (p: PartyPokemon) => Math.floor(p.id) === magikarpID && p.id !== piratekarpID;
+        const karpAmount = pokemonList.reduce((count, p) => count + +(Math.floor(p.id) === magikarpID && p.id !== piratekarpID), 0);
         AchievementHandler.addAchievement('Do You Even Splash?', 'Catch all unique Magikarp forms.', new CaughtUniquePokemonByFilterRequirement(karpDexFilter, 'Catch all unique Magikarp forms.', karpAmount), 1, GameConstants.ExtraAchievementCategories.magikarpJump);
         AchievementHandler.addAchievement('Twenty Thousands Karps Under the Seas', 'Catch all unique Shiny Magikarp forms.', new CaughtUniquePokemonByFilterRequirement(karpDexFilter, 'Catch all unique Shiny Magikarp forms.', karpAmount, true), 1.5, GameConstants.ExtraAchievementCategories.magikarpJump);
 
