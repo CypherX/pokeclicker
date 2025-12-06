@@ -522,7 +522,7 @@ export default class GenericDeal {
             Object.values(ItemList).filter((i) => i instanceof PokemonRestrictedAttackBonusHeldItem && (i as PokemonRestrictedAttackBonusHeldItem).regionUnlocked <= player.highestRegion()),
         ).find(() => true);
         list.push(new GenericDeal({
-            costs: [{ type: DealCostOrProfitType.Item, item: ItemList.Relic_gold, amount: 30 + SeededRand.intBetween(-30, 30) }],
+            costs: [{ type: DealCostOrProfitType.Item, item: ItemList.Relic_gold, amount: 300 + SeededRand.intBetween(-30, 30) }],
             profits: [{ type: DealCostOrProfitType.Item, item: pokemonBoostItem, amount: 1, hidePlayerInventory: true }],
             visibleRequirement: new MaxRegionRequirement(Region.galar),
             tradeRequirement: new CustomRequirement(ko.pureComputed(() => player.amountOfItem(pokemonBoostItem.name)), 0, 'You already own this item.'),
