@@ -4244,9 +4244,12 @@ class QuestLineHelper {
     public static createTreasureMapQuestLine() {
         SeededRand.seedWithDate(new Date());
         const treasureMapQuest = new QuestLine('Pirate Treasure Map', 'You obtained a Treasure Map.');
-        const treasureDungeon = SeededRand.fromArray(Object.values(dungeonList).filter(x => x.difficulty == player.highestRegion()));
-        const rewardTotal = 45 + 3 * player.highestRegion();
-        const rewardSilver = Math.floor(rewardTotal / 20);
+        let treasureDungeon = SeededRand.fromArray(Object.values(dungeonList).filter(x => x.difficulty == player.highestRegion() && TownList[x.name].isUnlocked()));
+        if (!treasureDungeon) {
+            treasureDungeon = Object.values(dungeonList).find(() => true);
+        }
+        const rewardTotal = 90 + 6 * player.highestRegion();
+        const rewardSilver = Math.floor(rewardTotal / 10);
         const rewardCopper = rewardTotal - rewardSilver * 10;
         treasureMapQuest.addQuest(new DefeatDungeonQuest(SeededRand.intBetween(1, treasureDungeon.difficulty), undefined, treasureDungeon.name).withDescription(`The map you obtained says there is a treasure waiting in ${treasureDungeon.name}. Go clear it out.`).withCustomReward(() => {
             BagHandler.gainItem({ type: ItemType.item, id: 'Relic_silver' }, rewardSilver);
