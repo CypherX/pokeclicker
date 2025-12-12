@@ -490,6 +490,7 @@ class Game implements TmpGameType {
                         timeout: 3e4,
                     });
                 }
+                GenericDeal.generateDeals();
                 // Give the players more Battle Cafe spins
                 BattleCafeController.spinsLeft(BattleCafeController.spinsPerDay());
                 // Generate the weather forecast
