@@ -351,6 +351,7 @@ export const SpriteCredits: Credit[] = [
             'Magikarp Blue Raindrops Shop Icon',
             'Magikarp Saucy Violet Shop Icon',
             'Magikarp (Feebas)',
+            'Magikarp (Pirate)',
             'Magikarp alt OverWorld sprites',
             'Magma Admin Courtney',
             'Magma Stone',
