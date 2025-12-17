@@ -6541,7 +6541,7 @@ const WorkingPirate = new NPC('Working Pirate', [
     'The tougher the challengers, the fiercer the pirates that appear. I’ve heard that those who’ve proven themselves in battle at least a hundred times earn the title of the strongest among us.',
     'As for me? I make my living hauling treasure and shuffling chests around for the others. Though... sometimes it feels like a trickster\'s messing with them.',
 ], {
-    image: 'assets/images/npcs/Sailor.png',
+    image: 'assets/images/npcs/Pirate.png',
 });
 
 //Kalos Towns

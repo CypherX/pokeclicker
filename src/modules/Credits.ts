@@ -320,6 +320,7 @@ export const SpriteCredits: Credit[] = [
             'Grotle (Acorn)',
             'Grotle (Acorn) Shop Icon',
             'Grotle and Friends',
+            'Gyarados (Captain)',
             'Honey',
             'Hopo berry image and trees',
             'Hoppip (Chimecho)',
@@ -390,6 +391,7 @@ export const SpriteCredits: Credit[] = [
             'Pinkan Scyther Shuffle + Overworld',
             'Pinkan Weedle',
             'Pinkan Weezing',
+            'Pirate',
             'Professor Burnet',
             'Profile Characters: Kris, Green (LGFR and LGPE), Firefarmer, Ghetsis',
             'Purify Icon',
@@ -548,6 +550,7 @@ export const SpriteCredits: Credit[] = [
             'White mane hair icon',
             'Zarude (Dada) shop image',
             'Zero',
+            'Zorua (Pirate) shop image',
         ],
         // Notes: Made specifically for PokéClicker.
     },
@@ -614,6 +617,7 @@ export const SpriteCredits: Credit[] = [
             'Reindeer Stantler',
             'Spooky Ivysaur',
             'Spooky Venusaur',
+            'Zorua (Pirate)',
         ],
         // Notes: Made specifically for PokéClicker.
     },

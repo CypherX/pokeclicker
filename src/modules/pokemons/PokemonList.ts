@@ -6100,7 +6100,6 @@ export const pokemonList = createPokemonArray(
         },
         'gender': {
             'visualDifference': true,
-            'femaleRatio': 0,
         },
         'heldItem': { type: ItemType.item, id: 'Relic_copper' },
     },
@@ -6160,7 +6159,6 @@ export const pokemonList = createPokemonArray(
         },
         'gender': {
             'visualDifference': true,
-            'femaleRatio': 0,
         },
         'heldItem': { type: ItemType.item, id: 'Relic_copper' },
     },
