@@ -502,7 +502,7 @@ export default class GenericDeal {
         pokeballItems.forEach((item) => {
             list.push(new GenericDeal({
                 costs: [{ type: DealCostOrProfitType.Item, item: ItemList.Relic_gold, amount: 10 }],
-                profits: [{ type: DealCostOrProfitType.Item, item, amount: 5 }],
+                profits: [{ type: DealCostOrProfitType.Item, item, amount: 5, hidePlayerInventory: true }],
                 visibleRequirement: new MaxRegionRequirement(Region.sinnoh),
             }));
         });
