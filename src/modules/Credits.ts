@@ -395,6 +395,7 @@ export const SpriteCredits: Credit[] = [
             'Professor Burnet',
             'Profile Characters: Kris, Green (LGFR and LGPE), Firefarmer, Ghetsis',
             'Purify Icon',
+            'Raboot (Pirate)',
             'Robo Groudon',
             'Roddy Tackle',
             'Rudy',
@@ -1272,6 +1273,17 @@ export const SpriteCredits: Credit[] = [
             'Calem overworld',
         ],
         // Notes: Permission given on image page if credited.
+    },
+    {
+        name: 'The Boy',
+        link: 'https://discordapp.com/users/305776563801030657',
+        image: 'assets/images/profile/trainer-96.png',
+        resources: [
+            'Bounsweet (Pirate)',
+            'Steenee (Pirate)',
+            'Tsareena (Captain)',         
+        ],
+        // Notes: Made specifically for PokéClicker.
     },
     {
         name: 'TintjeMadelintje101',
