@@ -603,6 +603,7 @@ export const SpriteCredits: Credit[] = [
         image: 'assets/images/profile/trainer-119.png',
         resources: [
             'Captain Charizard',
+            'Captain Lucario',
             'Ditto (Magikarp)',
             'Dugtrio (Punk)',
             'Genesect (High-Speed) and Drive Forms',
