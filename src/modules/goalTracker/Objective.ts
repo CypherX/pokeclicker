@@ -2,7 +2,8 @@ import { MINUTE } from '../GameConstants';
 import GameHelper from '../GameHelper';
 import NotificationConstants from '../notifications/NotificationConstants';
 import Notifier from '../notifications/Notifier';
-import { ObjectiveConfig, objectiveOptions, ObjectiveType } from './ObjectiveOptions';
+import { ObjectiveConfig, objectiveOptions } from './ObjectiveOptions';
+import { ObjectiveType } from './objectives/ObjectiveTypes';
 
 export default class Objective {
     private _type = ko.observable<ObjectiveType | undefined>(undefined);
