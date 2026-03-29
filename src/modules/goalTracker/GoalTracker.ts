@@ -4,7 +4,8 @@ import Notifier from '../notifications/Notifier';
 import SaveSelector from '../SaveSelector';
 import Goal from './Goal';
 import Objective from './Objective';
-import { objectiveOptions, ObjectiveType } from './ObjectiveOptions';
+import { objectiveOptions } from './ObjectiveOptions';
+import { ObjectiveType } from './objectives/ObjectiveTypes';
 
 export default class GoalTracker implements Feature {
     name = 'Goal Tracker';

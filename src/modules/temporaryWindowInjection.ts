@@ -233,7 +233,7 @@ import areaStatus from './enums/AreaStatus';
 import TranslationHelper from './translation/TranslationHelper';
 import * as DownloadUtil from './utilities/DownloadUtil';
 import GoalTracker from './goalTracker/GoalTracker';
-import { ObjectiveType } from './goalTracker/ObjectiveOptions';
+import { ObjectiveType } from './goalTracker/objectives/ObjectiveTypes';
 
 Object.assign(<any>window, {
     SaveSelector,
