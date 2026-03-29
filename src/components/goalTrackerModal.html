@@ -33,10 +33,6 @@
                                 <div class="flex-grow-1 mr-1">
                                     <input class="form-control form-control-sm" data-bind="textInput: $data.name"></span>
                                 </div>
-                                <!--<button class="btn bg-danger btn-sm text-white deleteButton" title="Delete Goal"
-                                    data-bind="click: () => App.game.goalTracker.deleteGoal($data)">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>-->
                                 <div class="dropdown">
                                     <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" style="min-width: 25px;"></button>
                                     <div class="dropdown-menu">
@@ -68,7 +64,7 @@
                                         <div class="goalObjective">
                                             <div class="border-bottom border-secondary mb-2 pb-1">
                                                 <div class="d-flex mb-1" style="gap: 4px; align-items: center;">
-                                                    <div class="flex-grow-1 text-wrap align-items-center" data-bind="text: name"></div>
+                                                    <div class="flex-grow-1 text-wrap align-items-center" data-bind="text: displayName"></div>
                                                     <button type="button" class="btn btn-primary btn-sm px-1 py-0 no-emoji-font" style="width: 25px;" title="Edit Objective" data-bind="click: () => {
                                                         App.game.goalTracker.selectedObjective($data);
                                                         $('#goalTrackerObjectiveModal').modal('show');

@@ -1,5 +1,5 @@
 import { Observable, PureComputed } from 'knockout';
-import { camelCaseToString, Currency, getDungeonIndex, getGymIndex, Region } from '../GameConstants';
+import { camelCaseToString, Currency, getDungeonIndex, getGymIndex, pluralizeString, Region } from '../GameConstants';
 import { ItemList } from '../items/ItemList';
 import { ItemNameType } from '../items/ItemNameType';
 import { pokemonMap } from '../pokemons/PokemonList';
@@ -104,6 +104,7 @@ interface ObjectiveOption<TConfig> {
         }
     }[keyof TConfig][];
     getProgress: (config: TConfig) => PureComputed<number>;
+    getDisplayName?: (config: TConfig) => PureComputed<string>;
     createConfig: () => TConfig;
 }
 
@@ -144,6 +145,13 @@ export const objectiveOptions: {
             });
         },
         createConfig: (): ItemObjectiveConfig => ({ category: ko.observable(), item: ko.observable() }),
+        getDisplayName: (config: ItemObjectiveConfig) => {
+            return ko.pureComputed(() => {
+                const itemName = ItemList[config.item()]?.displayName;
+                if (!itemName) return 'Unconfigured Objective';
+                return `Total ${pluralizeString(itemName, 2)}`;
+            });
+        },
     },
     [ObjectiveType.Pokemon]: {
         options: [
@@ -200,6 +208,26 @@ export const objectiveOptions: {
             });
         },
         createConfig: (): PokemonObjectiveConfig => ({ pokemon: ko.observable(), property: ko.observable() }),
+        getDisplayName: (config: PokemonObjectiveConfig) => {
+            return ko.pureComputed(() => {
+                const pokemon = config.pokemon();
+                const property = config.property();
+
+                if (!pokemon || !property) return 'Unconfigured Objective';
+
+                const pokemonName = App.game.party.getPokemonByName(pokemon)?.displayName ?? pokemon;
+
+                const sortOption = SortOptions[property];
+                if (sortOption !== undefined) {
+                    const statLabel = SortOptionConfigs[sortOption].text;
+                    return `${pokemonName} - ${statLabel}`;
+                }
+
+                const isShiny = property.startsWith('shiny');
+                const rawStatName = property.replace(/^(pokemon|shinyPokemon)/, '');
+                return `${pokemonName} - Total ${isShiny ? 'Shiny ' : ''}${camelCaseToString(rawStatName)}`;
+            });
+        },
     },
     [ObjectiveType.Currency]: {
         options: [
@@ -219,6 +247,19 @@ export const objectiveOptions: {
             });
         },
         createConfig: (): CurrencyObjectiveConfig => ({ currency: ko.observable() }),
+        getDisplayName: (config: CurrencyObjectiveConfig) => {
+            return ko.pureComputed(() => {
+                const currency = config.currency();
+                if (currency === undefined) return 'Unconfigured Objective';
+
+                switch (currency) {
+                    case Currency.money:
+                        return 'Pokédollars';
+                    default:
+                        return pluralizeString(camelCaseToString(Currency[currency]), 2);
+                }
+            });
+        },
     },
     [ObjectiveType.Statistic]: {
         options: [
@@ -239,6 +280,13 @@ export const objectiveOptions: {
             });
         },
         createConfig: (): StatisticObjectiveConfig => ({ statistic: ko.observable() }),
+        getDisplayName: (config: StatisticObjectiveConfig) => {
+            return ko.pureComputed(() => {
+                const statistic = config.statistic();
+                if (statistic === undefined) return 'Unconfigured Objective';
+                return camelCaseToString(statistic);
+            });
+        },
     },
     [ObjectiveType.Berry]: {
         options: [
@@ -260,6 +308,13 @@ export const objectiveOptions: {
             });
         },
         createConfig: (): BerryObjectiveConfig => ({ berry: ko.observable() }),
+        getDisplayName: (config: BerryObjectiveConfig) => {
+            return ko.pureComputed(() => {
+                const berry = config.berry();
+                if (berry === undefined) return 'Unconfigured Objective';
+                return `${BerryType[berry]} Berries`;
+            });
+        },
     },
     [ObjectiveType.GymClear]: {
         label: 'Gym Clears',
@@ -300,6 +355,13 @@ export const objectiveOptions: {
             });
         },
         createConfig: (): GymClearObjectiveConfig => ({ region: ko.observable(), gymTown: ko.observable() }),
+        getDisplayName: (config: GymClearObjectiveConfig) => {
+            return ko.pureComputed(() => {
+                const gym = GymList[config.gymTown()];
+                if (!gym) return 'Unconfigured Objective';
+                return `Clear Gym - ${gym.leaderName} - ${gym.parent.name}`;
+            });
+        },
     },
     [ObjectiveType.DungeonClear]: {
         label: 'Dungeon Clears',
@@ -347,6 +409,13 @@ export const objectiveOptions: {
             });
         },
         createConfig: (): DungeonClearObjectiveConfig => ({ region: ko.observable(), dungeonName: ko.observable() }),
+        getDisplayName: (config: DungeonClearObjectiveConfig) => {
+            return ko.pureComputed(() => {
+                const dungeonName = config.dungeonName();
+                if (dungeonName === undefined) return 'Unconfigured Objective';
+                return `Clear Dungeon - ${dungeonName}`;
+            });
+        },
     },
     [ObjectiveType.Gem]: {
         options: [
@@ -367,6 +436,13 @@ export const objectiveOptions: {
             });
         },
         createConfig: (): GemObjectiveConfig => ({ gem: ko.observable() }),
+        getDisplayName: (config: GemObjectiveConfig) => {
+            return ko.pureComputed(() => {
+                const gem = config.gem();
+                if (gem === undefined) return 'Unconfigured Objective';
+                return `Total ${pluralizeString(PokemonType[gem], 2)} Gems`;
+            });
+        },
     },
     [ObjectiveType.PartyAggregate]: {
         label: 'Party Aggregate',
@@ -436,5 +512,31 @@ export const objectiveOptions: {
             aggregateType: ko.observable(),
             threshold: ko.observable(0),
         }),
+        getDisplayName: (config: PartyAggregateObjectiveConfig) => {
+            return ko.pureComputed(() => {
+                const metric = config.metric();
+                const type = config.aggregateType();
+                const threshold = Number(config.threshold?.()) || 0;
+
+                if (metric === undefined || type === undefined) return 'Unconfigured Objective';
+
+                const metricLabel = SortOptionConfigs[SortOptions[metric]].text;
+
+                switch (type) {
+                    case PartyAggregateType.Minimum:
+                        return `Lowest [${metricLabel}] in Party`;
+                    case PartyAggregateType.Maximum:
+                        return `Highest [${metricLabel}] in Party`;
+                    case PartyAggregateType.Sum:
+                        return `Total Party [${metricLabel}]`;
+                    case PartyAggregateType.CountAbove:
+                        return `Pokémon with ${threshold.toLocaleString('en-US')} or higher [${metricLabel}]`;
+                    case PartyAggregateType.CountBelow:
+                        return `Pokémon with ${threshold.toLocaleString('en-US')} or lower [${metricLabel}]`;
+                    default:
+                        return 'Unconfigured Objective';
+                }
+            });
+        },
     },
 };

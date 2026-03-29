@@ -23,7 +23,7 @@
                 foreach: $data.objectives().filter(obj => obj.isConfigured())
             ">
                 <div class="my-2 border-secondary" data-bind="css: { 'border-top pt-2': $index() }, event: { contextmenu: () => { App.game.goalTracker.selectedObjective($data); $('#goalTrackerObjectiveModal').modal('show'); } }">
-                    <div data-bind="text: name"></div>
+                    <div data-bind="text: displayName"></div>
                     <div class="progress">
                         <div class="progress-bar" role="progressbar"
                             data-bind="attr: { style: 'width:' + (progressPercent() * 100) + '%'},
