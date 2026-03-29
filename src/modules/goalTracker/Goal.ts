@@ -35,7 +35,7 @@ export default class Goal {
     async deleteObjective(objective: Objective) {
         if (await Notifier.confirm({
             title: 'Delete objective',
-            message: `Are you sure you want to delete "${objective.name}"?`,
+            message: `Are you sure you want to delete "${objective.displayName}"?`,
             type: NotificationOption.danger,
             confirm: 'Delete',
         })) {
@@ -58,7 +58,7 @@ export default class Goal {
             title: 'Import Objective',
             message: 'Enter the exported objective code below:',
             type: NotificationOption.primary,
-            timeout: 1e6,
+            timeout: 0,
         });
 
         if (input?.trim().length) {
@@ -70,7 +70,7 @@ export default class Goal {
 
                 Notifier.notify({
                     title: 'Objective imported!',
-                    message: `The "<strong>${objective.name}</strong>" objective has been imported!`,
+                    message: `The "<strong>${objective.displayName}</strong>" objective has been imported!`,
                     type: NotificationOption.success,
                 });
             } catch (error) {

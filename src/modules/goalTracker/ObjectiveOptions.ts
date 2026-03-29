@@ -10,7 +10,7 @@ import BerryType from '../enums/BerryType';
 import GameHelper from '../GameHelper';
 import SubRegions from '../subRegion/SubRegions';
 import PokemonType from '../enums/PokemonType';
-import { PartyAggregateType } from './PartyAggregates';
+import { PartyAggregateType } from './PartyAggregateType';
 
 export enum ObjectiveType {
     // eslint-disable-next-line @typescript-eslint/no-shadow

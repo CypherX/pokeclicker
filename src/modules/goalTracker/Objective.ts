@@ -7,7 +7,6 @@ import { ObjectiveConfig, objectiveOptions, ObjectiveType } from './ObjectiveOpt
 export default class Objective {
     private _type = ko.observable<ObjectiveType | undefined>(undefined);
     public _config = ko.observable<ObjectiveConfig | undefined>(undefined);
-    private _name: KnockoutObservable<string>;
     private _targetAmount = ko.observable(0).extend({ numeric: 0 });
 
     public uuid: string;
@@ -32,11 +31,7 @@ export default class Objective {
         return this.isConfigured() && this.targetAmount > 0 && this.getProgress() >= this.targetAmount;
     });
 
-    constructor(
-        name: string = 'New Objective',
-    ) {
-        this._name = ko.observable(name);
-
+    constructor() {
         this.uuid = GameHelper.randomUUID();
 
         this.isComplete.subscribe((complete) => {
@@ -44,7 +39,7 @@ export default class Objective {
                 this._notified = true;
                 Notifier.notify({
                     title: 'Goal Tracker',
-                    message: `Your "${this.name}" objective is complete!`,
+                    message: `Your "${this.displayName}" objective is complete!`,
                     type: NotificationConstants.NotificationOption.primary,
                     sound: NotificationConstants.NotificationSound.General.goal_objective_complete,
                     setting: NotificationConstants.NotificationSetting.General.goal_objective_complete,
@@ -64,6 +59,10 @@ export default class Objective {
         return Math.floor((this.getProgress() / this.targetAmount) * 100) / 100;
     }
 
+    get displayName(): string {
+        return objectiveOptions[this.type]?.getDisplayName?.(this._config() as any)?.() ?? 'Unconfigured Objective';
+    }
+
     get type(): ObjectiveType {
         return this._type();
     }
@@ -79,14 +78,6 @@ export default class Objective {
 
     set config(value: ObjectiveConfig) {
         this._config(value);
-    }
-
-    get name(): string {
-        return this._name();
-    }
-
-    set name(value: string) {
-        this._name(value);
     }
 
     get targetAmount(): number {
@@ -105,7 +96,6 @@ export default class Objective {
         return {
             type: this.type,
             config: config,
-            name: this.name,
             targetAmount: this.targetAmount,
         };
     }
@@ -113,7 +103,6 @@ export default class Objective {
 
     fromJSON(json: Record<string, any>): void {
         this._type(json.type);
-        this._name(json.name);
         this._targetAmount(json.targetAmount ?? 0);
 
         const config = objectiveOptions[this.type]?.createConfig();

@@ -56,7 +56,7 @@ export default class GoalTracker implements Feature {
             title: 'Import Goal',
             message: 'Enter the exported goal code below:',
             type: NotificationOption.primary,
-            timeout: 1e6,
+            timeout: 0,
         });
 
         if (input?.trim().length) {
