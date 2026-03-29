@@ -19,7 +19,7 @@
                 </div>
                 <!-- ko with: $data.config, as: 'config' -->
                 <hr class="my-2 bg-secondary" />
-                <div data-bind="foreach: { data: $parent.getOptions().filter((option) => option.visible?.(config)() ?? true), as: 'option' }">
+                <div data-bind="foreach: { data: $parent.getOptions, as: 'option' }">
                     <!-- ko if: !option.type || option.type == 'dropdown' -->
                     <div class="form-group" data-bind="with: option.values(config), as: 'values'">
                         <div data-bind="visible: values.length">

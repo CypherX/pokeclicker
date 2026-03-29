@@ -3,7 +3,7 @@ import GameHelper from '../GameHelper';
 import NotificationConstants from '../notifications/NotificationConstants';
 import Notifier from '../notifications/Notifier';
 import { ObjectiveConfig, objectiveOptions } from './ObjectiveOptions';
-import { ObjectiveType } from './objectives/ObjectiveTypes';
+import { ObjectiveOption, ObjectiveType } from './objectives/ObjectiveTypes';
 
 export default class Objective {
     private _type = ko.observable<ObjectiveType | undefined>(undefined);
@@ -13,15 +13,21 @@ export default class Objective {
     public uuid: string;
     private _notified = false;
 
-    getProgress = ko.pureComputed(() => {
-        return objectiveOptions[this.type]?.getProgress(this._config() as any)?.() ?? 0; // "as any" fuck you typescript
+    private get activeOption(): ObjectiveOption<any> | undefined {
+        return objectiveOptions[this.type] as ObjectiveOption<any> | undefined;
+    }
+
+    public getProgress = ko.pureComputed(() => {
+        return this.activeOption?.getProgress(this.config)?.() ?? 0;
     });
 
-    getOptions = ko.pureComputed(() => {
-        return objectiveOptions[this.type]?.options ?? [];
+    public getOptions = ko.pureComputed(() => {
+        return this.activeOption?.options?.filter(opt => {
+            return opt.visible ? opt.visible(this.config)() : true;
+        }) ?? [];
     });
 
-    isConfigured = ko.pureComputed(() => {
+    public isConfigured = ko.pureComputed(() => {
         if (!this.config) {
             return false;
         }
@@ -61,7 +67,7 @@ export default class Objective {
     }
 
     get displayName(): string {
-        return objectiveOptions[this.type]?.getDisplayName?.(this._config() as any)?.() ?? 'Unconfigured Objective';
+        return this.activeOption?.getDisplayName?.(this.config)?.() ?? 'Unconfigured Objective';
     }
 
     get type(): ObjectiveType {
