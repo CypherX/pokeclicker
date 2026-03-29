@@ -7,7 +7,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body text-left" data-bind="with: App.game.goalTracker.selectedObjective">
+            <div class="modal-body text-left pb-0" data-bind="with: App.game.goalTracker.selectedObjective">
                 <div class="form-group">
                     <label>Name</label>
                     <input type="text" class="form-control" data-bind="textInput: $data.name" />
@@ -23,9 +23,11 @@
                 </div>
                 <!-- ko with: $data.config, as: 'config' -->
                 <hr class="my-2 bg-secondary" />
-                <div data-bind="foreach: { data: $parent.getOptions, as: 'option' }">
+                <div data-bind="foreach: { data: $parent.getOptions().filter((option) => option.visible?.(config)() ?? true), as: 'option' }">
+                    <!-- ko if: !option.type || option.type == 'dropdown' -->
                     <div class="form-group" data-bind="with: option.values(config), as: 'values'">
                         <div data-bind="visible: values.length">
+                            <label data-bind="text: option.label">Label</label>
                             <!-- ko if: option.searchable -->
                             <div data-bind="let: { searchValue: ko.observable('') }">
                                 <div class="dropdown" style="position: static;", data-bind="event: { 'hidden.bs.dropdown': () => searchValue('') }">
@@ -57,6 +59,13 @@
                             <!-- /ko -->
                         </div>
                     </div>
+                    <!-- /ko -->
+                    <!-- ko if: option.type == 'number' -->
+                    <div class="form-group">
+                        <label data-bind="text: option.label">Label</label>
+                        <input type="number" class="form-control" data-bind="value: config[option.key]" />
+                    </div>
+                    <!-- /ko -->
                 </div>
                 <div class="form-group">
                     <label>Goal Amount</label>
@@ -66,7 +75,39 @@
                         <span data-bind="text: $parent.isConfigured() ? $parent.getProgress().toLocaleString('en-US') : 'N/A'"></span>
                     </small>
                 </div>
+                <!--<div class="form-group">
+                    <label>Goal</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <select class="form-control">
+                                <option>Have a total of</option>
+                                <option>Gain</option>
+                            </select>
+                        </div>
+                        <input type="number" class="form-control" data-bind="value: $parent.targetAmount" />
+                    </div>
+                    <small class="form-text text-muted">
+                        Current Amount:
+                        <span data-bind="text: $parent.isConfigured() ? $parent.getProgress().toLocaleString('en-US') : 'N/A'"></span>
+                    </small>
+                </div>-->
                 <!-- /ko -->
+            </div>
+            <div class="modal-footer" data-bind="with: App.game.goalTracker.selectedObjective">
+                <div class="card-body text-left small p-0">
+                    <div data-bind="text: name"></div>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar"
+                            data-bind="attr: { style: 'width:' + (progressPercent() * 100) + '%'},
+                                css: { 'bg-primary': progressPercent() < 1, 'bg-success': progressPercent() >= 1 }"
+                            aria-valuemin="0" aria-valuemax="100">
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <div class="flex-grow-1" data-bind="text: progressText()"></div>
+                        <div data-bind="text: progressPercent().toLocaleString('en-US', { style: 'percent' })"></div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>

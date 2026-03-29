@@ -10,6 +10,7 @@ import BerryType from '../enums/BerryType';
 import GameHelper from '../GameHelper';
 import SubRegions from '../subRegion/SubRegions';
 import PokemonType from '../enums/PokemonType';
+import { PartyAggregateType } from './PartyAggregates';
 
 export enum ObjectiveType {
     // eslint-disable-next-line @typescript-eslint/no-shadow
@@ -22,6 +23,7 @@ export enum ObjectiveType {
     GymClear,
     DungeonClear,
     Gem,
+    PartyAggregate,
 }
 
 export interface ItemObjectiveConfig {
@@ -60,6 +62,12 @@ export interface GemObjectiveConfig {
     gem: Observable<PokemonType>;
 }
 
+export interface PartyAggregateObjectiveConfig {
+    metric: Observable<string>;
+    aggregateType: Observable<PartyAggregateType>;
+    threshold: Observable<number>;
+}
+
 export type ObjectiveConfig =
     | ItemObjectiveConfig
     | PokemonObjectiveConfig
@@ -68,7 +76,8 @@ export type ObjectiveConfig =
     | BerryObjectiveConfig
     | GymClearObjectiveConfig
     | DungeonClearObjectiveConfig
-    | GemObjectiveConfig;
+    | GemObjectiveConfig
+    | PartyAggregateObjectiveConfig;
 
 export type ObjectiveTypeToConfig = {
     [ObjectiveType.Item]: ItemObjectiveConfig;
@@ -79,6 +88,7 @@ export type ObjectiveTypeToConfig = {
     [ObjectiveType.GymClear]: GymClearObjectiveConfig;
     [ObjectiveType.DungeonClear]: DungeonClearObjectiveConfig
     [ObjectiveType.Gem] : GemObjectiveConfig;
+    [ObjectiveType.PartyAggregate]: PartyAggregateObjectiveConfig;
 };
 
 interface ObjectiveOption<TConfig> {
@@ -87,8 +97,10 @@ interface ObjectiveOption<TConfig> {
         [K in keyof TConfig]: {
             key: K;
             label: string;
+            type?: 'dropdown' | 'number';
             searchable?: boolean;
-            values: (config?: TConfig) => PureComputed<{ name: string; value: any }[]>;
+            values?: (config?: TConfig) => PureComputed<{ name: string; value: any }[]>;
+            visible?: (config: TConfig) => PureComputed<boolean>;
         }
     }[keyof TConfig][];
     getProgress: (config: TConfig) => PureComputed<number>;
@@ -355,5 +367,74 @@ export const objectiveOptions: {
             });
         },
         createConfig: (): GemObjectiveConfig => ({ gem: ko.observable() }),
+    },
+    [ObjectiveType.PartyAggregate]: {
+        label: 'Party Aggregate',
+        options: [
+            {
+                key: 'metric',
+                label: 'Metric',
+                values: () => ko.pureComputed(() => {
+                    return [
+                        SortOptions.attackMaxLevel,
+                        SortOptions.evs,
+                        SortOptions.evBonus,
+                    ].map((option) => ({ name: SortOptionConfigs[option].text, value: SortOptions[option] }));
+                }),
+            },
+            {
+                key: 'aggregateType',
+                label: 'Aggregate Type',
+                values: () => ko.pureComputed(() => [
+                    { name: 'Lowest in Party', value: PartyAggregateType.Minimum },
+                    { name: 'Highest in Party', value: PartyAggregateType.Maximum },
+                    { name: 'Total Combined', value: PartyAggregateType.Sum },
+                    { name: 'Count: Pokémon Above...', value: PartyAggregateType.CountAbove },
+                    { name: 'Count: Pokémon Below...', value: PartyAggregateType.CountBelow },
+                ]),
+            },
+            {
+                key: 'threshold',
+                label: 'Metric Threshold',
+                type: 'number',
+                visible: (config: PartyAggregateObjectiveConfig) => ko.pureComputed(() => {
+                    const type = config.aggregateType();
+                    return type === PartyAggregateType.CountAbove || type === PartyAggregateType.CountBelow;
+                }),
+            },
+        ],
+        getProgress: (config: PartyAggregateObjectiveConfig) => {
+            return ko.pureComputed((): number => {
+                const metric = config.metric?.();
+                const type = config.aggregateType?.();
+                const threshold = Number(config.threshold?.()) || 0;
+
+                if (metric === undefined || type === undefined) return 0;
+
+                const sortOption = SortOptions[metric];
+                if (!sortOption) return 0;
+
+                const values = App.game.party.caughtPokemon.map(p => SortOptionConfigs[sortOption].getValue(p));
+                switch (type) {
+                    case PartyAggregateType.Minimum:
+                        return Math.min(...values);
+                    case PartyAggregateType.Maximum:
+                        return Math.max(...values);
+                    case PartyAggregateType.Sum:
+                        return values.reduce((sum, val) => sum + val, 0);
+                    case PartyAggregateType.CountAbove:
+                        return values.filter(v => v >= threshold).length;
+                    case PartyAggregateType.CountBelow:
+                        return values.filter(v => v <= threshold).length;
+                    default:
+                        return 0;
+                }
+            });
+        },
+        createConfig: (): PartyAggregateObjectiveConfig => ({
+            metric: ko.observable(),
+            aggregateType: ko.observable(),
+            threshold: ko.observable(0),
+        }),
     },
 };
