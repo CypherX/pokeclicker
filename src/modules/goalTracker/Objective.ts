@@ -11,18 +11,20 @@ export default class Objective {
     private _targetAmount = ko.observable(0).extend({ numeric: 0 });
 
     public uuid: string;
-    private _notified = false;
+    private _isCompleteSub: KnockoutSubscription;
 
     private get activeOption(): ObjectiveOption<any> | undefined {
         return objectiveOptions[this.type] as ObjectiveOption<any> | undefined;
     }
 
     public getProgress = ko.pureComputed(() => {
-        return this.activeOption?.getProgress(this.config)?.() ?? 0;
+        if (!this.activeOption) return 0;
+        return this.activeOption.getProgress(this.config)() ?? 0;
     });
 
     public getOptions = ko.pureComputed(() => {
-        return this.activeOption?.options?.filter(opt => {
+        if (!this.activeOption) return [];
+        return this.activeOption.options.filter(opt => {
             return opt.visible ? opt.visible(this.config)() : true;
         }) ?? [];
     });
@@ -34,16 +36,16 @@ export default class Objective {
         return Object.values(this.config).every(obs => obs() !== undefined);
     });
 
-    private isComplete = ko.computed(() => {
-        return this.isConfigured() && this.targetAmount > 0 && this.getProgress() >= this.targetAmount;
+    private isComplete = ko.pureComputed(() => {
+        return this.isConfigured() && DisplayObservables.modalState.goalTrackerObjectiveModal !== 'show'
+            && this.targetAmount > 0 && this.getProgress() >= this.targetAmount;
     });
 
     constructor() {
         this.uuid = GameHelper.randomUUID();
 
-        this.isComplete.subscribe((complete) => {
-            if (complete && !this._notified) {
-                this._notified = true;
+        this._isCompleteSub = this.isComplete.subscribe((complete) => {
+            if (complete) {
                 Notifier.notify({
                     title: 'Goal Tracker',
                     message: `Your "${this.displayName}" objective is complete!`,
@@ -52,10 +54,12 @@ export default class Objective {
                     setting: NotificationConstants.NotificationSetting.General.goal_objective_complete,
                     timeout: 5 * MINUTE,
                 });
-            } else if (!complete && this._notified) {
-                this._notified = false;
             }
         });
+    }
+
+    public dispose(): void {
+        this._isCompleteSub?.dispose();
     }
 
     progressText(): string {
@@ -79,11 +83,11 @@ export default class Objective {
         this.config = objectiveOptions[value]?.createConfig();
     }
 
-    get config(): ObjectiveConfig {
+    get config(): ObjectiveConfig | undefined {
         return this._config();
     }
 
-    set config(value: ObjectiveConfig) {
+    set config(value: ObjectiveConfig | undefined) {
         this._config(value);
     }
 
@@ -97,8 +101,10 @@ export default class Objective {
 
     toJSON(): Record<string, any> {
         const config = {};
-        for (const key of Object.keys(this.config)) {
-            config[key] = this.config[key]();
+        if (this.config) {
+            for (const key of Object.keys(this.config)) {
+                config[key] = this.config[key]();
+            }
         }
         return {
             type: this.type,
@@ -109,13 +115,17 @@ export default class Objective {
 
 
     fromJSON(json: Record<string, any>): void {
+        if (!json) return;
+
         this._type(json.type);
         this._targetAmount(json.targetAmount ?? 0);
 
         const config = objectiveOptions[this.type]?.createConfig();
-        for (const key of Object.keys(config)) {
-            if (json.config[key] !== undefined) {
-                config[key](json.config[key]);
+        if (config && json.config) {
+            for (const key of Object.keys(config)) {
+                if (json.config[key] !== undefined) {
+                    config[key](json.config[key]);
+                }
             }
         }
 

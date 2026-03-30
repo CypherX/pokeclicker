@@ -39,6 +39,7 @@ export default class Goal {
             type: NotificationOption.danger,
             confirm: 'Delete',
         })) {
+            objective.dispose();
             this.objectives.remove(objective);
         }
     }

@@ -23,4 +23,5 @@ declare global {
     const GymList: TempTypes.TmpGymListType;
     const dungeonList: TempTypes.TmpDungeonListType;
     const TownList: TempTypes.TmpTownListType;
+    const DisplayObservables: TempTypes.TmpDisplayObservablesType;
 }

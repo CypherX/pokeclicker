@@ -398,3 +398,7 @@ export type TmpDungeonType = {
 export type TmpTownListType = {
     [name: string]: TmpTownType;
 };
+
+export type TmpDisplayObservablesType = {
+    modalState: Record<string, any>;
+};
