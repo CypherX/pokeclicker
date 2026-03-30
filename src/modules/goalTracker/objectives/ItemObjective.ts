@@ -43,7 +43,11 @@ export const itemObjectiveOption: ObjectiveOption<ItemObjectiveConfig> = {
             return ItemList[config.item?.()]?.getBagAmount() ?? 0;
         });
     },
-    createConfig: (): ItemObjectiveConfig => ({ category: ko.observable(), item: ko.observable() }),
+    createConfig: (): ItemObjectiveConfig => {
+        const config = { category: ko.observable(), item: ko.observable() };
+        config.category.subscribe(() => config.item(undefined)); // clear item if the category changes
+        return config;
+    },
     getDisplayName: (config: ItemObjectiveConfig) => {
         return ko.pureComputed(() => {
             const itemName = ItemList[config.item()]?.displayName;

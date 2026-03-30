@@ -6,17 +6,25 @@ export interface BerryObjectiveConfig {
     berry: Observable<BerryType>;
 }
 
+const berryValues = ko.pureComputed(() => {
+    return App.game.farming.unlockedBerries.reduce((options, isUnlocked, i) => {
+        if (isUnlocked()) {
+            options.push({
+                name: `#${(i + 1).toString().padStart(2, '0')} - ${BerryType[i]}`,
+                value: i,
+            });
+        }
+        return options;
+    }, []);
+});
+
 export const berryObjectiveOption: ObjectiveOption<BerryObjectiveConfig> = {
     options: [
         {
             key: 'berry',
             label: 'Berry',
             searchable: true,
-            values: () => ko.pureComputed(() => {
-                return App.game.farming.unlockedBerries
-                    .filter(unlocked => unlocked())
-                    .map((_, i) => ({ name: `#${(i + 1).toString().padStart(2, '0')} - ${BerryType[i]}`, value: i }));
-            }),
+            values: () => berryValues,
         },
     ],
     getProgress: (config: BerryObjectiveConfig) => {

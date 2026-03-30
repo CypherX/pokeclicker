@@ -52,10 +52,15 @@ export const dungeonClearObjectiveOption: ObjectiveOption<DungeonClearObjectiveC
     getProgress: (config: DungeonClearObjectiveConfig) => {
         return ko.pureComputed((): number => {
             const dungeonName = config.dungeonName?.();
+            if (!dungeonName) return 0;
             return App.game.statistics.dungeonsCleared[getDungeonIndex(dungeonName)]();
         });
     },
-    createConfig: (): DungeonClearObjectiveConfig => ({ region: ko.observable(), dungeonName: ko.observable() }),
+    createConfig: (): DungeonClearObjectiveConfig => {
+        const config = { region: ko.observable(), dungeonName: ko.observable() };
+        config.region.subscribe(() => config.dungeonName(undefined)); // clear dungeon if the region changes
+        return config;
+    },
     getDisplayName: (config: DungeonClearObjectiveConfig) => {
         return ko.pureComputed(() => {
             const dungeonName = config.dungeonName();

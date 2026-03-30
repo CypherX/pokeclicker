@@ -70,7 +70,7 @@ export const partyAggregateObjectiveOption: ObjectiveOption<PartyAggregateObject
                 default:
                     return 0;
             }
-        });
+        }).extend({ rateLimit: 1000 });
     },
     createConfig: (): PartyAggregateObjectiveConfig => ({
         metric: ko.observable(),
@@ -85,7 +85,7 @@ export const partyAggregateObjectiveOption: ObjectiveOption<PartyAggregateObject
 
             if (metric === undefined || type === undefined) return 'Unconfigured Objective';
 
-            const metricLabel = SortOptionConfigs[SortOptions[metric]].text;
+            const metricLabel = SortOptionConfigs[SortOptions[metric]]?.text ?? 'Unknown Metric';
 
             switch (type) {
                 case PartyAggregateType.Minimum:

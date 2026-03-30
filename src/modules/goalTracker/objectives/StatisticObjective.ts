@@ -6,16 +6,18 @@ export interface StatisticObjectiveConfig {
     statistic: Observable<string>;
 }
 
+const statisticValues = ko.pureComputed(() => {
+    return App.game.statistics.observables
+        .sort((a, b) => a.localeCompare(b))
+        .map(s => ({ name: camelCaseToString(s), value: s }));
+});
+
 export const statisticObjectiveOption: ObjectiveOption<StatisticObjectiveConfig> = {
     options: [
         {
             key: 'statistic',
             label: 'Statistic',
-            values: () => ko.pureComputed(() => {
-                return App.game.statistics.observables
-                    .sort((a, b) => a.localeCompare(b))
-                    .map(s => ({ name: camelCaseToString(s), value: s }));
-            }),
+            values: () => statisticValues,
         },
     ],
     getProgress: (config: StatisticObjectiveConfig) => {

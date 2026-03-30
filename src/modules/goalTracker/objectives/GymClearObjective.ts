@@ -44,10 +44,16 @@ export const gymClearObjectiveOption: ObjectiveOption<GymClearObjectiveConfig> =
     getProgress: (config: GymClearObjectiveConfig) => {
         return ko.pureComputed((): number => {
             const gymTown = config.gymTown?.();
+            if (!gymTown) return 0;
             return App.game.statistics.gymsDefeated[getGymIndex(gymTown)]();
         });
     },
-    createConfig: (): GymClearObjectiveConfig => ({ region: ko.observable(), gymTown: ko.observable() }),
+    createConfig: (): GymClearObjectiveConfig => {
+        const config = { region: ko.observable(), gymTown: ko.observable() };
+        config.region.subscribe(() => config.gymTown(undefined)); // clear gym if the region changes
+        return config;
+    },
+
     getDisplayName: (config: GymClearObjectiveConfig) => {
         return ko.pureComputed(() => {
             const gym = GymList[config.gymTown()];

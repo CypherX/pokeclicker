@@ -7,15 +7,17 @@ export interface CurrencyObjectiveConfig {
     currency: Observable<Currency>;
 }
 
+const currencyValues = ko.pureComputed(() => {
+    return GameHelper.enumNumbers(Currency)
+        .map((c) => ({ name: camelCaseToString(Currency[c]), value: c }));
+});
+
 export const currencyObjectiveOption: ObjectiveOption<CurrencyObjectiveConfig> = {
     options: [
         {
             key: 'currency',
             label: 'Currency',
-            values: () => ko.pureComputed(() => {
-                return GameHelper.enumNumbers(Currency)
-                    .map((c) => ({ name: camelCaseToString(Currency[c]), value: c }));
-            }),
+            values: () => currencyValues,
         },
     ],
     getProgress: (config: CurrencyObjectiveConfig) => {

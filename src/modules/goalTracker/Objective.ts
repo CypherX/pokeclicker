@@ -81,6 +81,7 @@ export default class Objective {
     set type(value: ObjectiveType) {
         this._type(value);
         this.config = objectiveOptions[value]?.createConfig();
+        this.targetAmount = 0;
     }
 
     get config(): ObjectiveConfig | undefined {
