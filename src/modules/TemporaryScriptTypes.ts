@@ -34,6 +34,7 @@ import type WeatherType from './weather/WeatherType';
 import type { MultiplierDecreaser } from './items/types';
 import type BagItem from './interfaces/BagItem';
 import type BattlePokemon from './battles/BattlePokemon';
+import BadgeEnums from './enums/Badges';
 
 /*
     These types are only temporary while we are converting things to modules. As things are converted,
@@ -233,6 +234,8 @@ export type TmpGymType = {
     town: string;
     parent?: TmpTownType;
     leaderName: string;
+    badgeReward: BadgeEnums;
+    buttonText: string;
 };
 
 export type TmpGymRunnerType = {
@@ -240,10 +243,7 @@ export type TmpGymRunnerType = {
 };
 
 export type TmpGymListType = {
-    [gymName: string]: {
-        badgeReward: any;
-        buttonText: string;
-    }
+    [gymName: string]: TmpGymType;
 };
 
 export type TmpAchievementHandlerType = {
@@ -385,10 +385,6 @@ export type TmpTownType = {
     name: string;
     region: GameConstants.Region;
     subRegion: GameConstants.SubRegions;
-};
-
-export type TmpGymListType = {
-    [townName: string]: TmpGymType;
 };
 
 export type TmpDungeonListType = {
