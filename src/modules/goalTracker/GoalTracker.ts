@@ -73,6 +73,7 @@ export default class GoalTracker implements Feature {
                     type: NotificationOption.success,
                 });
             } catch (error) {
+                console.error(error);
                 Notifier.notify({
                     title: 'Import Error',
                     message: 'Failed to import goal.',
