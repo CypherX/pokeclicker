@@ -31,7 +31,7 @@ export const gemObjectiveOption: ObjectiveOption<GemObjectiveConfig> = {
         return ko.pureComputed(() => {
             const gem = config.gem();
             if (gem === undefined) return 'Unconfigured Objective';
-            return `Total ${pluralizeString(PokemonType[gem], 2)} Gems`;
+            return `${pluralizeString(PokemonType[gem], 2)} Gems`;
         });
     },
 };

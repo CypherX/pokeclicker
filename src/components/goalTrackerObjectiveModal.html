@@ -1,13 +1,13 @@
 <div class="modal fade" id="goalTrackerObjectiveModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-scrollable modal-md" role="document">
-        <div class="modal-content">
+        <div class="modal-content" data-bind="with: App.game.goalTracker.selectedObjective">
             <div class="modal-header">
                 <h5 class="modal-title">Configure Objective</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body text-left pb-0" data-bind="with: App.game.goalTracker.selectedObjective">
+            <div class="modal-body text-left pb-0">
                 <div class="form-group">
                     <label>Type</label>
                     <select class="form-control" data-bind="
@@ -66,30 +66,33 @@
                 <div class="form-group">
                     <label>Goal Amount</label>
                     <input type="number" class="form-control" data-bind="value: $parent.targetAmount" />
-                    <small class="form-text text-muted">
+                    <!--<small class="form-text text-muted">
                         Current Amount:
                         <span data-bind="text: $parent.isConfigured() ? $parent.getProgress().toLocaleString('en-US') : 'N/A'"></span>
-                    </small>
+                    </small>-->
                 </div>
-                <!--<div class="form-group">
-                    <label>Goal</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <select class="form-control">
-                                <option>Have a total of</option>
-                                <option>Gain</option>
-                            </select>
-                        </div>
-                        <input type="number" class="form-control" data-bind="value: $parent.targetAmount" />
+                <div class="form-group">
+                    <label>Tracking Mode</label>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="trackingModeTotal" class="custom-control-input" name="trackingMode"
+                            data-bind="checkedValue: false, checked: $parent.startFromZero">
+                        <label class="custom-control-label" for="trackingModeTotal">Total</label>
+                        <small class="form-text text-muted mt-0">
+                            Tracks the current amount of the configured objective, including decreases.
+                        </small>
                     </div>
-                    <small class="form-text text-muted">
-                        Current Amount:
-                        <span data-bind="text: $parent.isConfigured() ? $parent.getProgress().toLocaleString('en-US') : 'N/A'"></span>
-                    </small>
-                </div>-->
+                    <div class="custom-control custom-radio mt-1">
+                        <input type="radio" id="trackingModeGain" class="custom-control-input" name="trackingMode"
+                            data-bind="checkedValue: true, checked: $parent.startFromZero">
+                        <label class="custom-control-label" for="trackingModeGain">Gain</label>
+                        <small class="form-text text-muted mt-0">
+                            Starts the current amount from zero, does not track decreases.
+                        </small>
+                    </div>
+                </div>
                 <!-- /ko -->
             </div>
-            <div class="modal-footer" data-bind="with: App.game.goalTracker.selectedObjective">
+            <div class="modal-footer">
                 <div class="card-body text-left small p-0">
                     <div data-bind="text: displayName"></div>
                     <div class="progress">
@@ -105,8 +108,18 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            <div class="modal-footer justify-content-start">
+                <div data-bind="visible: startFromZero">
+                    <button type="button" class="btn btn-danger btn-sm" data-bind="click: () => resetAccumulatedProgress(),
+                        tooltip: {
+                            title: 'Resets accumulated progress to zero when using the Gain tracking mode.',
+                            trigger: 'hover',
+                            position: 'top',
+                        }">Reset Progress</button>
+                </div>
+                <div class="flex-grow-1 text-right">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>

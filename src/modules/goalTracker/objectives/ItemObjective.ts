@@ -52,7 +52,7 @@ export const itemObjectiveOption: ObjectiveOption<ItemObjectiveConfig> = {
         return ko.pureComputed(() => {
             const itemName = ItemList[config.item()]?.displayName;
             if (!itemName) return 'Unconfigured Objective';
-            return `Total ${pluralizeString(itemName, 2)}`;
+            return `${pluralizeString(itemName, 2)}`;
         });
     },
 };

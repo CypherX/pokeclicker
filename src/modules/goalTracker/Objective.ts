@@ -7,19 +7,28 @@ import { ObjectiveOption, ObjectiveType } from './objectives/ObjectiveTypes';
 
 export default class Objective {
     private _type = ko.observable<ObjectiveType | undefined>(undefined);
-    public _config = ko.observable<ObjectiveConfig | undefined>(undefined);
+    private _config = ko.observable<ObjectiveConfig | undefined>(undefined);
     private _targetAmount = ko.observable(0).extend({ numeric: 0 });
+    private _startFromZero = ko.observable<boolean>(false);
+    private _accumulatedProgress = ko.observable<number>(0).extend({ numeric: 0 });
+    private _lastRawValue: number = 0;
 
     public uuid: string;
     private _isCompleteSub: KnockoutSubscription;
+    private _rawProgressSub: KnockoutSubscription;
 
     private get activeOption(): ObjectiveOption<any> | undefined {
         return objectiveOptions[this.type] as ObjectiveOption<any> | undefined;
     }
 
-    public getProgress = ko.pureComputed(() => {
+    private getRawProgress = ko.pureComputed(() => {
         if (!this.activeOption) return 0;
         return this.activeOption.getProgress(this.config)() ?? 0;
+    });
+
+    public getProgress = ko.pureComputed(() => {
+        if (!this.isConfigured()) return 0;
+        return this.startFromZero ? this.accumulatedProgress : this.getRawProgress();
     });
 
     public getOptions = ko.pureComputed(() => {
@@ -56,17 +65,33 @@ export default class Objective {
                 });
             }
         });
+
+        this._rawProgressSub = this.getRawProgress.subscribe((newValue) => {
+            if (this.startFromZero && this.isConfigured()) {
+                const diff = newValue - this._lastRawValue;
+                if (diff > 0) {
+                    this.accumulatedProgress = this.accumulatedProgress + diff;
+                }
+            }
+            this._lastRawValue = newValue;
+        });
     }
 
     public dispose(): void {
         this._isCompleteSub?.dispose();
+        this._rawProgressSub?.dispose();
     }
 
-    progressText(): string {
+    public resetAccumulatedProgress() {
+        this.accumulatedProgress = 0;
+        this._lastRawValue = this.getRawProgress.peek();
+    }
+
+    public progressText(): string {
         return `${this.getProgress().toLocaleString('en-US')} / ${this.targetAmount.toLocaleString('en-US')}`;
     }
 
-    progressPercent(): number {
+    public progressPercent(): number {
         return Math.floor((this.getProgress() / this.targetAmount) * 100) / 100;
     }
 
@@ -82,6 +107,7 @@ export default class Objective {
         this._type(value);
         this.config = objectiveOptions[value]?.createConfig();
         this.targetAmount = 0;
+        this.resetAccumulatedProgress();
     }
 
     get config(): ObjectiveConfig | undefined {
@@ -100,6 +126,22 @@ export default class Objective {
         this._targetAmount(value);
     }
 
+    get startFromZero(): boolean {
+        return this._startFromZero();
+    }
+
+    set startFromZero(value: boolean) {
+        this._startFromZero(value);
+    }
+
+    get accumulatedProgress(): number {
+        return this._accumulatedProgress();
+    }
+
+    set accumulatedProgress(value: number) {
+        this._accumulatedProgress(value);
+    }
+
     toJSON(): Record<string, any> {
         const config = {};
         if (this.config) {
@@ -111,6 +153,9 @@ export default class Objective {
             type: this.type,
             config: config,
             targetAmount: this.targetAmount,
+            startFromZero: this.startFromZero,
+            accumulatedProgress: this.accumulatedProgress,
+            lastRawValue: this._lastRawValue,
         };
     }
 
@@ -131,5 +176,8 @@ export default class Objective {
         }
 
         this._config(config);
+        this._startFromZero(json.startFromZero ?? false);
+        this._accumulatedProgress(json.accumulatedProgress ?? 0);
+        this._lastRawValue = json.lastRawValue ?? 0;
     }
 }
