@@ -44,9 +44,9 @@ export const itemObjectiveOption: ObjectiveOption<ItemObjectiveConfig> = {
         });
     },
     createConfig: (): ItemObjectiveConfig => {
-        const config = { category: ko.observable(), item: ko.observable() };
-        config.category.subscribe(() => config.item(undefined)); // clear item if the category changes
-        return config;
+        const item = ko.observable();
+        const category = ko.observable().extend({ clearDependent: item }); // clear item if the category changes
+        return { category, item };
     },
     getDisplayName: (config: ItemObjectiveConfig) => {
         return ko.pureComputed(() => {
