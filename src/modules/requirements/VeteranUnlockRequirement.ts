@@ -1,7 +1,7 @@
 import { AchievementOption, VeteranUnlock } from '../GameConstants';
 import Requirement from './Requirement';
 
-export default class VeteranRequirement extends Requirement {
+export default class VeteranUnlockRequirement extends Requirement {
     constructor(
         private unlock: VeteranUnlock,
     ) {

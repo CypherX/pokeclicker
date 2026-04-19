@@ -238,7 +238,7 @@ const PinkanBerryMaster = new BerryMasterShop(GameConstants.BerryTraderLocations
 const veteranShop = new VeteranShop([
     ItemList.Pokerus_virus,
     ItemList.Event_calendar,
-], 'Veteran Shop');
+]);
 
 // Kanto NPCs
 

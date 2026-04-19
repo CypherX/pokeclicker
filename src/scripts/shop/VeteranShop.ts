@@ -6,33 +6,52 @@ interface VeteranUnlockConfig {
 }
 
 class VeteranShop extends Shop {
-    static unlockList: Record<GameConstants.VeteranUnlock, VeteranUnlockConfig> = {
-        [GameConstants.VeteranUnlock.PokerusVirus]: {
-            isUnlocked: ko.observable(false),
-            checkFunction: (playerData, saveData) => {
-                return saveData?.keyItems?.Pokerus_virus === true;
-            },
-        },
-        [GameConstants.VeteranUnlock.EventCalendar]: {
-            isUnlocked: ko.observable(false),
-            checkFunction: (playerData, saveData) => {
-                return saveData?.keyItems?.Event_calendar === true;
-            },
-        },
-    };
+    static unlockList: Record<GameConstants.VeteranUnlock, VeteranUnlockConfig>
+        = {} as Record<GameConstants.VeteranUnlock, VeteranUnlockConfig>;
 
-    constructor(
-        items: Item[],
-        public name: string = 'Veteran',
-        requirements: (Requirement | OneFromManyRequirement)[] = [],
-        hideBeforeUnlocked = false
-    ) {
-        super(items, name, requirements, hideBeforeUnlocked);
+    constructor(items: Item[]) {
+        super(items, 'Veteran Shop');
     }
 
     public static initialize(): void {
-        const saveKeys = Object.keys(localStorage).filter((k: string) => k.startsWith('save')).map((k: string) => k.replace(/^save/, ''));
-        if (saveKeys.length <= 1) {
+        VeteranShop.addUnlock(GameConstants.VeteranUnlock.PokerusVirus, (playerData, saveData) => {
+            const caughtPokemon = saveData?.party?.caughtPokemon ?? [];
+            let resistCount = 0;
+
+            for (const pokemon of caughtPokemon) {
+                if (pokemon[PartyPokemonSaveKeys.pokerus] >= GameConstants.Pokerus.Resistant) {
+                    resistCount++;
+                    if (resistCount >= 500) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        });
+
+        VeteranShop.addUnlock(GameConstants.VeteranUnlock.EventCalendar,
+            (playerData, saveData) => saveData?.keyItems?.Event_calendar === true);
+
+        VeteranShop.checkUnlocks();
+    }
+
+    static addUnlock(
+        unlock: GameConstants.VeteranUnlock,
+        checkFunction: (playerData: Record<string, any>, saveData: Record<string, any>) => boolean
+    ) {
+        VeteranShop.unlockList[unlock] = {
+            isUnlocked: ko.observable(false),
+            checkFunction,
+        };
+    }
+
+    static checkUnlocks(): void {
+        const saveKeys = Object.keys(localStorage)
+            .filter((k: string) => k.startsWith('save') && k !== `save${Save.key}`)
+            .map((k: string) => k.replace(/^save/, ''));
+
+        if (saveKeys.length === 0) {
             return;
         }
 
@@ -59,7 +78,11 @@ class VeteranShop extends Shop {
         }
     }
 
-    public static isUnlockAvailable(unlock: GameConstants.VeteranUnlock): boolean {
+    static isUnlockAvailable(unlock: GameConstants.VeteranUnlock): boolean {
         return this.unlockList[unlock]?.isUnlocked() ?? false;
+    }
+
+    public isVisible(): boolean {
+        return Object.values(VeteranShop.unlockList).some((unlock) => unlock.isUnlocked());
     }
 }
