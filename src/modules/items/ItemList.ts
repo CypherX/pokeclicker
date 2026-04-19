@@ -24,6 +24,7 @@ import {
     Pokeball,
     PokeBlockColor,
     Region,
+    VeteranUnlock,
     VitaminType,
 } from '../GameConstants';
 import { MulchShovelItem, ShovelItem } from './ShovelItem';
@@ -43,6 +44,8 @@ import UndergroundItemValueType from '../enums/UndergroundItemValueType';
 import TreasureItem from './TreasureItem';
 import { pokemonMap } from '../pokemons/PokemonList';
 import AttackGainConsumable from './AttackGainConsumable';
+import OneFromManyRequirement from '../requirements/OneFromManyRequirement';
+import VeteranRequirement from '../requirements/VeteranRequirement';
 // eslint-disable-next-line import/prefer-default-export
 export const ItemList: { [name: string]: Item } = {};
 
@@ -64,7 +67,12 @@ ItemList.LargeRestore    = new EnergyRestore(EnergyRestoreSize.LargeRestore, 200
 
 ItemList.Dungeon_ticket = new BuyKeyItem(KeyItemType.Dungeon_ticket, 100, undefined, undefined, 'Dungeon Ticket');
 ItemList.Explorer_kit = new BuyKeyItem(KeyItemType.Explorer_kit, 5000, undefined, undefined, 'Explorer Kit');
-ItemList.Event_calendar = new BuyKeyItem(KeyItemType.Event_calendar, 100000, undefined, undefined, 'Event Calendar');
+ItemList.Event_calendar = new BuyKeyItem(KeyItemType.Event_calendar, 100000, undefined, {
+    visible: new OneFromManyRequirement([new MaxRegionRequirement(Region.galar), new VeteranRequirement(VeteranUnlock.EventCalendar)]),
+}, 'Event Calendar');
+ItemList.Pokerus_virus = new BuyKeyItem(KeyItemType.Pokerus_virus, 69420, Currency.contestToken, {
+    visible: new VeteranRequirement(VeteranUnlock.PokerusVirus),
+}, 'Pokérus Virus');
 
 ItemList.Squirtbottle = new BuyOakItem(OakItemType.Squirtbottle, 5000, Currency.farmPoint);
 ItemList.Sprinklotad = new BuyOakItem(OakItemType.Sprinklotad, 10000, Currency.farmPoint);

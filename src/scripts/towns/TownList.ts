@@ -9,6 +9,7 @@
 ///<reference path="../safari/SafariTownContent.ts"/>
 ///<reference path="PurifyChamber.ts"/>
 ///<reference path="../shop/GenericTraderShop.ts"/>
+///<reference path="../shop/VeteranShop.ts"/>
 
 const TownList: { [name: string]: Town } = {};
 
@@ -233,6 +234,11 @@ const PinkanBerryMaster = new BerryMasterShop(GameConstants.BerryTraderLocations
     ItemList.Mulch_Shovel,
     ItemList.Gooey_Mulch,
 ], 'Officer Jenny\'s Pinkan Trade Shop', [new QuestLineCompletedRequirement('Team Rocket\'s Pinkan Theme Park')]);
+
+const veteranShop = new VeteranShop([
+    ItemList.Pokerus_virus,
+    ItemList.Event_calendar,
+], 'Veteran Shop');
 
 // Kanto NPCs
 
@@ -900,7 +906,7 @@ TownList['Pallet Town'] = new Town(
     'Pallet Town',
     GameConstants.Region.kanto,
     GameConstants.KantoSubRegions.Kanto,
-    [new BulletinBoard(GameConstants.BulletinBoards.Kanto)],
+    [new BulletinBoard(GameConstants.BulletinBoards.Kanto), veteranShop],
     {
         npcs: [PalletProfOak, PalletCelebiProfOak1, PalletCelebiProfOak2, PalletMom1, PalletMom2],
     }

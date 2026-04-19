@@ -2684,3 +2684,8 @@ export const ZMOVE_ACTIVE_MULTIPLIER = 1.5;
 export const ZMOVE_COUNTERACTIVE_MULTIPLIER = 0.75;
 export const ZMOVE_ACTIVE_TIME = 1 * MINUTE;
 export const ZMOVE_COUNTERACTIVE_TIME = 4 * MINUTE;
+
+export enum VeteranUnlock {
+    PokerusVirus,
+    EventCalendar,
+}
