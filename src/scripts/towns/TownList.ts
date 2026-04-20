@@ -236,8 +236,24 @@ const PinkanBerryMaster = new BerryMasterShop(GameConstants.BerryTraderLocations
 ], 'Officer Jenny\'s Pinkan Trade Shop', [new QuestLineCompletedRequirement('Team Rocket\'s Pinkan Theme Park')]);
 
 const veteranShop = new VeteranShop([
-    ItemList.Pokerus_virus,
-    ItemList.Event_calendar,
+    new BuyKeyItem(KeyItemType.Pokerus_virus, 69420, GameConstants.Currency.contestToken, {
+        visible: new MultiRequirement([
+            new VeteranUnlockRequirement(GameConstants.VeteranUnlock.PokerusVirus),
+            new CaughtPokemonRequirement(1),
+        ]),
+    }, 'Pokérus Virus', true),
+    new BuyKeyItem(KeyItemType.Event_calendar, 100000, undefined, {
+        visible: new VeteranUnlockRequirement(GameConstants.VeteranUnlock.EventCalendar),
+    }, 'Event Calendar', true),
+    new BuyKeyItem(KeyItemType.Explorer_kit, 5000, undefined, {
+        visible: new VeteranUnlockRequirement(GameConstants.VeteranUnlock.ExplorerKit),
+    }, 'Explorer Kit', true),
+    new BuyKeyItem(KeyItemType.Holo_caster, 8875, GameConstants.Currency.dungeonToken, {
+        visible: new VeteranUnlockRequirement(GameConstants.VeteranUnlock.AchievementTracker),
+    }, 'Holo Caster', true),
+    new BuyKeyItem(KeyItemType.Wailmer_pail, 1, GameConstants.Currency.farmPoint, {
+        visible: new VeteranUnlockRequirement(GameConstants.VeteranUnlock.WailmerPail),
+    }, 'Wailmer Pail', true),
 ]);
 
 // Kanto NPCs

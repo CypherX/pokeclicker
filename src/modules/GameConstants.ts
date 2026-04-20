@@ -2688,4 +2688,7 @@ export const ZMOVE_COUNTERACTIVE_TIME = 4 * MINUTE;
 export enum VeteranUnlock {
     PokerusVirus,
     EventCalendar,
+    ExplorerKit,
+    AchievementTracker,
+    WailmerPail,
 }
