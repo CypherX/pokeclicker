@@ -235,6 +235,7 @@ const PinkanBerryMaster = new BerryMasterShop(GameConstants.BerryTraderLocations
     ItemList.Gooey_Mulch,
 ], 'Officer Jenny\'s Pinkan Trade Shop', [new QuestLineCompletedRequirement('Team Rocket\'s Pinkan Theme Park')]);
 
+// Instantiate as new items to not muddy ItemList and requirements
 const veteranShop = new VeteranShop([
     new BuyKeyItem(KeyItemType.Pokerus_virus, 69420, GameConstants.Currency.contestToken, {
         visible: new MultiRequirement([
