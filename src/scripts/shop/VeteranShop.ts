@@ -39,8 +39,10 @@ class VeteranShop extends Shop {
         VeteranShop.addUnlock(GameConstants.VeteranUnlock.AchievementTracker,
             (playerData, saveData) => saveData?.keyItems?.Holo_caster === true);
 
-        VeteranShop.addUnlock(GameConstants.VeteranUnlock.WailmerPail,
-            (playerData, saveData) => saveData?.keyItems?.Wailmer_pail === true);
+        VeteranShop.addUnlock(GameConstants.VeteranUnlock.WailmerPail, (playerData, saveData) => {
+            const unlockedPlots = (saveData?.farming?.plotList ?? []).filter((plot) => plot.isUnlocked === true);
+            return unlockedPlots.length >= GameConstants.FARM_PLOT_WIDTH * GameConstants.FARM_PLOT_HEIGHT;
+        });
 
         VeteranShop.checkUnlocks();
     }

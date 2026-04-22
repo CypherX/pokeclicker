@@ -252,7 +252,7 @@ const veteranShop = new VeteranShop([
     new BuyKeyItem(KeyItemType.Holo_caster, 8875, GameConstants.Currency.dungeonToken, {
         visible: new VeteranUnlockRequirement(GameConstants.VeteranUnlock.AchievementTracker),
     }, 'Holo Caster', true),
-    new BuyKeyItem(KeyItemType.Wailmer_pail, 1, GameConstants.Currency.farmPoint, {
+    new BuyKeyItem(KeyItemType.Wailmer_pail, 1, GameConstants.Currency.money, {
         visible: new VeteranUnlockRequirement(GameConstants.VeteranUnlock.WailmerPail),
     }, 'Wailmer Pail', true),
 ]);
