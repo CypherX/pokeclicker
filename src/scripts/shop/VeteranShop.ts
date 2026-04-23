@@ -36,7 +36,7 @@ class VeteranShop extends Shop {
         VeteranShop.addUnlock(GameConstants.VeteranUnlock.ExplorerKit,
             (playerData, saveData) => saveData?.keyItems?.Explorer_kit === true);
 
-        VeteranShop.addUnlock(GameConstants.VeteranUnlock.AchievementTracker,
+        VeteranShop.addUnlock(GameConstants.VeteranUnlock.HoloCaster,
             (playerData, saveData) => saveData?.keyItems?.Holo_caster === true);
 
         VeteranShop.addUnlock(GameConstants.VeteranUnlock.WailmerPail, (playerData, saveData) => {

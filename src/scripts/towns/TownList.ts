@@ -243,14 +243,14 @@ const veteranShop = new VeteranShop([
             new CaughtPokemonRequirement(1),
         ]),
     }, 'Pokérus Virus', true),
-    new BuyKeyItem(KeyItemType.Event_calendar, 100000, undefined, {
+    new BuyKeyItem(KeyItemType.Event_calendar, 10000, undefined, {
         visible: new VeteranUnlockRequirement(GameConstants.VeteranUnlock.EventCalendar),
     }, 'Event Calendar', true),
     new BuyKeyItem(KeyItemType.Explorer_kit, 5000, undefined, {
         visible: new VeteranUnlockRequirement(GameConstants.VeteranUnlock.ExplorerKit),
     }, 'Explorer Kit', true),
     new BuyKeyItem(KeyItemType.Holo_caster, 8875, GameConstants.Currency.dungeonToken, {
-        visible: new VeteranUnlockRequirement(GameConstants.VeteranUnlock.AchievementTracker),
+        visible: new VeteranUnlockRequirement(GameConstants.VeteranUnlock.HoloCaster),
     }, 'Holo Caster', true),
     new BuyKeyItem(KeyItemType.Wailmer_pail, 1, GameConstants.Currency.money, {
         visible: new VeteranUnlockRequirement(GameConstants.VeteranUnlock.WailmerPail),

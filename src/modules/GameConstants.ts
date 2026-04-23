@@ -2689,6 +2689,6 @@ export enum VeteranUnlock {
     PokerusVirus,
     EventCalendar,
     ExplorerKit,
-    AchievementTracker,
+    HoloCaster,
     WailmerPail,
 }
