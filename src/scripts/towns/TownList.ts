@@ -235,6 +235,22 @@ const PinkanBerryMaster = new BerryMasterShop(GameConstants.BerryTraderLocations
     ItemList.Gooey_Mulch,
 ], 'Officer Jenny\'s Pinkan Trade Shop', [new QuestLineCompletedRequirement('Team Rocket\'s Pinkan Theme Park')]);
 
+const KantoExclusiveBerryShop = new Shop([
+    ItemList.Boost_Mulch,
+    ItemList.Rich_Mulch,
+    ItemList.Surprise_Mulch,
+    ItemList.Amaze_Mulch,
+    ItemList.Freeze_Mulch,
+    ItemList.Berry_Shovel,
+    ItemList.Mulch_Shovel,
+    ItemList.Squirtbottle,
+    ItemList.FarmHandBailey,
+    ItemList.ChopleBerry,
+    ItemList.KebiaBerry,
+    ItemList.ShucaBerry,
+    ItemList.ChartiBerry,
+], 'Exclusive Berry Shop', [new ItemOwnedRequirement('CeruleanBerryShopPermit')], true);
+
 // Instantiate as new items to not muddy ItemList and requirements
 const veteranShop = new VeteranShop([
     new BuyKeyItem(KeyItemType.Pokerus_virus, 69420, GameConstants.Currency.contestToken, {
@@ -243,18 +259,22 @@ const veteranShop = new VeteranShop([
             new CaughtPokemonRequirement(1),
         ]),
     }, 'Pokérus Virus', true),
-    new BuyKeyItem(KeyItemType.Event_calendar, 10000, undefined, {
+    new BuyKeyItem(KeyItemType.Event_calendar, 10000, GameConstants.Currency.questPoint, {
         visible: new VeteranUnlockRequirement(GameConstants.VeteranUnlock.EventCalendar),
     }, 'Event Calendar', true),
-    new BuyKeyItem(KeyItemType.Explorer_kit, 5000, undefined, {
-        visible: new VeteranUnlockRequirement(GameConstants.VeteranUnlock.ExplorerKit),
+    new BuyKeyItem(KeyItemType.Explorer_kit, 1, GameConstants.Currency.questPoint, {
+        visible: new VeteranUnlockRequirement(GameConstants.VeteranUnlock.ExplorerKit), // todo test if this screws up the quest line
     }, 'Explorer Kit', true),
-    new BuyKeyItem(KeyItemType.Holo_caster, 8875, GameConstants.Currency.dungeonToken, {
+    new BuyKeyItem(KeyItemType.Holo_caster, 1, GameConstants.Currency.dungeonToken, {
         visible: new VeteranUnlockRequirement(GameConstants.VeteranUnlock.HoloCaster),
     }, 'Holo Caster', true),
     new BuyKeyItem(KeyItemType.Wailmer_pail, 1, GameConstants.Currency.money, {
         visible: new VeteranUnlockRequirement(GameConstants.VeteranUnlock.WailmerPail),
     }, 'Wailmer Pail', true),
+    new BuyKeyItem(KeyItemType.Super_rod, 1, GameConstants.Currency.money, {
+        visible: new VeteranUnlockRequirement(GameConstants.VeteranUnlock.SuperRod),
+    }, 'Super Rod', true),
+    ItemList.CeruleanBerryShopPermit,
 ]);
 
 // Kanto NPCs
@@ -968,7 +988,7 @@ TownList['Cerulean City'] = new Town(
     'Cerulean City',
     GameConstants.Region.kanto,
     GameConstants.KantoSubRegions.Kanto,
-    [CeruleanCityShop, new ShardTraderShop(GameConstants.ShardTraderLocations['Cerulean City']), new MoveToDungeon(dungeonList['Cerulean Cave'])],
+    [CeruleanCityShop, new ShardTraderShop(GameConstants.ShardTraderLocations['Cerulean City']), KantoExclusiveBerryShop, new MoveToDungeon(dungeonList['Cerulean Cave'])],
     {
         requirements: [new RouteKillRequirement(10, GameConstants.Region.kanto, 4)],
         npcs: [CeruleanKantoBerryMaster, CeruleanFarmApprentice, CeruleanSuperNerd, Mewtwo1, Mewtwo2, DetectiveRaichu],

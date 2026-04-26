@@ -2691,4 +2691,6 @@ export enum VeteranUnlock {
     ExplorerKit,
     HoloCaster,
     WailmerPail,
+    SuperRod,
+    CeruleanBerryShopPermit,
 }

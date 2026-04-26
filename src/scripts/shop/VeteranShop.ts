@@ -44,6 +44,14 @@ class VeteranShop extends Shop {
             return unlockedPlots.length >= GameConstants.FARM_PLOT_WIDTH * GameConstants.FARM_PLOT_HEIGHT;
         });
 
+        VeteranShop.addUnlock(GameConstants.VeteranUnlock.SuperRod,
+            (playerData, saveData) => saveData?.keyItems?.Super_rod === true);
+
+        VeteranShop.addUnlock(GameConstants.VeteranUnlock.CeruleanBerryShopPermit, (playerData, saveData) => {
+            const unlockedBerries = saveData?.farming?.unlockedBerries ?? [];
+            return unlockedBerries[BerryType.Petaya] === true;
+        });
+
         VeteranShop.checkUnlocks();
     }
 
