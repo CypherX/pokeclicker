@@ -2692,5 +2692,6 @@ export enum VeteranUnlock {
     HoloCaster,
     WailmerPail,
     SuperRod,
+    GemCase,
     CeruleanBerryShopPermit,
 }

@@ -251,7 +251,7 @@ const KantoExclusiveBerryShop = new Shop([
     ItemList.ChartiBerry,
 ], 'Exclusive Berry Shop', [new ItemOwnedRequirement('CeruleanBerryShopPermit')], true);
 
-// Instantiate as new items to not muddy ItemList and requirements
+// To avoid polluting ItemList & item requirements, instantiate as new items where it makes sense
 const veteranShop = new VeteranShop([
     new BuyKeyItem(KeyItemType.Pokerus_virus, 69420, GameConstants.Currency.contestToken, {
         visible: new MultiRequirement([
@@ -271,6 +271,9 @@ const veteranShop = new VeteranShop([
     new BuyKeyItem(KeyItemType.Wailmer_pail, 1, GameConstants.Currency.money, {
         visible: new VeteranUnlockRequirement(GameConstants.VeteranUnlock.WailmerPail),
     }, 'Wailmer Pail', true),
+    new BuyKeyItem(KeyItemType.Gem_case, 1, GameConstants.Currency.money, {
+        visible: new VeteranUnlockRequirement(GameConstants.VeteranUnlock.GemCase),
+    }, 'Gem Case', true),
     new BuyKeyItem(KeyItemType.Super_rod, 1, GameConstants.Currency.money, {
         visible: new VeteranUnlockRequirement(GameConstants.VeteranUnlock.SuperRod),
     }, 'Super Rod', true),
