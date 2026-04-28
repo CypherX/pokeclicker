@@ -78,7 +78,7 @@ ItemList.Red_Flute    = new FluteItem(FluteItemType.Red_Flute, 'Egg Steps', ['Fi
 ItemList.White_Flute  = new FluteItem(FluteItemType.White_Flute, 'Shiny Chance', ['Normal', 'Fairy', 'Ice'], 'shiny', 1.02);
 ItemList.Blue_Flute   = new FluteItem(FluteItemType.Blue_Flute, 'EV Yield', ['Water', 'Bug', 'Ghost'], 'ev', 1.02);
 
-ItemList.Boost_Mulch   = new MulchItem(MulchType.Boost_Mulch, 50, 'Boost Mulch', 'Increases Berry growth rate.');
+ItemList.Boost_Mulch   = new MulchItem(MulchType.Boost_Mulch, 50, 'Boost Mulch', 'Increases Berry growth and wither rate.');
 ItemList.Rich_Mulch  = new MulchItem(MulchType.Rich_Mulch, 100, 'Rich Mulch', 'Increases Berry harvest rate and replant chances.');
 ItemList.Surprise_Mulch  = new MulchItem(MulchType.Surprise_Mulch, 150, 'Surprise Mulch', 'Increases Berry mutation rate.');
 ItemList.Amaze_Mulch = new MulchItem(MulchType.Amaze_Mulch, 200, 'Amaze Mulch', 'A weaker combination of Boost, Rich and Surprise mulch.');
