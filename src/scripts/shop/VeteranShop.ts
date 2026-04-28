@@ -49,11 +49,27 @@ class VeteranShop extends Shop {
 
         VeteranShop.addUnlock(GameConstants.VeteranUnlock.GemCase, (playerData, saveData) => {
             const gemUpgrades = saveData?.gems?.gemUpgrades ?? [];
-            return gemUpgrades.length >= Gems.nTypes * Gems.nEffects && gemUpgrades.every((upgrade: number, index: number) => {
-                const type: PokemonType = Math.floor(index / Gems.nEffects);
-                const effectiveness = index % Gems.nEffects;
-                return App.game.gems.validUpgrades[type][effectiveness] === false || upgrade >= GameConstants.MAX_GEM_UPGRADES;
-            });
+            const totalUpgrades = Gems.nTypes * Gems.nEffects;
+
+            if (gemUpgrades.length < totalUpgrades) {
+                return false;
+            }
+
+            const validUpgrades = App.game.gems.validUpgrades;
+            const maxUpgrade = GameConstants.MAX_GEM_UPGRADES;
+            let index = 0;
+
+            for (let type = 0; type < Gems.nTypes; type++) {
+                const typeValidUpgrades = validUpgrades[type];
+                for (let effect = 0; effect < Gems.nEffects; effect++) {
+                    if (typeValidUpgrades[effect] && gemUpgrades[index] < maxUpgrade) {
+                        return false;
+                    }
+                    index++;
+                }
+            }
+
+            return true;
         });
 
         VeteranShop.addUnlock(GameConstants.VeteranUnlock.CeruleanBerryShopPermit, (playerData, saveData) => {
