@@ -180,7 +180,7 @@ const skippableRateLimitExtender = (target: Subscribable, delay: number): typeof
     return target.extend({ rateLimit: { timeout: delay, method: skippableLimiter } }) as typeof target & SkippableRateLimit;
 };
 
-const clearDependent = (target: Observable, dependentObservable: Observable | Observable[]) => {
+const clearDependentExtender = (target: Observable, dependentObservable: Observable | Observable[]) => {
     let previousValue = target.peek();
     target.subscribe((newValue) => {
         if (previousValue !== undefined && previousValue !== newValue) {
@@ -201,7 +201,7 @@ Object.assign(ko.extenders, {
     boolean: booleanExtender,
     arrayEquals: arrayEqualsExtender,
     skippableRateLimit: skippableRateLimitExtender,
-    clearDependent: clearDependent,
+    clearDependent: clearDependentExtender,
 });
 
 declare module 'knockout' {
