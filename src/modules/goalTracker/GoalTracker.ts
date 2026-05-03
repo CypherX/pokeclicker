@@ -1,4 +1,5 @@
 import { Feature } from '../DataStore/common/Feature';
+import { getDungeonIndex } from '../GameConstants';
 import NotificationOption from '../notifications/NotificationOption';
 import Notifier from '../notifications/Notifier';
 import SaveSelector from '../SaveSelector';
@@ -18,7 +19,7 @@ export default class GoalTracker implements Feature {
     initialize(): void {}
 
     canAccess(): boolean {
-        return true;
+        return App.game.statistics.dungeonsCleared[getDungeonIndex('Victory Road Johto')]() > 0;
     }
 
     update() {}
