@@ -18,6 +18,13 @@ export default class Goal {
         this.uuid = GameHelper.randomUUID();
     }
 
+    dispose() {
+        if (this.objectives().includes(App.game.goalTracker.selectedObjective())) {
+            App.game.goalTracker.selectedObjective(undefined);
+        }
+        this.objectives().forEach(obj => obj.dispose());
+    }
+
     createObjective() {
         const objective = new Objective();
         this.objectives.push(objective);
@@ -29,6 +36,7 @@ export default class Goal {
         const json = objective.toJSON();
         const newObjective = new Objective();
         newObjective.fromJSON(json);
+        newObjective.resetAccumulatedProgress();
         this.objectives.push(newObjective);
     }
 
@@ -41,6 +49,9 @@ export default class Goal {
         })) {
             objective.dispose();
             this.objectives.remove(objective);
+            if (App.game.goalTracker.selectedObjective() === objective) {
+                App.game.goalTracker.selectedObjective(undefined);
+            }
         }
     }
 
@@ -67,6 +78,7 @@ export default class Goal {
                 const json = JSON.parse(SaveSelector.atob(input));
                 const objective = new Objective();
                 objective.fromJSON(json);
+                objective.resetAccumulatedProgress();
                 this.objectives.push(objective);
 
                 Notifier.notify({
@@ -74,7 +86,8 @@ export default class Goal {
                     message: `The "<strong>${objective.displayName}</strong>" objective has been imported!`,
                     type: NotificationOption.success,
                 });
-            } catch (error) {
+            } catch (e) {
+                console.error(e);
                 Notifier.notify({
                     title: 'Import Error',
                     message: 'Failed to import objective.',
@@ -104,9 +117,13 @@ export default class Goal {
 
         const objectives = [];
         json.objectives?.forEach((objectiveJson) => {
-            const objective = new Objective();
-            objective.fromJSON(objectiveJson);
-            objectives.push(objective);
+            try {
+                const objective = new Objective();
+                objective.fromJSON(objectiveJson);
+                objectives.push(objective);
+            } catch (e) {
+                console.warn('Failed to load objective, skipping:', e);
+            }
         });
 
         this.objectives(objectives);

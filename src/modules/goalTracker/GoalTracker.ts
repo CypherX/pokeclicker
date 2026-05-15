@@ -35,6 +35,7 @@ export default class GoalTracker implements Feature {
             type: NotificationOption.danger,
             confirm: 'Delete',
         })) {
+            goal.dispose();
             this.goals.remove(goal);
         }
     }
@@ -66,6 +67,7 @@ export default class GoalTracker implements Feature {
                 const json = JSON.parse(SaveSelector.atob(input));
                 const goal = new Goal();
                 goal.fromJSON(json);
+                goal.objectives().forEach(obj => obj.resetAccumulatedProgress());
                 this.goals.unshift(goal);
 
                 Notifier.notify({
@@ -73,8 +75,8 @@ export default class GoalTracker implements Feature {
                     message: `The "<strong>${goal.name}</strong>" goal has been imported!`,
                     type: NotificationOption.success,
                 });
-            } catch (error) {
-                console.error(error);
+            } catch (e) {
+                console.error(e);
                 Notifier.notify({
                     title: 'Import Error',
                     message: 'Failed to import goal.',

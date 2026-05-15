@@ -49,9 +49,12 @@ export const pokemonObjectiveOption: ObjectiveOption<PokemonObjectiveConfig> = {
             const pokemonName = config.pokemon?.();
             const property = config.property?.();
 
+            if (!pokemonName || !property) return 0;
+
             const statistic = App.game.statistics[property];
             if (statistic) {
-                const id = pokemonMap[pokemonName].id;
+                const id = pokemonMap[pokemonName]?.id;
+                if (id === undefined) return 0;
                 return App.game.statistics[property][id]?.() ?? 0;
             }
 

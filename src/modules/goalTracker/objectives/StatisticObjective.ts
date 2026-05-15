@@ -17,6 +17,7 @@ export const statisticObjectiveOption: ObjectiveOption<StatisticObjectiveConfig>
         {
             key: 'statistic',
             label: 'Statistic',
+            searchable: true,
             values: () => statisticValues,
         },
     ],

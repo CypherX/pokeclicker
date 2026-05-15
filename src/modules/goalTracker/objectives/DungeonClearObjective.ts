@@ -57,8 +57,8 @@ export const dungeonClearObjectiveOption: ObjectiveOption<DungeonClearObjectiveC
         });
     },
     createConfig: (): DungeonClearObjectiveConfig => {
-        const region = ko.observable();
-        const dungeonName = ko.observable().extend({ clearDependent: region }); // clear dungeon if the region changes
+        const dungeonName = ko.observable();
+        const region = ko.observable().extend({ clearDependent: dungeonName }); // clear dungeon if the region changes
         return { region, dungeonName };
     },
     getDisplayName: (config: DungeonClearObjectiveConfig) => {

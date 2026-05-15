@@ -58,9 +58,9 @@ export const partyAggregateObjectiveOption: ObjectiveOption<PartyAggregateObject
             const values = App.game.party.caughtPokemon.map(p => SortOptionConfigs[sortOption].getValue(p));
             switch (type) {
                 case PartyAggregateType.Minimum:
-                    return Math.min(...values);
+                    return values.length ? Math.min(...values) : 0;
                 case PartyAggregateType.Maximum:
-                    return Math.max(...values);
+                    return values.length ? Math.max(...values) : 0;
                 case PartyAggregateType.Sum:
                     return values.reduce((sum, val) => sum + val, 0);
                 case PartyAggregateType.CountAbove:

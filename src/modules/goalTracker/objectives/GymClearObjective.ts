@@ -49,8 +49,8 @@ export const gymClearObjectiveOption: ObjectiveOption<GymClearObjectiveConfig> =
         });
     },
     createConfig: (): GymClearObjectiveConfig => {
-        const region = ko.observable();
-        const gymTown = ko.observable().extend({ clearDependent: region }); // clear gym if the region changes
+        const gymTown = ko.observable();
+        const region = ko.observable().extend({ clearDependent: gymTown }); // clear gym if the region changes
         return { region, gymTown };
     },
 

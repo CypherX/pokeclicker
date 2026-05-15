@@ -67,7 +67,8 @@ export default class Objective {
         });
 
         this._rawProgressSub = this.getRawProgress.subscribe((newValue) => {
-            if (this.startFromZero && this.isConfigured()) {
+            const modalOpen = DisplayObservables.modalState.goalTrackerObjectiveModal === 'show';
+            if (this.startFromZero && this.isConfigured() && !modalOpen) {
                 const diff = newValue - this._lastRawValue;
                 if (diff > 0) {
                     this.accumulatedProgress = this.accumulatedProgress + diff;
@@ -92,6 +93,7 @@ export default class Objective {
     }
 
     public progressPercent(): number {
+        if (this.targetAmount <= 0) return 0;
         return Math.floor((this.getProgress() / this.targetAmount) * 100) / 100;
     }
 
@@ -176,8 +178,8 @@ export default class Objective {
         }
 
         this._config(config);
+        this._lastRawValue = json.lastRawValue ?? 0;
         this._startFromZero(json.startFromZero ?? false);
         this._accumulatedProgress(json.accumulatedProgress ?? 0);
-        this._lastRawValue = json.lastRawValue ?? 0;
     }
 }
