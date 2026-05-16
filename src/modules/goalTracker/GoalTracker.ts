@@ -22,8 +22,6 @@ export default class GoalTracker implements Feature {
         return App.game.statistics.dungeonsCleared[getDungeonIndex('Victory Road Johto')]() > 0;
     }
 
-    update() {}
-
     createGoal() {
         this.goals.unshift(new Goal());
     }
