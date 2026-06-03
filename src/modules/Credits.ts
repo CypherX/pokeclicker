@@ -417,6 +417,7 @@ export const SpriteCredits: Credit[] = [
             'Sacred Stone Plate',
             'Sacred Toxic Plate',
             'Sacred Zap Plate',
+            'Scorebunny (Pirate)',
             'Sea Mauville',
             'Shadow Absol',
             'Shadow Arbok',
@@ -752,6 +753,7 @@ export const SpriteCredits: Credit[] = [
             'Trial Site',
             'Willie',
             'XD001',
+            'Captain Zacian',
         ],
         // Notes: Made specifically for PokéClicker.
     },
@@ -1284,6 +1286,8 @@ export const SpriteCredits: Credit[] = [
             'Bounsweet (Pirate)',
             'Steenee (Pirate)',
             'Tsareena (Captain)',         
+            'Captain Hoopa',         
+            'Cinderace (Captain)',         
         ],
         // Notes: Made specifically for PokéClicker.
     },
