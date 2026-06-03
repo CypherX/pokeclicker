@@ -168,20 +168,30 @@ export default class SpecialEvents implements Feature {
         );
         /* Pokemon the first movie release date
         RoamingPokemonList.ts:
-            Bulbausaur (Clone)
-            Charmander (Clone)
-            Squirtle (Clone)
-            Pikachu (Clone)
+            Captain Charizard
+        RouteData.ts:
+            Magikarp (Pirate)
+            Captain Lucario
+            Bounsweet (Pirate)
+            Steenee (Pirate)
+            Scorbunny (Pirate)
+            Raboot (Pirate)
         Dungeon.ts:
-            New Island as a dungeon
-            Armored Mewtwo in New Island
+            Pirate Island as a dungeon
+            Captain Hoopa
+            Gyarados (Captain)
+            Tsareena (Captain)
+            Cinderace (Captain)
+            Captain Zacian
+        GenericDeal.ts
+            Zorua (Pirate)
         */
         this.newEvent('A Pirate\'s Life', 'Pirates are causing trouble all over the Seven Seas.',
             // Start
-            new Date(new Date().getFullYear(), 0, 1, 1), () => {
+            new Date(new Date().getFullYear(), 7, 29, 1), () => {
             },
             // End
-            new Date(new Date().getFullYear(), 11, 31, 23), () => {
+            new Date(new Date().getFullYear(), 8, 19, 23), () => {
             },
         );
         // Halloween
