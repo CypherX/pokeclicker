@@ -33,6 +33,15 @@ export class HeldItem extends Item {
     public isUnlocked() {
         return player.highestRegion() >= this.regionUnlocked;
     }
+
+    // Note that it's possible for both of these to return false, e.g. when comparing different categories
+    public isSameOrBetter(comparedItem: HeldItem): boolean {
+        return this === comparedItem;
+    }
+
+    public isInferior(comparedItem: HeldItem): boolean {
+        return false;
+    }
 }
 
 export class AttackBonusHeldItem extends HeldItem {
@@ -47,13 +56,37 @@ export class AttackBonusHeldItem extends HeldItem {
         pokemonDescription = 'the Pokémon',
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         canUse = (pokemon: TmpPartyPokemonType) => true,
-        protected applyBonus = () => true,
+        protected applyCondition?: () => boolean,
         additionDescription = '') {
         super(name, basePrice, currency, shopOptions, displayName, `A held item that ${_attackBonus > 1 ? 'raises' : 'lowers'} the attack of ${pokemonDescription} by ${(Math.abs(_attackBonus - 1)).toLocaleString('en-US', { style: 'percent', minimumFractionDigits: 0, maximumFractionDigits: 0 })}${additionDescription}.`, regionUnlocked, canUse);
     }
 
+    protected applyBonus(): boolean {
+        return (!this.applyCondition || this.applyCondition());
+    }
+
     get attackBonus(): number {
         return this.applyBonus() ? this._attackBonus : 1;
+    }
+
+    public override isSameOrBetter(comparedItem: HeldItem): boolean {
+        if (this.applyCondition) {
+            return this === comparedItem;
+        }
+        if (comparedItem instanceof AttackBonusHeldItem) {
+            return this._attackBonus >= comparedItem._attackBonus;
+        }
+        return false;
+    }
+
+    public override isInferior(comparedItem: HeldItem): boolean {
+        if (comparedItem instanceof AttackBonusHeldItem) {
+            if (comparedItem.applyCondition) {
+                return false;
+            }
+            return this._attackBonus < comparedItem._attackBonus;
+        }
+        return false;
     }
 }
 
@@ -110,14 +143,28 @@ export class HybridAttackBonusHeldItem extends AttackBonusHeldItem {
         regionUnlocked: Region,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         canUse = (pokemon: TmpPartyPokemonType) => true,
-        applyBonus = () => true,
+        applyCondition = () => true,
     ) {
-        super(name, basePrice, currency, shopOptions, displayName, attackBonus, regionUnlocked, undefined, canUse, applyBonus,
+        super(name, basePrice, currency, shopOptions, displayName, attackBonus, regionUnlocked, undefined, canUse, applyCondition,
             ` and ${_clickAttackBonus > 1 ? 'raises' : 'lowers'} its click attack contribution by ${(Math.abs(_clickAttackBonus - 1) * 100).toFixed(0)}%`);
     }
 
     get clickAttackBonus(): number {
         return this.applyBonus() ? this._clickAttackBonus : 1;
+    }
+
+    public override isSameOrBetter(comparedItem: HeldItem): boolean {
+        if (comparedItem instanceof HybridAttackBonusHeldItem) {
+            return this.attackBonus >= comparedItem.attackBonus && this.clickAttackBonus >= comparedItem.clickAttackBonus;
+        }
+        return false;
+    }
+
+    public override isInferior(comparedItem: HeldItem): boolean {
+        if (comparedItem instanceof HybridAttackBonusHeldItem) {
+            return this.attackBonus < comparedItem.attackBonus && this.clickAttackBonus < comparedItem.clickAttackBonus;
+        }
+        return false;
     }
 }
 
@@ -133,6 +180,20 @@ export class EVsGainedBonusHeldItem extends HeldItem {
         super(name, basePrice, currency, shopOptions, displayName, `A held item that increases EV gains for the holding Pokémon by ${(gainedBonus - 1).toLocaleString('en-US', { style: 'percent', minimumFractionDigits: 0, maximumFractionDigits: 0 })}.`, regionUnlocked, (pokemon: TmpPartyPokemonType) => {
             return pokemon.pokerus > Pokerus.Uninfected;
         });
+    }
+
+    public override isSameOrBetter(comparedItem: HeldItem): boolean {
+        if (comparedItem instanceof EVsGainedBonusHeldItem) {
+            return this.gainedBonus >= comparedItem.gainedBonus;
+        }
+        return false;
+    }
+
+    public override isInferior(comparedItem: HeldItem): boolean {
+        if (comparedItem instanceof EVsGainedBonusHeldItem) {
+            return this.gainedBonus < comparedItem.gainedBonus;
+        }
+        return false;
     }
 }
 
@@ -150,16 +211,30 @@ export class ExpGainedBonusHeldItem extends HeldItem {
         canUse = (pokemon: TmpPartyPokemonType) => true) {
         super(name, basePrice, currency, shopOptions, displayName, `A held item that earns ${pokemonDescription} ${(gainedBonus - 1).toLocaleString('en-US', { style: 'percent', minimumFractionDigits: 0, maximumFractionDigits: 0 })} bonus Experience Points.`, regionUnlocked, canUse);
     }
+
+    public override isSameOrBetter(comparedItem: HeldItem): boolean {
+        if (comparedItem instanceof ExpGainedBonusHeldItem) {
+            return this.gainedBonus >= comparedItem.gainedBonus;
+        }
+        return false;
+    }
+
+    public override isInferior(comparedItem: HeldItem): boolean {
+        if (comparedItem instanceof ExpGainedBonusHeldItem) {
+            return this.gainedBonus < comparedItem.gainedBonus;
+        }
+        return false;
+    }
 }
 
 ItemList.Wonder_Chest = new ExpGainedBonusHeldItem('Wonder_Chest', 10000, Currency.money, undefined, 'Wonder Chest', 1.25, Region.johto);
 ItemList.Miracle_Chest = new ExpGainedBonusHeldItem('Miracle_Chest', 30000, Currency.money, { visible: new MaxRegionRequirement(Region.sinnoh) }, 'Miracle Chest', 1.5, Region.sinnoh);
-ItemList.Joy_Scent = new ExpGainedBonusHeldItem('Joy_Scent', 10000, Currency.money, undefined, 'Joy Scent', 1.75, Region.hoenn, ' the holding Shadow Pokémon',
-    (p) => p.shadow >= ShadowStatus.Shadow );
-ItemList.Excite_Scent = new ExpGainedBonusHeldItem('Excite_Scent', 10000, Currency.money, undefined, 'Excite Scent', 2, Region.hoenn, 'the holding Shadow Pokémon',
-    (p) => p.shadow >= ShadowStatus.Shadow   );
-ItemList.Vivid_Scent = new ExpGainedBonusHeldItem('Vivid_Scent', 10000, Currency.money, undefined, 'Vivid Scent', 2.5, Region.hoenn, 'the holding Shadow Pokémon',
-    (p) => p.shadow >= ShadowStatus.Shadow  );
+ItemList.Joy_Scent = new ExpGainedBonusHeldItem('Joy_Scent', 10000, Currency.money, undefined, 'Joy Scent', 1.75, Region.hoenn, ' the holding Shadow or Purified Pokémon',
+    (p) => p.shadow >= ShadowStatus.Shadow);
+ItemList.Excite_Scent = new ExpGainedBonusHeldItem('Excite_Scent', 10000, Currency.money, undefined, 'Excite Scent', 2, Region.hoenn, 'the holding Shadow or Purified Pokémon',
+    (p) => p.shadow >= ShadowStatus.Shadow);
+ItemList.Vivid_Scent = new ExpGainedBonusHeldItem('Vivid_Scent', 10000, Currency.money, undefined, 'Vivid Scent', 2.5, Region.hoenn, 'the holding Shadow or Purified Pokémon',
+    (p) => p.shadow >= ShadowStatus.Shadow);
 ItemList.Muscle_Band = new AttackBonusHeldItem('Muscle_Band', 1000, Currency.battlePoint, undefined, 'Muscle Band', 1.05, Region.hoenn);
 // Pokemon specific items
 ItemList.Light_Ball = new PokemonRestrictedAttackBonusHeldItem('Light_Ball', 10000, Currency.money, undefined, 'Light Ball', 1.3, Region.johto, 'Pikachu',
@@ -231,8 +306,8 @@ ItemList.Twisted_Spoon = new TypeRestrictedAttackBonusHeldItem('Twisted_Spoon', 
 ItemList.Agile_Scroll = new HybridAttackBonusHeldItem('Agile_Scroll', 10000, Currency.money, undefined, 'Agile Scroll', 0.5, 2.0, Region.hisui);
 ItemList.Strong_Scroll = new HybridAttackBonusHeldItem('Strong_Scroll', 10000, Currency.money, undefined, 'Strong Scroll', 2.0, 0.5, Region.hisui);
 
-ItemList.Power_Herb = new AttackBonusHeldItem('Power_Herb', undefined, Currency.money, undefined, 'Power Herb', 1.5, Region.alola, undefined, () => true,
-    () => App.game.gameState == GameState.dungeon && DungeonRunner.fightingBoss(), ' against Dungeon Bosses');
+ItemList.Power_Herb = new AttackBonusHeldItem('Power_Herb', 2500, Currency.battlePoint, undefined, 'Power Herb', 1.4, Region.hoenn, undefined, (pokemon) => true,
+    () => App.game.gameState == GameState.battleFrontier, ' in the Battle Frontier');
 
 ItemList.Macho_Brace = new EVsGainedBonusHeldItem('Macho_Brace', 1500, Currency.questPoint, undefined, 'Macho Brace', 1.5, Region.sinnoh);
 ItemList.Power_Bracer = new EVsGainedBonusHeldItem('Power_Bracer', 2000, Currency.questPoint, undefined, 'Power Bracer', 2, Region.alola);

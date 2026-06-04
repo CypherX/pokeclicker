@@ -492,7 +492,10 @@ class Game implements TmpGameType {
                 }
                 GenericDeal.generateDeals();
                 // Give the players more Battle Cafe spins
-                BattleCafeController.spinsLeft(BattleCafeController.spinsPerDay());
+                if (this.party.getPokemonByName('Milcery')) {
+                    BattleCafeController.accumulateSpins();
+                }
+
                 // Generate the weather forecast
                 WeatherApp.initialize();
                 // Refresh Friend Safari Pokemon List
