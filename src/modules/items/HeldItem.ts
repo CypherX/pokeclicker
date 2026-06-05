@@ -306,7 +306,7 @@ ItemList.Twisted_Spoon = new TypeRestrictedAttackBonusHeldItem('Twisted_Spoon', 
 ItemList.Agile_Scroll = new HybridAttackBonusHeldItem('Agile_Scroll', 10000, Currency.money, undefined, 'Agile Scroll', 0.5, 2.0, Region.hisui);
 ItemList.Strong_Scroll = new HybridAttackBonusHeldItem('Strong_Scroll', 10000, Currency.money, undefined, 'Strong Scroll', 2.0, 0.5, Region.hisui);
 
-ItemList.Power_Herb = new AttackBonusHeldItem('Power_Herb', 2500, Currency.battlePoint, undefined, 'Power Herb', 1.4, Region.hoenn, undefined, (pokemon) => true,
+ItemList.Power_Herb = new AttackBonusHeldItem('Power_Herb', 2500, Currency.battlePoint, undefined, 'Power Herb', 1.4, Region.hoenn, undefined, () => true,
     () => App.game.gameState == GameState.battleFrontier, ' in the Battle Frontier');
 
 ItemList.Macho_Brace = new EVsGainedBonusHeldItem('Macho_Brace', 1500, Currency.questPoint, undefined, 'Macho Brace', 1.5, Region.sinnoh);
