@@ -148,7 +148,7 @@ class Game implements TmpGameType {
         Weather.generateWeather(now);
         GemDeals.generateDeals();
         ShardDeal.generateDeals();
-        GenericDeal.generateDeals();
+        GenericDeal.generateDeals(now);
         SafariPokemonList.generateSafariLists();
         RoamingPokemonList.generateIncreasedChanceRoutes(now);
         WeatherApp.initialize();
@@ -490,7 +490,7 @@ class Game implements TmpGameType {
                         timeout: 3e4,
                     });
                 }
-                GenericDeal.generateDeals();
+                GenericDeal.generateDeals(now);
                 // Give the players more Battle Cafe spins
                 if (this.party.getPokemonByName('Milcery')) {
                     BattleCafeController.accumulateSpins();

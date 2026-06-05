@@ -247,7 +247,10 @@ export default class GenericDeal {
         }
     }
 
-    public static generateDeals() {
+    public static generateDeals(date: Date) {
+
+        SeededRand.seedWithDate(date);
+
         GenericDeal.list.CoinChanger = ko.observableArray([
             new GenericDeal({
                 costs: [{ type: DealCostOrProfitType.Item, item: ItemList.Relic_copper, amount: 10 }],
@@ -275,7 +278,7 @@ export default class GenericDeal {
             }),
         ]);
 
-        GenericDeal.list.PirateFence = ko.observableArray(this.generatePirateDeals(GameHelper.currentTime()));        
+        GenericDeal.list.PirateFence = ko.observableArray(this.generatePirateDeals(date));        
 
         GenericDeal.list.Palaeontologist = ko.observableArray([
             new GenericDeal({
