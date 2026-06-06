@@ -43,7 +43,10 @@
         </div>
 	</div>
     <!-- List of quest line quests -->
-	<!-- ko let: { activeQuestLines: App.game.quests.questLines().filter((ql) => ql.state() == QuestLineState.started) } -->
+	<!-- ko let: {
+        activeQuestLines: App.game.quests.questLines().filter((ql) => ql.state() == QuestLineState.started),
+        hideCompletedTasks: Settings.getSetting('hideCompletedQuestLineTasks').observableValue(),
+    } -->
         <!-- ko if: activeQuestLines.length -->
         <div class="card-header p-0" data-toggle="collapse" href="#questLineDisplayBody">
             <span>Quest Lines</span>
@@ -69,7 +72,7 @@
                             </div>
                             <!-- /ko -->
                             <!-- ko if: $data.curQuestObject().quests -->
-    							<!-- ko foreach: $data.curQuestObject().quests -->
+    							<!-- ko foreach: $data.curQuestObject().quests.filter(q => !hideCompletedTasks || !q.isCompleted()) -->
     								<!-- ko if: $data.description-->
                                     <div data-bind="text: $data.description, css: { 'text-muted strikethrough': $data.isCompleted }"></div>
     								<!-- /ko -->
