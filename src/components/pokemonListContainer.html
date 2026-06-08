@@ -37,7 +37,10 @@
         <div class="table-responsive d-flex flex-column" data-bind="resizable: { setting: 'pokemonList' }">
             <div class="flex-grow-1 flex-shrink-1 text-left" style="overflow: auto;">
                 <div data-bind="template: { name: 'PartySortSettingTemplate', data: Settings.getSetting('partySort')}"></div>
-                <div data-bind="let: { lazyPokemonList: lazyLoad('lazyPokemonList', $element, PartyController.getSortedList, { pageSize: 20, reset: () => (DisplayObservables.collapseState.pokemonListBody === 'hidden'), pause: () => DisplayObservables.collapseState.pokemonListBody !== 'show' }) }">
+                <div data-bind="let: {
+                    lazyPokemonList: lazyLoad('lazyPokemonList', $element, PartyController.getSortedList, { pageSize: 20, reset: () => (DisplayObservables.collapseState.pokemonListBody === 'hidden'), pause: () => DisplayObservables.collapseState.pokemonListBody !== 'show' }),
+                    showAtkLabel: player.highestRegion() == GameConstants.Region.kanto,
+                }">
                     <!-- ko if: DisplayObservables.collapseState.pokemonListBody !== 'hidden' -->
                         <!-- ko foreach: lazyPokemonList, childrenComplete: () => { lazyLoadCallback('lazyPokemonList'); } -->
                             <div class="d-flex align-items-center small px-1 border-bottom pokemon-row">
@@ -56,7 +59,7 @@
                                     </div>
                                     <div class="d-flex align-items-center">
                                         <div class="text-muted">
-                                            <small>Atk</small>
+                                            <small class="attack-label" data-bind="visible: showAtkLabel">Atk</small>
                                             <knockout title="Attack Power" data-bind="text: attack.toLocaleString('en-US')"></knockout>
                                         </div>
                                         <div class="ml-auto text-right d-flex align-items-center">
