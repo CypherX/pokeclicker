@@ -55,7 +55,10 @@
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-center">
-                                        <div class="text-muted" data-bind="text: attack.toLocaleString('en-US')"></div>
+                                        <div class="text-muted">
+                                            <small>Atk</small>
+                                            <knockout title="Attack Power" data-bind="text: attack.toLocaleString('en-US')"></knockout>
+                                        </div>
                                         <div class="ml-auto text-right d-flex align-items-center">
                                             <!-- ko foreach: PokemonHelper.getMegaStones($data.name).filter(s => player.hasMegaStone(s.megaStone)) -->
                                             <img width="18" data-bind="attr: { src: $data.image },
