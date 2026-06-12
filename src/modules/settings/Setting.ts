@@ -7,8 +7,7 @@ import Requirement from '../requirements/Requirement';
 import GameLoadState from '../utilities/GameLoadState';
 
 export default class Setting<T> {
-    private _value: T;
-    private readonly _observable: KnockoutObservable<T>;
+    protected readonly _observable: KnockoutObservable<T>;
     public readonly observableValue: KnockoutComputed<T>;
     private computedOptions: KnockoutComputed<SettingOption<T>[]>;
 
@@ -24,7 +23,7 @@ export default class Setting<T> {
         public requirement: Requirement = undefined,
         public saveAsDefault: boolean = true,
     ) {
-        this._observable = ko.observable(this.defaultValue);
+        this._observable = this.createObservable(this.defaultValue);
         this.set(defaultValue);
 
         // Redirects writes to the observable to this.set()
@@ -41,8 +40,12 @@ export default class Setting<T> {
         }
     }
 
+    protected createObservable(initial: T): KnockoutObservable<T> {
+        return ko.observable(initial);
+    }
+
     get value() {
-        return this._value;
+        return this._observable.peek();
     }
 
     set value(value: T) {
@@ -55,7 +58,6 @@ export default class Setting<T> {
 
     set(value: T): void {
         if (this.validValue(value)) {
-            this._value = value;
             this._observable(value);
         } else {
             let stringified = typeof value === 'string' ? `\"${value}\"` : value.toString();
