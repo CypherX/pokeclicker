@@ -19,7 +19,7 @@
             <div data-bind="if: $data.topButtons?.length">
                 <!-- ko foreach: $data.topButtons -->
                 <div class="pb-1">
-                    <button type="button" class="btn btn-block"
+                    <button type="button" class="btn btn-block font-weight-bold"
                         data-bind="text: (typeof $data.label === 'function' ? $data.label() : $data.label) || 'Button', class: $data.class,
                             click: () => $data.onClick?.()">Button</button>
                 </div>
@@ -48,7 +48,7 @@
                 <div class="dropdown-divider mt-1"></div>
                 <!-- ko foreach: $data.bottomButtons -->
                 <div class="pb-1">
-                    <button type="button" class="btn btn-block"
+                    <button type="button" class="btn btn-block font-weight-bold"
                         data-bind="text: (typeof $data.label === 'function' ? $data.label() : $data.label) || 'Button', class: $data.class,
                             click: () => $data.onClick?.()">Button</button>
                 </div>

@@ -97,7 +97,7 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                                         topButtons: [
                                                             {
                                                                 label: 'All',
-                                                                class: 'btn-secondary btn-sm',
+                                                                class: 'btn-primary btn-sm',
                                                                 onClick: () => breedingType1Filter.set([]),
                                                             },
                                                         ],
@@ -130,7 +130,7 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                                         topButtons: [
                                                             {
                                                                 label: 'All',
-                                                                class: 'btn-secondary btn-sm',
+                                                                class: 'btn-primary btn-sm',
                                                                 onClick: () => breedingType2Filter.set([]),
                                                             },
                                                         ],
@@ -159,7 +159,7 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                                         topButtons: [
                                                             {
                                                                 label: 'All',
-                                                                class: 'btn-secondary btn-sm',
+                                                                class: 'btn-primary btn-sm',
                                                                 onClick: () => breedingRegionFilter.set([]),
                                                             },
                                                         ],
@@ -194,54 +194,20 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                                         topButtons: [
                                                             {
                                                                 label: 'All',
-                                                                class: 'btn-secondary btn-sm',
+                                                                class: 'btn-primary btn-sm',
                                                                 onClick: () => breedingCategoryFilter.set([]),
                                                             },
                                                         ],
                                                         bottomButtons: [
                                                             {
                                                                 label: 'Edit Categories',
-                                                                class: 'btn-secondary btn-sm',
+                                                                class: 'btn-primary btn-sm',
                                                                 onClick: () => $('#categoryModal').modal('show'),
                                                             },
                                                         ],
                                                     }}">
                                                 </knockout>
                                             </div>
-
-                                            <!-- ko if: 1 == 2 -->
-                                            <div class="form-group col-lg-6 col-6">
-                                                <!-- ko let: { breedingCategoryFilter: Settings.getSetting('breedingCategoryFilter') } -->
-                                                <label for="breeding-filter-category" data-bind="text: breedingCategoryFilter.displayName">Category</label>
-                                                <div class="dropdown show">
-                                                    <button id="breeding-filter-category" type="button" class="text-left custom-select col-12 btn btn-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                                        data-bind="text: breedingCategoryFilter.observableValue() == -1 ? 'All'
-                                                            : breedingCategoryFilter.observableValue() == -2 ? 'Categorized'
-                                                            : PokemonCategories.categories().find(c => c.id == breedingCategoryFilter.observableValue()).name()">
-                                                        Categories
-                                                    </button>
-                                                    <div class="border-secondary dropdown-menu col-12 category-dropdown">
-                                                        <div class="dropdown-item dropdown-text" data-bind="click: function() { breedingCategoryFilter.set(-1) }">
-                                                            All
-                                                        </div>
-                                                        <div class="dropdown-item dropdown-text" data-bind="click : function(){ breedingCategoryFilter.set(-2) }">
-                                                            Categorized
-                                                        </div>
-                                                        <div class="dropdown-divider"></div>
-                                                        <!-- ko foreach : PokemonCategories.categories -->
-                                                        <div class="dropdown-item" data-bind="text : $data.name(), style: { background: $data.color(), color: GameHelper.isColorLight($data.color()) ? 'black' : 'white' },
-                                                            click : function() { breedingCategoryFilter.set($data.id) }">
-                                                        </div>
-                                                        <!-- /ko-->
-                                                        <div class="dropdown-divider"></div>
-                                                        <a class="dropdown-item dropdown-text" href="#categoryModal" data-toggle="modal">
-                                                            <i>Edit categories</i>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                <!-- /ko -->
-                                            </div>
-                                            <!-- /ko -->
 
                                             <div class="form-group col-lg-6 col-6">
                                                 <!-- ko let: { breedingShinyFilter: Settings.getSetting('breedingShinyFilter') } -->
@@ -711,7 +677,7 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                                             topButtons: [
                                                                 {
                                                                     label: 'All Categories',
-                                                                    class: 'btn-secondary btn-sm',
+                                                                    class: 'btn-primary btn-sm',
                                                                     onClick: () => $data.categories([]),
                                                                 },
                                                             ],
