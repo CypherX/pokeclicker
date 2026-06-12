@@ -546,7 +546,7 @@ export default class GenericDeal {
         if (pokemonBoostItem) {
             list.push(new GenericDeal({
                 costs: [{ type: DealCostOrProfitType.Item, item: ItemList.Relic_gold, amount: 300 + SeededRand.intBetween(-30, 30) }],
-                profits: [{ type: DealCostOrProfitType.Item, item: pokemonBoostItem, amount: 1}],
+                profits: [{ type: DealCostOrProfitType.Item, item: pokemonBoostItem, amount: 1 }],
                 visibleRequirement: new MaxRegionRequirement(Region.galar),
                 tradeRequirement: new CustomRequirement(ko.pureComputed(() => +player.pirateTrade), 0, 'You already traded for this item today.'),
                 onTrade: () => { player.pirateTrade = true; },
