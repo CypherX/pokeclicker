@@ -7,7 +7,7 @@ import SettingOption from './SettingOption';
 import Requirement from '../requirements/Requirement';
 import GameLoadState from '../utilities/GameLoadState';
 
-export default class MultiSelectSetting<T> extends Setting<T[]> {
+export default class MultiSelectSetting<T> extends Setting<T[], T> {
     private readonly usesComputedOptions: boolean;
 
     constructor(
@@ -18,15 +18,7 @@ export default class MultiSelectSetting<T> extends Setting<T[]> {
         requirement: Requirement = undefined,
         saveAsDefault: boolean = true,
     ) {
-        super(
-            name,
-            displayName,
-            options as unknown as SettingOption<T[]>[] | (() => SettingOption<T[]>[]),
-            defaultValue,
-            requirement,
-            saveAsDefault,
-        );
-
+        super(name, displayName, options, defaultValue, requirement, saveAsDefault);
         this.usesComputedOptions = typeof options === 'function';
     }
 
@@ -39,21 +31,12 @@ export default class MultiSelectSetting<T> extends Setting<T[]> {
         return this._observable as KnockoutObservableArray<T>;
     }
 
-    get optionList(): SettingOption<T>[] {
-        return this.options as unknown as SettingOption<T>[];
-    }
-
-    // Currently selectable (unlocked) options, for multi-select UI bind `options:` against this
-    get validOptionList(): SettingOption<T>[] {
-        return this.optionList.filter((opt) => opt.isUnlocked());
-    }
-
     validValue(value: T[]): boolean {
         if (!Array.isArray(value)) {
             return false;
         }
 
-        const opts = this.optionList;
+        const opts = this.options;
         if (!Array.isArray(opts) || opts.length === 0) {
             return true;
         }
