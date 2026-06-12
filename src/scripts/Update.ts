@@ -2973,14 +2973,6 @@ class Update implements Saveable {
                 delete saveData.farming.berryList;
             }
 
-            // Convert single-select filters to multi-select
-            const toMultiSelect = (value, emptyValues = [null, undefined]) => {
-                if (Array.isArray(value)) {
-                    return value;
-                }
-                return emptyValues.includes(value) ? [] : [value];
-            };
-
             const regionMaskToArray = (mask, highestRegion) => {
                 if (Array.isArray(mask)) {
                     return mask;
@@ -3002,7 +2994,8 @@ class Update implements Saveable {
 
             ['breedingType1Filter', 'breedingType2Filter'].forEach((key) => {
                 if (settingsData[key] !== undefined) {
-                    settingsData[key] = toMultiSelect(settingsData[key]);
+                    const value = settingsData[key];
+                    settingsData[key] = value == null ? [] : [value];
                 }
             });
 
@@ -3011,7 +3004,8 @@ class Update implements Saveable {
             }
 
             if (settingsData.breedingCategoryFilter !== undefined) {
-                //settingsData.breedingCategoryFilter = toMultiSelect(settingsData.breedingCategoryFilter, [null, undefined, -1]);
+                const value = settingsData.breedingCategoryFilter;
+                settingsData.breedingCategoryFilter = [-1, -2].includes(value) ? [] : [value];
             }
         },
     };

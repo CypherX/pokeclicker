@@ -475,14 +475,11 @@ class PartyPokemon implements Saveable, TmpPartyPokemonType {
         }
 
         // Check based on categories
-        const categoryFilter = Settings.getSetting('breedingCategoryFilter').observableValue();
-        // Categorized only
-        if (categoryFilter == -2 && this.isUncategorized()) {
-            return false;
-        }
-        // Selected category
-        if (categoryFilter >= 0 && !this.category.includes(categoryFilter)) {
-            return false;
+        const categoryFilter = Settings.getSetting('breedingCategoryFilter').observableValue() as number[];
+        if (categoryFilter.length > 0) {
+            if (!categoryFilter.some((category) => this.category.includes(category))) {
+                return false;
+            }
         }
 
         // Check based on shiny status

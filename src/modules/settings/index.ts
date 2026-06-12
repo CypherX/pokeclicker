@@ -346,11 +346,9 @@ Settings.add(new Setting<number>('breedingPokerusFilter', 'Pokérus Status',
         ...Settings.enumToNumberSettingOptionArray(Pokerus, (t) => t !== 'Infected'),
     ],
     -1, undefined, false));
-Settings.add(new Setting<number>('breedingCategoryFilter', 'Category', () => [
-    new SettingOption('All', -1),
-    new SettingOption('Categorized', -2),
+Settings.add(new MultiSelectSetting<number>('breedingCategoryFilter', 'Category', () => [
     ...PokemonCategories.categories().map(c => new SettingOption(`Category ${c.id}`, c.id)),
-], -1, undefined, false));
+], [], undefined, false));
 Settings.add(new Setting<string>('breedingUniqueTransformationFilter', 'Unique Transformations',
     [
         new SettingOption('Show All Pokémon', 'all'),

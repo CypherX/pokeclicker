@@ -84,10 +84,8 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                                         buttonText: () => {
                                                             const selected = breedingType1Filter.observableValue();
                                                             return selected.length === 0
-                                                                ? 'All'
-                                                                : selected.length === 1
-                                                                    ? PokemonType[selected[0]]
-                                                                    : `${selected.length} selected`;
+                                                                ? 'All' : selected.length === 1
+                                                                    ? PokemonType[selected[0]] : `${selected.length} selected`;
                                                         },
                                                         itemLabel: {
                                                             class: 'small',
@@ -96,9 +94,13 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                                                 color: item.value === PokemonType.None ? '' : GameHelper.isColorLight(GameConstants.TypeColor[item.value]) ? 'black' : 'white'
                                                             })
                                                         },
-                                                        showSelectAll: true,
-                                                        selectAllText: 'Select All',
-                                                        selectAllClick: () => breedingType1Filter.set([]),
+                                                        topButtons: [
+                                                            {
+                                                                label: 'All',
+                                                                class: 'btn-secondary btn-sm',
+                                                                onClick: () => breedingType1Filter.set([]),
+                                                            },
+                                                        ],
                                                     }}">
                                                 </knockout>
                                             </div>
@@ -115,10 +117,8 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                                         buttonText: () => {
                                                             const selected = breedingType2Filter.observableValue();
                                                             return selected.length === 0
-                                                                ? 'All'
-                                                                : selected.length === 1
-                                                                    ? PokemonType[selected[0]]
-                                                                    : `${selected.length} selected`;
+                                                                ? 'All' : selected.length === 1
+                                                                    ? PokemonType[selected[0]] : `${selected.length} selected`;
                                                         },
                                                         itemLabel: {
                                                             class: 'small',
@@ -127,15 +127,19 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                                                 color: item.value === PokemonType.None ? '' : GameHelper.isColorLight(GameConstants.TypeColor[item.value]) ? 'black' : 'white'
                                                             })
                                                         },
-                                                        showSelectAll: true,
-                                                        selectAllText: 'Select All',
-                                                        selectAllClick: () => breedingType2Filter.set([]),
+                                                        topButtons: [
+                                                            {
+                                                                label: 'All',
+                                                                class: 'btn-secondary btn-sm',
+                                                                onClick: () => breedingType2Filter.set([]),
+                                                            },
+                                                        ],
                                                     }}">
                                                 </knockout>
                                             </div>
 
                                             <div class="form-group col-lg-6 col-6" data-bind="let: { breedingRegionFilter: Settings.getSetting('breedingRegionFilter') }">
-                                                <label for="breeding-filter-region" data-bind="text: breedingRegionFilter.displayName">Region(s)</label>
+                                                <label data-bind="text: breedingRegionFilter.displayName">Region(s)</label>
                                                 <knockout data-bind="template: { name: 'multiSelectDropdownTemplate',
                                                     data: {
                                                         id: 'hatchery-filter-region',
@@ -146,22 +150,66 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                                         buttonText: () => {
                                                             const selected = breedingRegionFilter.observableValue();
                                                             return selected.length === 0
-                                                                ? 'All'
-                                                                : selected.length === 1
-                                                                    ? GameConstants.camelCaseToString(GameConstants.Region[selected[0]])
-                                                                    : `${selected.length} selected`;
+                                                                ? 'All' : selected.length === 1
+                                                                    ? GameConstants.camelCaseToString(GameConstants.Region[selected[0]]) : `${selected.length} selected`;
                                                         },
                                                         itemLabel: {
                                                             class: 'small',
                                                         },
-                                                        showSelectAll: true,
-                                                        selectAllText: 'Select All',
-                                                        selectAllClick: () => breedingRegionFilter.set([]),
+                                                        topButtons: [
+                                                            {
+                                                                label: 'All',
+                                                                class: 'btn-secondary btn-sm',
+                                                                onClick: () => breedingRegionFilter.set([]),
+                                                            },
+                                                        ],
                                                     }}">
                                                 </knockout>
                                             </div>
 
                                             <!-- Category -->
+                                            <div class="form-group col-lg-6 col-6" data-bind="let: { breedingCategoryFilter: Settings.getSetting('breedingCategoryFilter') }">
+                                                <label data-bind="text: breedingCategoryFilter.displayName">Category</label>
+                                                <knockout data-bind="template: { name: 'multiSelectDropdownTemplate',
+                                                    data: {
+                                                        id: 'hatchery-filter-category',
+                                                        //options: breedingCategoryFilter.getValidOptions(),
+                                                        options: PokemonCategories.categories,
+                                                        optionsText: 'name',
+                                                        optionsValue: 'id',
+                                                        bindingField: breedingCategoryFilter.observableValue,
+                                                        buttonText: () => {
+                                                            const selected = breedingCategoryFilter.observableValue();
+                                                            return selected.length === 0
+                                                                ? 'All' : selected.length === 1
+                                                                    ? PokemonCategories.getCategoryById(selected[0])?.name() : `${selected.length} selected`;
+                                                        },
+                                                        itemLabel: {
+                                                            class: 'small',
+                                                            style: (item) => ({
+                                                                'background-color': item.color(),
+                                                                color: GameHelper.isColorLight(item.color()) ? 'black' : 'white',
+                                                            })
+                                                        },
+                                                        topButtons: [
+                                                            {
+                                                                label: 'All',
+                                                                class: 'btn-secondary btn-sm',
+                                                                onClick: () => breedingCategoryFilter.set([]),
+                                                            },
+                                                        ],
+                                                        bottomButtons: [
+                                                            {
+                                                                label: 'Edit Categories',
+                                                                class: 'btn-secondary btn-sm',
+                                                                onClick: () => $('#categoryModal').modal('show'),
+                                                            },
+                                                        ],
+                                                    }}">
+                                                </knockout>
+                                            </div>
+
+                                            <!-- ko if: 1 == 2 -->
                                             <div class="form-group col-lg-6 col-6">
                                                 <!-- ko let: { breedingCategoryFilter: Settings.getSetting('breedingCategoryFilter') } -->
                                                 <label for="breeding-filter-category" data-bind="text: breedingCategoryFilter.displayName">Category</label>
@@ -193,6 +241,7 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                                 </div>
                                                 <!-- /ko -->
                                             </div>
+                                            <!-- /ko -->
 
                                             <div class="form-group col-lg-6 col-6">
                                                 <!-- ko let: { breedingShinyFilter: Settings.getSetting('breedingShinyFilter') } -->
