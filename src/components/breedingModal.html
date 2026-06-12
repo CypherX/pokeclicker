@@ -708,9 +708,13 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                                                 class: 'small',
                                                                 style: (item) => ({ 'background-color': item.color(), color: GameHelper.isColorLight(item.color()) ? 'black' : 'white' })
                                                             },
-                                                            showSelectAll: true,
-                                                            selectAllText: 'All Categories',
-                                                            selectAllClick: () => $data.categories([]),
+                                                            topButtons: [
+                                                                {
+                                                                    label: 'All Categories',
+                                                                    class: 'btn-secondary btn-sm',
+                                                                    onClick: () => $data.categories([]),
+                                                                },
+                                                            ],
                                                         }}">
                                                     </knockout>
                                                 </td>
