@@ -39,6 +39,7 @@ export class HeldItem extends Item {
         return this === comparedItem;
     }
 
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     public isInferior(comparedItem: HeldItem): boolean {
         return false;
     }
