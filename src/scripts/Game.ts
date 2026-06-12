@@ -142,7 +142,7 @@ class Game implements TmpGameType {
         //Safari.load();
         AchievementHandler.calculateMaxBonus(); //recalculate bonus based on active challenges
 
-        const now = new Date();
+        const now = new Date("2026-06-13");
         SeededDateRand.seedWithDate(now);
         BerryDeal.generateDeals(now);
         Weather.generateWeather(now);
@@ -502,6 +502,7 @@ class Game implements TmpGameType {
                 // Refresh Friend Safari Pokemon List
                 SafariPokemonList.generateKalosSafariList();
 
+                QuestLineHelper.quitQuestLine('Pirate Treasure Map');
                 // Reset some temporary battles
                 Object.values(TemporaryBattleList).forEach(t => {
                     if (t.optionalArgs?.resetDaily) {

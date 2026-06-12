@@ -4275,6 +4275,35 @@ class QuestLineHelper {
         });
     }
 
+    private static quitQuest(quest: Quest) {
+        if (quest instanceof MultipleQuestsQuest) {
+            quest.quests.forEach(q => QuestLineHelper.quitQuest(q));
+        }
+        quest.quit();
+        quest.claimed(false);
+        quest.notified = false;
+        quest.suspended = false;
+    }
+
+    public static quitQuestLine(name: QuestLineNameType): boolean {
+        const questline = App.game.quests.getQuestLine(name);
+        if (!questline || ![QuestLineState.started, QuestLineState.suspended].includes(questline.state())) {
+            return false;
+        }
+
+        if (questline.state() === QuestLineState.suspended) {
+            questline.resumeSuspendedQuest();
+        }
+
+        questline.quests().forEach(q => QuestLineHelper.quitQuest(q));
+        questline.quests().forEach(q => {
+            q.deleteAutoCompleter();
+            q.createAutoCompleter();
+        });
+        questline.state(QuestLineState.inactive);
+        return true;
+    }
+
     public static loadQuestLines() {
         this.createTutorial();
         this.createRocketKantoQuestLine();
