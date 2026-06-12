@@ -86,6 +86,7 @@ type GenericDealParams = {
     tradeRequirement?: Requirement;
     visibleRequirement?: Requirement;
     tradeButtonOverride?: string;
+    onTrade?: (tradeTimes: number) => void;
 };
 
 export default class GenericDeal {
@@ -94,6 +95,8 @@ export default class GenericDeal {
     private readonly _tradeRequirement?: Requirement;
     private readonly _visibleRequirement?: Requirement;
     private readonly _tradeButtonOverride?: string;
+    private readonly _maxTrades?: number;
+    private readonly _onTrade?: (tradeTimes: number) => void;
 
     get costs(): DealCost[] {
         return this._costs;
@@ -120,6 +123,7 @@ export default class GenericDeal {
             tradeRequirement = undefined,
             visibleRequirement = undefined,
             tradeButtonOverride = undefined,
+            onTrade = undefined,
         } = params;
 
         this._costs = costs;
@@ -127,6 +131,7 @@ export default class GenericDeal {
         this._tradeRequirement = tradeRequirement;
         this._visibleRequirement = visibleRequirement;
         this._tradeButtonOverride = tradeButtonOverride;
+        this._onTrade = onTrade;
     }
 
     public isVisible(): boolean {
@@ -181,7 +186,6 @@ export default class GenericDeal {
         if (!deal) {
             return false;
         }
-
         // Cap the amount of trades we want to do
         tradeTimes = Math.min(tradeTimes, this.maxTrades(deal));
 
@@ -207,6 +211,8 @@ export default class GenericDeal {
                 case DealCostOrProfitType.Amount: App.game.wallet.addAmount(new Amount(profit.currency.amount * profit.amount * tradeTimes, profit.currency.currency), true); break;
             }
         });
+
+        deal._onTrade?.(tradeTimes);
     }
 
     public static anySoldOut(deal: GenericDeal) {
@@ -540,9 +546,10 @@ export default class GenericDeal {
         if (pokemonBoostItem) {
             list.push(new GenericDeal({
                 costs: [{ type: DealCostOrProfitType.Item, item: ItemList.Relic_gold, amount: 300 + SeededRand.intBetween(-30, 30) }],
-                profits: [{ type: DealCostOrProfitType.Item, item: pokemonBoostItem, amount: 1, hidePlayerInventory: true }],
+                profits: [{ type: DealCostOrProfitType.Item, item: pokemonBoostItem, amount: 1}],
                 visibleRequirement: new MaxRegionRequirement(Region.galar),
-                tradeRequirement: new CustomRequirement(ko.pureComputed(() => player.amountOfItem(pokemonBoostItem.name)), 0, 'You already own this item.'),
+                tradeRequirement: new CustomRequirement(ko.pureComputed(() => +player.pirateTrade), 0, 'You already traded for this item today.'),
+                onTrade: () => { player.pirateTrade = true; },
             }));
         }
 

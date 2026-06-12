@@ -480,6 +480,7 @@ class Game implements TmpGameType {
                 SeededDateRand.seedWithDate(now);
                 // Give the player a free quest refresh
                 this.quests.freeRefresh(true);
+                player._pirateTrade(false);
                 //Refresh the Underground deals
                 BerryDeal.generateDeals(now);
                 if (App.game.quests.isDailyQuestsUnlocked()) {
