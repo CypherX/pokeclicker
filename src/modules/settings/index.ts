@@ -37,6 +37,7 @@ import PokemonCategories from '../party/Category';
 import ShadowPokemonRequirement from '../requirements/ShadowPokemonRequirement';
 import OrderSetting from './OrderSetting';
 import areaStatus from '../enums/AreaStatus';
+import MultiSelectSetting from './MultiselectSetting';
 
 export default Settings;
 
@@ -323,21 +324,15 @@ export const breedingFilterSettingKeys = ['breedingNameFilter', 'breedingIDFilte
 
 Settings.add(new SearchSetting('breedingNameFilter', 'Search', '', undefined, false));
 Settings.add(new Setting<number>('breedingIDFilter', 'Search ID', [], -1, undefined, false));
-Settings.add(new Setting<number>('breedingRegionFilter', 'Region(s)', [], (2 << MAX_AVAILABLE_REGION) - 1, undefined, false));
-Settings.add(new Setting<PokemonType | null>('breedingType1Filter', 'Type 1',
-    [
-        new SettingOption('All', null),
-        ...Settings.enumToNumberSettingOptionArray(PokemonType).filter((opt) => opt.text !== 'None'),
-        new SettingOption('None', PokemonType.None),
-    ],
-    null, undefined, false));
-Settings.add(new Setting<PokemonType | null>('breedingType2Filter', 'Type 2',
-    [
-        new SettingOption('All', null),
-        ...Settings.enumToNumberSettingOptionArray(PokemonType).filter((opt) => opt.text !== 'None'),
-        new SettingOption('None', PokemonType.None),
-    ],
-    null, undefined, false));
+Settings.add(new MultiSelectSetting<number>('breedingRegionFilter', 'Region(s)', [...regionOptionsNoneLast], [], undefined, false));
+Settings.add(new MultiSelectSetting<PokemonType>('breedingType1Filter', 'Type 1', [
+    ...Settings.enumToNumberSettingOptionArray(PokemonType).filter((opt) => opt.text !== 'None'),
+    new SettingOption('None', PokemonType.None),
+], [], undefined, false));
+Settings.add(new MultiSelectSetting<PokemonType>('breedingType2Filter', 'Type 2', [
+    ...Settings.enumToNumberSettingOptionArray(PokemonType).filter((opt) => opt.text !== 'None'),
+    new SettingOption('None', PokemonType.None),
+], [], undefined, false));
 Settings.add(new Setting<number>('breedingShinyFilter', 'Shiny Status',
     [
         new SettingOption('All', -1),

@@ -99,26 +99,24 @@ class BreedingController {
         return id == -1 ? name : id;
     }
 
-    public static getRegionFilterString() {
-        const unlockedRegionsMask = (2 << player.highestRegion()) - 1;
-        const showRegions = Settings.getSetting('breedingRegionFilter').observableValue() & unlockedRegionsMask;
-        if (showRegions == unlockedRegionsMask) {
-            return 'All';
-        } else if (showRegions > 0) {
-            const highestBit = Math.floor(Math.log2(showRegions));
-            let txt = GameConstants.camelCaseToString(GameConstants.Region[highestBit]);
-            if (showRegions > (1 << highestBit)) {
-                txt += ' & more';
-            }
-            return txt;
-        } else {
-            return 'None';
-        }
-    }
-
     public static isPureType(pokemon: PartyPokemon, type: (PokemonType | null)): boolean {
         const pokemonData = pokemonMap[pokemon.name];
         return ((type == null || pokemonData.type[0] === type) && (pokemonData.type[1] == undefined || pokemonData.type[1] == PokemonType.None));
+    }
+
+    public static matchesTypeFilter(types: PokemonType[], selected: PokemonType[]): boolean {
+        if (selected.length === 0) {
+            return true;
+        }
+        if (types.length === 1 && selected.includes(PokemonType.None)) {
+            return true;
+        }
+        for (let i = 0; i < types.length; i += 1) {
+            if (selected.includes(types[i])) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // Value displayed at bottom of image
@@ -211,7 +209,11 @@ class BreedingController {
     private static hatcheryFilteredList: KnockoutComputed<PartyPokemon[]> = ko.pureComputed(() => {
         // Subscribe to force view resets even when none of the pokemon.matchesHatcheryFilters() computeds change
         BreedingController.resetFilteredListNotifier();
-        return App.game.party.caughtPokemon.filter((pokemon) => pokemon.matchesHatcheryFilters());
+        const start = performance.now();
+        const a = App.game.party.caughtPokemon.filter((pokemon) => pokemon.matchesHatcheryFilters());
+        const end = performance.now();
+        console.log(`[new] ${end - start}ms`);
+        return a;
     }).extend({ rateLimit: 100 }); // deferUpdates isn't good enough to prevent lag
 
     // Used to reset the LazyLoaderdisplay

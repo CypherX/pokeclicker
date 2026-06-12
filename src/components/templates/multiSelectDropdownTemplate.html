@@ -4,7 +4,7 @@
             <div class="text-truncate btn-text"
                 data-bind="text: typeof $data.buttonText === 'function' ? $data.buttonText() : $data.buttonText"></div>
         </button>
-        <div class="dropdown-menu multiselect-dropdown px-2">
+        <div class="dropdown-menu multiselect-dropdown px-2 pb-1">
             <!-- ko if: $data.showSelectAll -->
             <div class="text-center pb-1 mb-1 border-bottom border-secondary">
                 <button type="button" class="btn btn-secondary btn-sm btn-block"
@@ -12,7 +12,7 @@
                         click: () => $data.selectAllClick?.()">Select All</button>
             </div>
             <!-- /ko -->
-            <div data-bind="foreach: $data.options">
+            <div class="px-1" data-bind="foreach: $data.options">
                 <div class="form-check d-flex align-items-center">
                     <input type="checkbox" class="form-check-input mt-0" style="cursor: pointer;"
                         data-bind="

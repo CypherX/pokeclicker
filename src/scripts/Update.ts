@@ -2972,6 +2972,47 @@ class Update implements Saveable {
                 saveData.farming.berryInventory = savedBerries;
                 delete saveData.farming.berryList;
             }
+
+            // Convert single-select filters to multi-select
+            const toMultiSelect = (value, emptyValues = [null, undefined]) => {
+                if (Array.isArray(value)) {
+                    return value;
+                }
+                return emptyValues.includes(value) ? [] : [value];
+            };
+
+            const regionMaskToArray = (mask, highestRegion) => {
+                if (Array.isArray(mask)) {
+                    return mask;
+                }
+                if (mask === (2 << highestRegion) - 1) { // All
+                    return [];
+                }
+                if (mask === 0) { // None
+                    return [-1];
+                }
+                const regions = [];
+                for (let region = 0; region <= highestRegion; region += 1) {
+                    if (mask & (1 << region)) {
+                        regions.push(region);
+                    }
+                }
+                return regions;
+            };
+
+            ['breedingType1Filter', 'breedingType2Filter'].forEach((key) => {
+                if (settingsData[key] !== undefined) {
+                    settingsData[key] = toMultiSelect(settingsData[key]);
+                }
+            });
+
+            if (settingsData.breedingRegionFilter !== undefined) {
+                settingsData.breedingRegionFilter = regionMaskToArray(settingsData.breedingRegionFilter, playerData.highestRegion);
+            }
+
+            if (settingsData.breedingCategoryFilter !== undefined) {
+                //settingsData.breedingCategoryFilter = toMultiSelect(settingsData.breedingCategoryFilter, [null, undefined, -1]);
+            }
         },
     };
 

@@ -492,15 +492,10 @@ class PartyPokemon implements Saveable, TmpPartyPokemonType {
         }
 
         // Check based on native region
-        const unlockedRegionsMask = (2 << player.highestRegion()) - 1;
-        const regionFilterMask = Settings.getSetting('breedingRegionFilter').observableValue() & unlockedRegionsMask;
-        if (regionFilterMask !== unlockedRegionsMask) {
+        const selectedRegions = Settings.getSetting('breedingRegionFilter').observableValue() as GameConstants.Region[];
+        if (selectedRegions.length > 0) {
             const nativeRegion = PokemonHelper.calcNativeRegion(this.name);
-            // With the region filter active, regionless pokemon should be shown only if no regions are selected
-            const nativeRegionInFilter = nativeRegion !== GameConstants.Region.none ?
-                (1 << nativeRegion) & regionFilterMask :
-                regionFilterMask === 0;
-            if (!nativeRegionInFilter) {
+            if (!selectedRegions.includes(nativeRegion)) {
                 return false;
             }
         }
@@ -538,7 +533,7 @@ class PartyPokemon implements Saveable, TmpPartyPokemonType {
         }
 
         // Check if either of the types match
-        const type1: (PokemonType | null) = Settings.getSetting('breedingType1Filter').observableValue();
+        /*const type1: (PokemonType | null) = Settings.getSetting('breedingType1Filter').observableValue();
         const type2: (PokemonType | null) = Settings.getSetting('breedingType2Filter').observableValue();
         if (type1 !== null || type2 !== null) {
             const { type: types } = pokemonMap[this.name];
@@ -548,6 +543,16 @@ class PartyPokemon implements Saveable, TmpPartyPokemonType {
                     return false;
                 }
             } else if ((type1 !== null && !types.includes(type1)) || (type2 !== null && !types.includes(type2))) {
+                return false;
+            }
+        }*/
+
+        const selectedType1 = Settings.getSetting('breedingType1Filter').observableValue() as PokemonType[];
+        const selectedType2 = Settings.getSetting('breedingType2Filter').observableValue() as PokemonType[];
+        if (selectedType1.length > 0 || selectedType2.length > 0) {
+            const { type: types } = pokemonMap[this.name];
+            if (!BreedingController.matchesTypeFilter(types, selectedType1)
+                || !BreedingController.matchesTypeFilter(types, selectedType2)) {
                 return false;
             }
         }
