@@ -142,7 +142,7 @@ class Game implements TmpGameType {
         //Safari.load();
         AchievementHandler.calculateMaxBonus(); //recalculate bonus based on active challenges
 
-        const now = new Date("2026-06-13");
+        const now = new Date();
         SeededDateRand.seedWithDate(now);
         BerryDeal.generateDeals(now);
         Weather.generateWeather(now);
