@@ -194,11 +194,7 @@ class BreedingController {
     private static hatcheryFilteredList: KnockoutComputed<PartyPokemon[]> = ko.pureComputed(() => {
         // Subscribe to force view resets even when none of the pokemon.matchesHatcheryFilters() computeds change
         BreedingController.resetFilteredListNotifier();
-        const start = performance.now();
-        const a = App.game.party.caughtPokemon.filter((pokemon) => pokemon.matchesHatcheryFilters());
-        const end = performance.now();
-        console.log(`[new] ${end - start}ms`);
-        return a;
+        return App.game.party.caughtPokemon.filter((pokemon) => pokemon.matchesHatcheryFilters());
     }).extend({ rateLimit: 100 }); // deferUpdates isn't good enough to prevent lag
 
     // Used to reset the LazyLoaderdisplay
