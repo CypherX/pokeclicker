@@ -14,7 +14,6 @@ import {
     SortOptions as UndergroundTreasureDisplaySortOptions } from '../underground/UndergroundTreasuresSortOptions';
 import {
     Region,
-    MAX_AVAILABLE_REGION,
     AchievementType,
     HOUR,
     DAY,
