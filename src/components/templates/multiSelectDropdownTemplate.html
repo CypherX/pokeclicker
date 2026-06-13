@@ -5,17 +5,6 @@
                 data-bind="text: typeof $data.buttonText === 'function' ? $data.buttonText() : $data.buttonText"></div>
         </button>
         <div class="dropdown-menu multiselect-dropdown px-2 pb-1">
-            <!-- ko if: 1 == 2 -->
-            <!-- ko if: $data.showSelectAll -->
-            <div class="text-center pb-1 mb-1">
-                <button type="button" class="btn btn-secondary btn-sm btn-block"
-                    data-bind="text: (typeof $data.selectAllText === 'function' ? $data.selectAllText() : $data.selectAllText) || 'Select All',
-                        click: () => $data.selectAllClick?.()">Select All</button>
-            </div>
-            <div class="dropdown-divider mt-1"></div>
-            <!-- /ko -->
-            <!-- /ko -->
-
             <div data-bind="if: $data.topButtons?.length">
                 <!-- ko foreach: $data.topButtons -->
                 <div class="pb-1">
@@ -79,9 +68,14 @@
             class: 'text-white small',
             style: (item) => ({ 'background-color': item.color() })
         },
-        showSelectAll: true,
-        selectAllText: 'All Categories',
-        selectAllClick: () => $data.categories([]),
+        topButtons: [
+            {
+                label: 'Select All',
+                class: 'btn-primary btn-sm',
+                onClick: () => $data.categories([]),
+            },
+        ]
+        bottomButtons: [...]
     }}">
 </knockout>
 
@@ -99,8 +93,13 @@ buttonClass - (Optional) Additional classes to customize the dropdown button.
 itemLabel - (Optional)
   class - (Optional) Additional classes to customize the item labels.
   style - (Optional) Function to customize CSS styling of the item labels.
-showSelectAll - (Optional) Boolean value to display the Select All button. Default is false.
-selectAllText - (Optional) String or function to set the text of the Select All button. Default is 'Select All'.
-selectAllClick - (Optional) Function called when the Select All button is clicked.
+topButtons - (Optional) Adds one or more buttons to the top of the dropdown menu
+  label - Button label
+  class - (Optional) Additional classes to style the button
+  onClick - Function called when this button is clicked
+bottomButtons - (Optional) Adds one or more buttons to the bottom of the dropdown menu
+  label - Button label
+  class - (Optional) Additional classes to style the button
+  onClick - Function called when this button is clicked
 
 -->
