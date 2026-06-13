@@ -104,21 +104,6 @@ class BreedingController {
         return ((type == null || pokemonData.type[0] === type) && (pokemonData.type[1] == undefined || pokemonData.type[1] == PokemonType.None));
     }
 
-    public static matchesTypeFilter(types: PokemonType[], selected: PokemonType[]): boolean {
-        if (selected.length === 0) {
-            return true;
-        }
-        if (types.length === 1 && selected.includes(PokemonType.None)) {
-            return true;
-        }
-        for (let i = 0; i < types.length; i += 1) {
-            if (selected.includes(types[i])) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     // Value displayed at bottom of image
     public static getDisplayValue(pokemon: PartyPokemon): string {
         const pokemonData = pokemonMap[pokemon.name];

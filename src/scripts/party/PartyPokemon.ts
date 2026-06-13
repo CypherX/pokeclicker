@@ -534,8 +534,8 @@ class PartyPokemon implements Saveable, TmpPartyPokemonType {
         const selectedType2 = Settings.getSetting('breedingType2Filter').observableValue() as PokemonType[];
         if (selectedType1.length > 0 || selectedType2.length > 0) {
             const { type: types } = pokemonMap[this.name];
-            if (!BreedingController.matchesTypeFilter(types, selectedType1)
-                || !BreedingController.matchesTypeFilter(types, selectedType2)) {
+            if (!PokemonHelper.matchesTypeFilter(types, selectedType1)
+                || !PokemonHelper.matchesTypeFilter(types, selectedType2)) {
                 return false;
             }
         }

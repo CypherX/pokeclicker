@@ -2992,7 +2992,7 @@ class Update implements Saveable {
                 return regions;
             };
 
-            ['breedingType1Filter', 'breedingType2Filter'].forEach((key) => {
+            ['breedingType1Filter', 'breedingType2Filter', 'pokedexType1Filter', 'pokedexType2Filter', 'pokedexRegionFilter'].forEach((key) => {
                 if (settingsData[key] !== undefined) {
                     const value = settingsData[key];
                     settingsData[key] = value == null ? [] : [value];
@@ -3003,10 +3003,12 @@ class Update implements Saveable {
                 settingsData.breedingRegionFilter = regionMaskToArray(settingsData.breedingRegionFilter, playerData.highestRegion);
             }
 
-            if (settingsData.breedingCategoryFilter !== undefined) {
-                const value = settingsData.breedingCategoryFilter;
-                settingsData.breedingCategoryFilter = [-1, -2].includes(value) ? [] : [value];
-            }
+            ['breedingCategoryFilter', 'pokedexCategoryFilter'].forEach((key) => {
+                if (settingsData[key] !== undefined) {
+                    const value = settingsData[key];
+                    settingsData[key] = [-1, -2].includes(value) ? [] : [value];
+                }
+            });
         },
     };
 

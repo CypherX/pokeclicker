@@ -384,21 +384,17 @@ export const pokedexFilterSettingKeys = ['pokedexNameFilter', 'pokedexIDFilter',
 
 Settings.add(new SearchSetting('pokedexNameFilter', 'Search', '', undefined, false));
 Settings.add(new Setting<number>('pokedexIDFilter', 'Search ID', [], -1, undefined, false));
-Settings.add(new Setting<Region | null>('pokedexRegionFilter', 'Region', [new SettingOption('All', null), ...regionOptionsNoneLast], null, undefined, false));
-Settings.add(new Setting<PokemonType | null>('pokedexType1Filter', 'Type 1',
-    [
-        new SettingOption('All', null),
-        ...Settings.enumToNumberSettingOptionArray(PokemonType).filter((opt) => opt.text !== 'None'),
-        new SettingOption('None', PokemonType.None),
-    ],
-    null, undefined, false));
-Settings.add(new Setting<PokemonType | null>('pokedexType2Filter', 'Type 2',
-    [
-        new SettingOption('All', null),
-        ...Settings.enumToNumberSettingOptionArray(PokemonType).filter((opt) => opt.text !== 'None'),
-        new SettingOption('None', PokemonType.None),
-    ],
-    null, undefined, false));
+Settings.add(new MultiSelectSetting<number>('pokedexRegionFilter', 'Region(s)', [...regionOptionsNoneLast], [], undefined, false));
+Settings.add(new MultiSelectSetting<PokemonType>('pokedexType1Filter', 'Type 1', [
+    ...Settings.enumToNumberSettingOptionArray(PokemonType).filter((opt) => opt.text !== 'None'),
+    new SettingOption('None', PokemonType.None),
+], [], undefined, false));
+
+Settings.add(new MultiSelectSetting<PokemonType>('pokedexType2Filter', 'Type 2', [
+    ...Settings.enumToNumberSettingOptionArray(PokemonType).filter((opt) => opt.text !== 'None'),
+    new SettingOption('None', PokemonType.None),
+], [], undefined, false));
+
 Settings.add(new Setting<string>('pokedexCaughtFilter', 'Caught Status',
     [
         new SettingOption('All', 'all'),
@@ -417,11 +413,10 @@ Settings.add(new Setting<number>('pokedexPokerusFilter', 'Pokérus Status',
         ...Settings.enumToNumberSettingOptionArray(Pokerus, (t) => t !== 'Infected'),
     ],
     -1, undefined, false));
-Settings.add(new Setting<number>('pokedexCategoryFilter', 'Category', () => [
-    new SettingOption('All', -1),
-    new SettingOption('Categorized', -2),
+Settings.add(new MultiSelectSetting<number>('pokedexCategoryFilter', 'Category', () => [
     ...PokemonCategories.categories().map(c => new SettingOption(`Category ${c.id}`, c.id)),
-], -1, undefined, false));
+], [], undefined, false));
+
 Settings.add(new Setting<string>('pokedexUniqueTransformationFilter', 'Unique Transformations',
     [
         new SettingOption('Show All Pokémon', 'all'),
