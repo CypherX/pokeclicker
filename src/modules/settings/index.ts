@@ -37,7 +37,7 @@ import PokemonCategories from '../party/Category';
 import ShadowPokemonRequirement from '../requirements/ShadowPokemonRequirement';
 import OrderSetting from './OrderSetting';
 import areaStatus from '../enums/AreaStatus';
-import MultiSelectSetting from './MultiselectSetting';
+import MultiSelectSetting from './MultiSelectSetting';
 
 export default Settings;
 
