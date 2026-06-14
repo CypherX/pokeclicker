@@ -540,9 +540,9 @@ export default class GenericDeal {
             visibleRequirement: new MaxRegionRequirement(Region.alola),
         }));
 
-        const pokemonBoostItem = SeededRand.shuffleArray(
+        const pokemonBoostItem = SeededRand.fromArray(
             Object.values(ItemList).filter((i) => i instanceof PokemonRestrictedAttackBonusHeldItem && (i as PokemonRestrictedAttackBonusHeldItem).regionUnlocked <= player.highestRegion()),
-        ).find(() => true);
+        );
         if (pokemonBoostItem) {
             list.push(new GenericDeal({
                 costs: [{ type: DealCostOrProfitType.Item, item: ItemList.Relic_gold, amount: 300 + SeededRand.intBetween(-30, 30) }],
