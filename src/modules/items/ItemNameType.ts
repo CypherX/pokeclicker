@@ -519,4 +519,5 @@ export type ItemNameType
     | 'Dragonium Z'
     | 'Darkinium Z'
     | 'Steelium Z'
-    | 'Fairium Z';
+    | 'Fairium Z'
+    | 'Pirate_receipt';

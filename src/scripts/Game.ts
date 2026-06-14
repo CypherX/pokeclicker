@@ -480,7 +480,6 @@ class Game implements TmpGameType {
                 SeededDateRand.seedWithDate(now);
                 // Give the player a free quest refresh
                 this.quests.freeRefresh(true);
-                player._pirateTrade(false);
                 //Refresh the Underground deals
                 BerryDeal.generateDeals(now);
                 if (App.game.quests.isDailyQuestsUnlocked()) {
@@ -503,6 +502,7 @@ class Game implements TmpGameType {
                 SafariPokemonList.generateKalosSafariList();
 
                 QuestLineHelper.quitQuestLine('Pirate Treasure Map');
+                player.itemList['Pirate_receipt'](0)
                 // Reset some temporary battles
                 Object.values(TemporaryBattleList).forEach(t => {
                     if (t.optionalArgs?.resetDaily) {

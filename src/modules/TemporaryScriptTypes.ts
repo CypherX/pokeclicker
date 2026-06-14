@@ -198,7 +198,6 @@ export type TmpPlayerType = {
     lowerItemMultipliers: (multiplierDecreaser: MultiplierDecreaser, amount?: number) => void;
     hasMegaStone: (megaStone: GameConstants.MegaStoneType) => boolean;
     gainMegaStone: (megaStone: GameConstants.MegaStoneType, notify?: boolean) => void;
-    pirateTrade: boolean;
     toJSON: () => Record<string, any>;
 };
 

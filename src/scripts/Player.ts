@@ -28,7 +28,6 @@ class Player implements TmpPlayerType {
     public subregionObject: KnockoutObservable<SubRegion>;
     public trainerId: string;
     private _createdTime: number;
-    public _pirateTrade: KnockoutObservable<boolean>;
 
     constructor(savedPlayer?) {
         const saved: boolean = (savedPlayer != null);
@@ -87,8 +86,6 @@ class Player implements TmpPlayerType {
 
         this.trainerId = savedPlayer.trainerId || Rand.intBetween(0, 999999).toString().padStart(6, '0');
         this._createdTime = savedPlayer._createdTime ?? Date.now();
-
-        this._pirateTrade = ko.observable(savedPlayer._pirateTrade || false);
     }
 
     private _itemList: { [name: string]: KnockoutObservable<number> };
@@ -217,14 +214,6 @@ class Player implements TmpPlayerType {
         return this._createdTime;
     }
 
-    get pirateTrade(): boolean {
-        return this._pirateTrade();
-    }
-
-    set pirateTrade(value: boolean) {
-        this._pirateTrade(value);
-    }
-
     public toJSON() {
         const keep = [
             '_route',
@@ -242,7 +231,6 @@ class Player implements TmpPlayerType {
             'regionStarters',
             'trainerId',
             '_createdTime',
-            '_pirateTrade',
         ];
         const plainJS = ko.toJS(this);
         Object.entries(plainJS._itemMultipliers).forEach(([key, value]) => {

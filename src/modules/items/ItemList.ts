@@ -243,9 +243,6 @@ ItemList.Shaderoot_Carrot_Calyrex = new QuestItem('Shaderoot_Carrot_Calyrex', 'S
 ItemList.Iceroot_Carrot_Calyrex = new QuestItem('Iceroot_Carrot_Calyrex', 'Iceroot Carrot', 'Carrot that the King of Bountiful Harvest\'s beloved steed likes to eat. It grew in a field covered in snow.', 'The Crown of Galar');
 ItemList.Wishing_Piece = new QuestItem('Wishing_Piece', 'Wishing Piece', 'Attracts Gigantamax Pokémon to the Max Lair', 'The Lair of Giants');
 
-// Other Collectible Items
-ItemList.Christmas_present = new ChristmasPresent();
-
 // Vitamins
 ItemList.Protein   = new Vitamin(VitaminType.Protein, 1e4, Currency.money, {
     multiplier: 1.1,
@@ -274,6 +271,7 @@ ItemList.Christmas_present = new ChristmasPresent();
 ItemList.Relic_copper = new EventCollectibleItem('Relic_copper', 'Copper Coin', 'A copper coin used by pirates.', 'A Pirate\'s Life');
 ItemList.Relic_silver = new EventCollectibleItem('Relic_silver', 'Silver Coin', 'A silver coin used by pirates.', 'A Pirate\'s Life');
 ItemList.Relic_gold = new EventCollectibleItem('Relic_gold', 'Gold Coin', 'A gold coin used by pirates.', 'A Pirate\'s Life');
+ItemList.Pirate_receipt = new EventCollectibleItem('Pirate_receipt', 'Pirate Receipt', 'A proof you\'ve bought the most expensive Pirate Goods today.', 'A Pirate\'s Life');
 
 // Underground Items
 // Sellable (Diamonds)
