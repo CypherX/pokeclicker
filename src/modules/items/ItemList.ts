@@ -249,7 +249,7 @@ ItemList.Wishing_Piece = new QuestItem('Wishing_Piece', 'Wishing Piece', 'Attrac
 
 // Other Collectible Items
 ItemList.Christmas_present = new ChristmasPresent();
-ItemList.CeruleanBerryShopPermit = new CollectibleItem('CeruleanBerryShopPermit', 'Cerulean Berry Shop Permit',
+ItemList.CeruleanBerryShopPermit = new CollectibleItem('CeruleanBerryShopPermit', 'Berry Shop Permit',
     'A permit granting access to the exclusive Berry Shop in Cerulean City.', new DummyRequirement(), 10000, Currency.farmPoint, {
         maxAmount: 1,
         visible: new VeteranUnlockRequirement(VeteranUnlock.CeruleanBerryShopPermit),
