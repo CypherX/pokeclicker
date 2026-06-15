@@ -253,7 +253,7 @@ const KantoExclusiveBerryShop = new Shop([
 
 // To avoid polluting ItemList & item requirements, instantiate as new items where it makes sense
 const veteranShop = new VeteranShop([
-    new BuyKeyItem(KeyItemType.Pokerus_virus, 69420, GameConstants.Currency.contestToken, {
+    new BuyKeyItem(KeyItemType.Pokerus_virus, 2000, GameConstants.Currency.dungeonToken, {
         visible: new MultiRequirement([
             new VeteranUnlockRequirement(GameConstants.VeteranUnlock.PokerusVirus),
             new CaughtPokemonRequirement(1),
@@ -263,7 +263,7 @@ const veteranShop = new VeteranShop([
         visible: new VeteranUnlockRequirement(GameConstants.VeteranUnlock.EventCalendar),
     }, 'Event Calendar', true),
     new BuyKeyItem(KeyItemType.Explorer_kit, 1, GameConstants.Currency.questPoint, {
-        visible: new VeteranUnlockRequirement(GameConstants.VeteranUnlock.ExplorerKit), // todo test if this screws up the quest line
+        visible: new VeteranUnlockRequirement(GameConstants.VeteranUnlock.ExplorerKit),
     }, 'Explorer Kit', true),
     new BuyKeyItem(KeyItemType.Holo_caster, 1, GameConstants.Currency.dungeonToken, {
         visible: new VeteranUnlockRequirement(GameConstants.VeteranUnlock.HoloCaster),
