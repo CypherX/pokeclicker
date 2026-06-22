@@ -5,7 +5,10 @@ class LocationNavigator {
         [LocationNavigatorOption.Towns]: ko.pureComputed(() => {
             return Object.values(TownList)
                 .filter((town) => town.region == player.region
-                    && (town.subRegion ?? 0) == player.subregion && !(town instanceof DungeonTown))
+                    && (town.subRegion ?? 0) == player.subregion
+                    && !(town instanceof DungeonTown)
+                    && (!town.secret || App.game.statistics.secretTownsVisited[town.name]())
+                    && (!town.hideFromLocationNavigatorWhenLocked || town.isUnlocked()))
                 .map((town) => new TownLocationNavigatorItem(town));
         }),
         [LocationNavigatorOption.Routes]: ko.pureComputed(() => {

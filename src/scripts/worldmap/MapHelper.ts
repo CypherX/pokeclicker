@@ -260,6 +260,9 @@ class MapHelper {
             player.subregion = town.subRegion;
             player.town = town;
             Battle.enemyPokemon(null);
+            if (town.secret) {
+                App.game.statistics.secretTownsVisited[townName](1);
+            }
             //this should happen last, so all the values all set beforehand
             App.game.gameState = GameConstants.GameState.town;
         } else {
