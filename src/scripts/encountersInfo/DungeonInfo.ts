@@ -1,0 +1,70 @@
+class DungeonInfo {
+    public static lootList = ko.pureComputed(() => {
+        return DungeonInfo.getLootList();
+    });
+
+    private static getLootList() {
+        const rawTable = player.town.dungeon?.lootTable || {};
+        const displayTable = {};
+        Object.entries(rawTable).forEach(([tier, loots]) => {
+            const filteredLoots = (loots as Loot[]);
+            if (filteredLoots.length) {
+                displayTable[tier] = filteredLoots;
+            }
+        });
+        return displayTable;
+    }
+
+    public static getFullName() {
+        return `${DungeonInfo.getDungeonName()} - ${DungeonInfo.getRegionName()} (${DungeonInfo.getSubregionName()})`;
+    }
+
+    private static getDungeonName() {
+        return player.town.name;
+    }
+
+    private static getRegionName() {
+        return GameConstants.camelCaseToString(GameConstants.Region[player.region]);
+    }
+
+    private static getSubregionName() {
+        return player.subregionObject()?.name;
+    }
+
+    public static getLootImage(input) {
+        switch (true) {
+            case typeof BerryType[input] == 'number':
+                return FarmController.getBerryImage(BerryType[GameConstants.humanifyString(input)]);
+            case UndergroundItems.getByName(input) instanceof UndergroundItem:
+                return UndergroundItems.getByName(input).image;
+            case pokemonMap[input].name == input:
+                const caught = App.game.party.alreadyCaughtPokemonByName(input);
+                return caught ? `assets/images/pokemon/${pokemonMap[input].id}.png` : 'assets/images/encountersInfo/unknownMimic.png';
+            default:
+                return ItemList[input].image;
+        }
+    }
+
+    public static getLootName(input) {
+        switch (true) {
+            case input in ItemList:
+                return ItemList[input]?.displayName;
+            case typeof BerryType[input] == 'number':
+                return `${input} Berry`;
+            case pokemonMap[input].name == input:
+                const caught = App.game.party.alreadyCaughtPokemonByName(input);
+                return caught ? input : 'Unknown Mimic';
+            default:
+                return GameConstants.camelCaseToString(GameConstants.humanifyString(input.toLowerCase()));
+        }
+    }
+
+    public static getLootChanceFormatted(loot: Loot, tier: LootTier) {
+        const value = player.town.dungeon?.getLootChance(loot, tier) ?? 0;
+        return value.toLocaleString('en-US', {
+            style: 'percent',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: value < 0.00005 ? 4 : 3,
+        });
+    }
+}

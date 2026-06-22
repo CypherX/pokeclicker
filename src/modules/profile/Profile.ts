@@ -6,9 +6,11 @@ import { Saveable } from '../DataStore/common/Saveable';
 import * as GameConstants from '../GameConstants';
 import Notifier from '../notifications/Notifier';
 import Rand from '../utilities/Rand';
+import GameHelper from '../GameHelper';
+import * as PokemonHelper from '../pokemons/PokemonHelper';
 
 export default class Profile implements Saveable {
-    public static MAX_TRAINER = 157;
+    public static MAX_TRAINER = 163;
     public static MAX_BACKGROUND = 40;
 
     saveKey = 'profile';
@@ -19,9 +21,24 @@ export default class Profile implements Saveable {
     public trainer: KnockoutObservable<number>;
     public pokemon: KnockoutObservable<number>;
     public pokemonShiny: KnockoutObservable<boolean>;
+    public pokemonShadow: KnockoutObservable<boolean>;
     public pokemonFemale: KnockoutObservable<boolean>;
     public background: KnockoutObservable<number>;
     public textColor: KnockoutObservable<string>;
+
+    public pokemonSearch = ko.observable('');
+    public getCaughtPokemonList = ko.pureComputed(() => {
+        let caughtPokemon = [...App.game.party.caughtPokemon];
+        if (/^\d+$/.test(this.pokemonSearch())) {
+            // Search by ID
+            caughtPokemon = caughtPokemon.filter((pokemon) => +this.pokemonSearch() == Math.floor(pokemon.id));
+        } else if (this.pokemonSearch() != '') {
+            // Search by name
+            const regex = GameHelper.safelyBuildRegex(this.pokemonSearch());
+            caughtPokemon = caughtPokemon.filter((pokemon) => PokemonHelper.matchPokemonByNames(regex, pokemon.name, pokemon));
+        }
+        return caughtPokemon;
+    });
 
     constructor(
         name = 'Trainer',
@@ -33,8 +50,10 @@ export default class Profile implements Saveable {
         this.name = ko.observable(name);
         this.trainer = ko.observable(trainer).extend({ numeric: 0 });
         this.trainer.subscribe((t) => document.documentElement.style.setProperty('--trainer-image', `url('../assets/images/profile/trainer-${t}.png')`));
+        document.documentElement.style.setProperty('--trainer-image', `url('../assets/images/profile/trainer-${trainer}.png')`);
         this.pokemon = ko.observable(pokemon).extend({ numeric: 2 });
         this.pokemonShiny = ko.observable(false).extend({ boolean: null });
+        this.pokemonShadow = ko.observable(false).extend({ boolean: null });
         this.pokemonFemale = ko.observable(false).extend({ boolean: null });
         this.background = ko.observable(background).extend({ numeric: 0 });
         this.textColor = ko.observable(textColor);
@@ -45,6 +64,7 @@ export default class Profile implements Saveable {
         trainer = Rand.floor(Profile.MAX_TRAINER),
         pokemon = Rand.intBetween(1, 151),
         pokemonShiny = false,
+        pokemonShadow = false,
         pokemonFemale = false,
         background = Rand.floor(Profile.MAX_BACKGROUND),
         textColor = 'whitesmoke',
@@ -68,7 +88,10 @@ export default class Profile implements Saveable {
         card.classList.add(`trainer-bg-${background}`);
         card.style.color = textColor;
         card.dataset.key = key;
-        card.addEventListener('click', () => {
+        card.addEventListener('click', (e) => {
+            if ((e.target as HTMLElement).classList.contains('context-menu-button')) {
+                return;
+            }
             // If no key provided, this is a preview
             if (key === undefined) {
                 Notifier.notify({ message: 'What a lovely profile!' });
@@ -91,7 +114,7 @@ export default class Profile implements Saveable {
         const trainerTime: HTMLElement = node.querySelector('.trainer-time');
         trainerTime.innerText = GameConstants.formatTimeFullLetters(seconds);
         const trainerPokemonImage: HTMLImageElement = node.querySelector('.trainer-pokemon-image');
-        trainerPokemonImage.src = `assets/images/${pokemonShiny ? 'shiny' : ''}pokemon/${pokemon}${pokemonFemale ? '-f' : ''}.png`;
+        trainerPokemonImage.src = `assets/images/${pokemonShiny ? 'shiny' : ''}${pokemonShadow ? 'shadow' : ''}pokemon/${pokemon}${pokemonFemale ? '-f' : ''}.png`;
         const trainerVersion: HTMLElement = node.querySelector('.trainer-version');
         trainerVersion.innerText = `v${version}`;
         const badgeContainer = node.querySelector('.challenge-badges');
@@ -110,6 +133,9 @@ export default class Profile implements Saveable {
             });
         const trainerId: HTMLElement = node.querySelector('.trainer-id');
         trainerId.innerText = id.length ? `#${id}` : '';
+        if (key === undefined) {
+            node.querySelector('.context-menu-button').remove();
+        }
         return container;
     }
 
@@ -121,6 +147,7 @@ export default class Profile implements Saveable {
             this.trainer(),
             this.pokemon(),
             this.pokemonShiny(),
+            this.pokemonShadow(),
             this.pokemonFemale(),
             this.background(),
             this.textColor(),
@@ -147,6 +174,7 @@ export default class Profile implements Saveable {
         if (json.trainer !== undefined) this.trainer(json.trainer);
         if (json.pokemon !== undefined) this.pokemon(json.pokemon);
         if (json.pokemonShiny !== undefined) this.pokemonShiny(json.pokemonShiny);
+        if (json.pokemonShadow !== undefined) this.pokemonShadow(json.pokemonShadow);
         if (json.pokemonFemale !== undefined) this.pokemonFemale(json.pokemonFemale);
         if (json.background !== undefined) this.background(json.background);
         if (json.textColor) this.textColor(json.textColor);
@@ -158,6 +186,7 @@ export default class Profile implements Saveable {
             trainer: this.trainer(),
             pokemon: this.pokemon(),
             pokemonShiny: this.pokemonShiny(),
+            pokemonShadow: this.pokemonShadow(),
             pokemonFemale: this.pokemonFemale(),
             background: this.background(),
             textColor: this.textColor(),

@@ -20,6 +20,7 @@ export default class PokeballFilters implements Feature {
         { name: 'New', options: { caught: false }, ball: Pokeball.Pokeball },
         { name: 'Caught Shiny', options: { shiny: true, caughtShiny: true }, ball: Pokeball.Pokeball },
         { name: 'Contagious', options: { pokerus: Pokerus.Contagious } },
+        { name: 'New Shadow', options: { shadow: true, caughtShadow: false } },
         { name: 'Caught', options: { caught: true } },
     ];
 
@@ -89,8 +90,6 @@ export default class PokeballFilters implements Feature {
 
     canAccess() { return true; }
 
-    update() {}
-
     getFilterByName(name: string) {
         return this.list().find((filter) => filter.name === name);
     }
@@ -153,6 +152,10 @@ export default class PokeballFilters implements Feature {
         }
 
         this.list(defaultFilters);
+    }
+
+    toggleAllFiltersEnabled(enabled: boolean) {
+        this.list().forEach((pf) => pf.enabled(enabled));
     }
 
     toJSON() {

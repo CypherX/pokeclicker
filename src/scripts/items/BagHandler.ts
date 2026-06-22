@@ -58,7 +58,7 @@ class BagHandler {
             case ItemType.underground:
                 return player.itemList[this.getUndergroundItem(item.id).itemName]();
             case ItemType.berry:
-                return App.game.farming.berryList[this.getBerry(item.id)];
+                return App.game.farming.berryInventory[this.getBerry(item.id)];
             case ItemType.gem:
                 return App.game.gems.gemWallet[this.getGem(item.id)];
         }
@@ -79,7 +79,7 @@ class BagHandler {
                 this.getItem(item.id).gain(amount);
                 return;
             case ItemType.underground:
-                Underground.gainMineItem(this.getUndergroundItem(item.id).id, amount);
+                UndergroundController.gainMineItem(this.getUndergroundItem(item.id).id, amount);
                 return;
             case ItemType.berry:
                 App.game.farming.gainBerry(this.getBerry(item.id), amount, false);
@@ -122,7 +122,7 @@ class BagHandler {
 
     private static getBerry(id: string | number): BerryType {
         if (typeof id === 'string') {
-            id = App.game.farming.berryData.findIndex((_, idx) => BerryType[idx] === id);
+            id = BerryList.findIndex((_, idx) => BerryType[idx] === id);
         }
         return id;
     }
@@ -137,3 +137,6 @@ class BagHandler {
     //#endregion
 
 }
+
+
+BagHandler satisfies TmpBagHandlerType;

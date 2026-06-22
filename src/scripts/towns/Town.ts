@@ -1,9 +1,12 @@
+/// <reference path="../../declarations/TemporaryScriptTypes.d.ts" />
 ///<reference path="../../declarations/enums/Badges.d.ts"/>
 ///<reference path="NPC.ts"/>
 ///<reference path="KantoBerryMasterNPC.ts"/>
 ///<reference path="ProfNPC.ts"/>
 ///<reference path="RoamerNPC.ts"/>
 ///<reference path="GiftNPC.ts"/>
+///<reference path="PokemonGiftNPC.ts"/>
+///<reference path="AssistantNPC.ts"/>
 ///<reference path="TownContent.ts"/>
 
 type TownOptionalArgument = {
@@ -12,7 +15,7 @@ type TownOptionalArgument = {
     ignoreAreaStatus?: boolean
 };
 
-class Town {
+class Town implements TmpTownType {
     public name: string;
     public region: GameConstants.Region;
     public requirements: Requirement[];
@@ -49,6 +52,9 @@ class Town {
             this.content.push(new DockTownContent());
         }
         if (GameConstants.StartingTowns.includes(name)) {
+            if (region > GameConstants.Region.kanto) {// Kanto is treated separately
+                this.content.push(new PickStarterContent());
+            }
             this.content.push(new NextRegionTownContent());
         }
         content.forEach((c) => {

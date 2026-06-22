@@ -38,13 +38,41 @@ class RouteHelper {
         return pokemonList;
     }
 
+    public static getAvailablePokemonWeightList(route: number, region: GameConstants.Region, includeHeadbutt = true): number[] {
+        // If the route is somehow higher than allowed, use the first route to generateWildPokemon Pokémon
+        const possiblePokemons = Routes.getRoute(region, route)?.pokemon;
+        if (!possiblePokemons) {
+            return [1];
+        }
+
+        // Land Pokémon
+        let pokemonCount = possiblePokemons.land.length;
+
+        // Water Pokémon
+        if (App.game.keyItems.hasKeyItem(KeyItemType.Super_rod) || possiblePokemons.land.length == 0) {
+            pokemonCount += possiblePokemons.water.length;
+        }
+
+        // Headbutt Pokémon
+        if (includeHeadbutt) {
+            pokemonCount += possiblePokemons.headbutt.length;
+        }
+
+        let pokemonWeight = new Array(pokemonCount).fill(1);
+
+        // Special requirement Pokémon
+        pokemonWeight = pokemonWeight.concat(...possiblePokemons.special.filter(p => p.isAvailable()).map(p => new Array(p.pokemon.length).fill(p.weight)));
+
+        return pokemonWeight;
+    }
+
     public static routePokerusEVs(route:number, region:GameConstants.Region): string {
-        const possiblePokemon: PokemonNameType[] = RouteHelper.getAvailablePokemonList(route, region);
+        const possiblePokemon: PokemonNameType[] = [...new Set(RouteHelper.getAvailablePokemonList(route, region))];
         if (this.minPokerus(possiblePokemon) == GameConstants.Pokerus.Resistant) {
             return 'All Pokémon on this route are resistant!';
         }
         const currentEVs = this.getEvs(possiblePokemon);
-        return `EVs until all Pokémon are resistant on this route: ${currentEVs} / ${50 * possiblePokemon.length}.`;
+        return `EVs until all Pokémon are resistant on this route: ${currentEVs}&nbsp;/&nbsp;${50 * possiblePokemon.length}.`;
     }
 
     public static dungeonPokerusEVs(dungeon: Dungeon): string {
@@ -53,7 +81,7 @@ class RouteHelper {
             return 'All Pokémon in this dungeon are resistant!';
         }
         const currentEVs = this.getEvs(possiblePokemon);
-        return `EVs until all Pokémon are resistant in this dungeon: ${currentEVs} / ${50 * possiblePokemon.length}.`;
+        return `EVs until all Pokémon are resistant in this dungeon: ${currentEVs}&nbsp;/&nbsp;${50 * possiblePokemon.length}.`;
 
     }
 

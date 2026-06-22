@@ -13,9 +13,20 @@ import Item from './Item';
 import MulchItem from './MulchItem';
 import PokeballItem from './PokeballItem';
 import {
-    BattleItemType, Currency, EggItemType, EnergyRestoreSize, MegaStoneType, Pokeball, PokeBlockColor, Region, VitaminType, ConsumableType, FluteItemType, AchievementOption,
+    AchievementOption,
+    BattleItemType,
+    ConsumableType,
+    Currency,
+    EggItemType,
+    EnergyRestoreSize,
+    FluteItemType,
+    MegaStoneType,
+    Pokeball,
+    PokeBlockColor,
+    Region,
+    VitaminType,
 } from '../GameConstants';
-import { ShovelItem, MulchShovelItem } from './ShovelItem';
+import { MulchShovelItem, ShovelItem } from './ShovelItem';
 import PokeBlock from './PokeBlock';
 import MegaStoneItem from './MegaStoneItem';
 import Vitamin from './Vitamin';
@@ -39,7 +50,7 @@ ItemList.xAttack         = new BattleItem(BattleItemType.xAttack, '+50% Bonus to
 ItemList.xClick          = new BattleItem(BattleItemType.xClick, '+50% Bonus to click attack for 30 seconds', 400, undefined, 'X Click', 'clickAttack', 1.5);
 ItemList.Lucky_egg       = new BattleItem(BattleItemType.Lucky_egg, '+50% Bonus to experience gained for 30 seconds', 800, undefined, 'Lucky Egg', 'exp', 1.5);
 ItemList.Token_collector = new BattleItem(BattleItemType.Token_collector, '+50% Bonus to Dungeon Tokens gained for 30 seconds', 1000, undefined, 'Token Collector', 'dungeonToken', 1.5);
-ItemList.Dowsing_machine = new BattleItem(BattleItemType.Dowsing_machine, 'Increased chance of gaining extra items for 30 seconds', 1500, undefined, 'Dowsing Machine');
+ItemList.Dowsing_machine = new BattleItem(BattleItemType.Dowsing_machine, 'Increases chance for Pokémon to drop rare hold items and chance to multiply loot from dungeon chests, for 30 seconds.', 1500, undefined, 'Dowsing Machine', 'rareItemDropRate', 1.5);
 ItemList.Lucky_incense   = new BattleItem(BattleItemType.Lucky_incense, '+50% Bonus to Pokédollars gained for 30 seconds', 2000, undefined, 'Lucky Incense', 'money', 1.5);
 
 ItemList.ChopleBerry     = new BerryItem(BerryType.Chople, 10000, Currency.farmPoint, BerryType.Spelon);
@@ -48,8 +59,8 @@ ItemList.ShucaBerry      = new BerryItem(BerryType.Shuca, 10000, Currency.farmPo
 ItemList.ChartiBerry     = new BerryItem(BerryType.Charti, 10000, Currency.farmPoint, BerryType.Cornn);
 
 ItemList.SmallRestore    = new EnergyRestore(EnergyRestoreSize.SmallRestore, 30000, undefined, 'Small Restore');
-ItemList.MediumRestore   = new EnergyRestore(EnergyRestoreSize.MediumRestore, 100000, undefined, 'Medium Restore');
-ItemList.LargeRestore    = new EnergyRestore(EnergyRestoreSize.LargeRestore, 400000, undefined, 'Large Restore');
+ItemList.MediumRestore   = new EnergyRestore(EnergyRestoreSize.MediumRestore, 75000, undefined, 'Medium Restore');
+ItemList.LargeRestore    = new EnergyRestore(EnergyRestoreSize.LargeRestore, 200000, undefined, 'Large Restore');
 
 ItemList.Dungeon_ticket = new BuyKeyItem(KeyItemType.Dungeon_ticket, 100, undefined, undefined, 'Dungeon Ticket');
 ItemList.Explorer_kit = new BuyKeyItem(KeyItemType.Explorer_kit, 5000, undefined, undefined, 'Explorer Kit');
@@ -61,8 +72,8 @@ ItemList.Explosive_Charge = new BuyOakItem(OakItemType.Explosive_Charge, 5000, C
 ItemList.Treasure_Scanner = new BuyOakItem(OakItemType.Treasure_Scanner, 10000, Currency.questPoint);
 
 ItemList.Yellow_Flute = new FluteItem(FluteItemType.Yellow_Flute, 'Pokémon Attack', ['Grass', 'Flying', 'Electric'], 'pokemonAttack', 1.02);
-ItemList.Time_Flute   = new FluteItem(FluteItemType.Time_Flute, 'Gym and Dungeon Timers', ['Ground', 'Poison', 'Steel'], undefined, 1.02);
 ItemList.Black_Flute  = new FluteItem(FluteItemType.Black_Flute, 'Click Attack', ['Dark', 'Psychic', 'Fighting'], 'clickAttack', 1.02);
+ItemList.Time_Flute   = new FluteItem(FluteItemType.Time_Flute, 'Battle Timers and Flow Gained', ['Ground', 'Poison', 'Steel'], undefined, 1.02);
 ItemList.Red_Flute    = new FluteItem(FluteItemType.Red_Flute, 'Egg Steps', ['Fire', 'Rock', 'Dragon'], 'eggStep', 1.02);
 ItemList.White_Flute  = new FluteItem(FluteItemType.White_Flute, 'Shiny Chance', ['Normal', 'Fairy', 'Ice'], 'shiny', 1.02);
 ItemList.Blue_Flute   = new FluteItem(FluteItemType.Blue_Flute, 'EV Yield', ['Water', 'Bug', 'Ghost'], 'ev', 1.02);
@@ -72,7 +83,7 @@ ItemList.Rich_Mulch  = new MulchItem(MulchType.Rich_Mulch, 100, 'Rich Mulch', 'I
 ItemList.Surprise_Mulch  = new MulchItem(MulchType.Surprise_Mulch, 150, 'Surprise Mulch', 'Increases Berry mutation rate.');
 ItemList.Amaze_Mulch = new MulchItem(MulchType.Amaze_Mulch, 200, 'Amaze Mulch', 'A weaker combination of Boost, Rich and Surprise mulch.');
 ItemList.Freeze_Mulch = new MulchItem(MulchType.Freeze_Mulch, 350, 'Freeze Mulch', 'Stops Berry growth and auras. Mutations will still occur while berries are frozen.');
-ItemList.Gooey_Mulch = new MulchItem(MulchType.Gooey_Mulch, 100, 'Gooey Mulch', 'Helps attract rarer species. Gooed Pokémon are less likely to flee.');
+ItemList.Gooey_Mulch = new MulchItem(MulchType.Gooey_Mulch, 100, 'Gooey Mulch', 'Helps attract rarer species. Gooed Pokémon are more likely to be caught.');
 
 ItemList.Pokeball   = new PokeballItem(Pokeball.Pokeball, 100, undefined, { multiplier: 1 }, 'Poké Ball');
 ItemList.Greatball  = new PokeballItem(Pokeball.Greatball, 500, undefined, undefined, 'Great Ball');
@@ -147,7 +158,7 @@ ItemList.Lopunnite          = new MegaStoneItem(MegaStoneType.Lopunnite, 'Lopunn
 ItemList.Lucarionite        = new MegaStoneItem(MegaStoneType.Lucarionite, 'Lucario', 10000);
 ItemList.Manectite          = new MegaStoneItem(MegaStoneType.Manectite, 'Manectric', 10000);
 ItemList.Mawilite           = new MegaStoneItem(MegaStoneType.Mawilite, 'Mawile', 10000);
-//ItemList.Medichamite        = new MegaStoneItem(MegaStoneType.Medichamite, 'Medicham', 10000);
+ItemList.Medichamite        = new MegaStoneItem(MegaStoneType.Medichamite, 'Medicham', 10000);
 ItemList.Metagrossite       = new MegaStoneItem(MegaStoneType.Metagrossite, 'Metagross', 10000);
 ItemList.Meteorite          = new MegaStoneItem(MegaStoneType.Meteorite, 'Rayquaza', 10000);
 ItemList.Mewtwonite_X       = new MegaStoneItem(MegaStoneType.Mewtwonite_X, 'Mewtwo', 10000);
@@ -176,11 +187,10 @@ ItemList.Grass_egg = new EggItem(EggItemType.Grass_egg, 1000, undefined, 'Grass 
 ItemList.Fighting_egg = new EggItem(EggItemType.Fighting_egg, 1000, undefined, 'Fighting Egg');
 ItemList.Electric_egg = new EggItem(EggItemType.Electric_egg, 1000, undefined, 'Electric Egg');
 ItemList.Dragon_egg = new EggItem(EggItemType.Dragon_egg, 1000, undefined, 'Dragon Egg');
-ItemList.Pokemon_egg = new EggItem(EggItemType.Pokemon_egg, 1000, undefined, 'Pokémon Egg');
 ItemList.Mystery_egg = new EggItem(EggItemType.Mystery_egg, 700, undefined, 'Mystery Egg');
 
 // Quest Items
-ItemList.Meteorite_Bills_Errand = new QuestItem('Meteorite_Bills_Errand', 'Meteorite', 'A Meteorite the Game Corner owner gave you for find his daughter', 'Bill\'s Errand');
+ItemList.Meteorite_Bills_Errand = new QuestItem('Meteorite_Bills_Errand', 'Meteorite for Celio', 'A Meteorite the Game Corner owner gave you for find his daughter', 'Bill\'s Errand');
 ItemList.Tidal_Bell_Lugia = new QuestItem('Tidal_Bell_Lugia', 'Tidal Bell', 'A Bell that can summon the Legendary Pokémon Lugia', 'Whirl Guardian');
 ItemList.Clear_Bell_Hooh = new QuestItem('Clear_Bell_Hooh', 'Clear Bell', 'A Bell that can summon the Legendary Pokémon Ho-oh', 'Rainbow Guardian');
 ItemList.GS_Ball_Celebi = new QuestItem('GS_Ball_Celebi', 'GS Ball', 'A Strange Pokéball that Professor Ivy gave you', 'Unfinished Business');
@@ -210,18 +220,17 @@ ItemList.Push_Forretress_Magikarp_Jump = new QuestItem('Push_Forretress_Magikarp
 ItemList.Push_Golem_Magikarp_Jump = new QuestItem('Push_Golem_Magikarp_Jump', 'Push Golem', 'One of the pushing Pokémons Dr. Splash asked you for his laboratory', 'Dr. Splash\'s Research Project');
 ItemList.Push_Steelix_Magikarp_Jump = new QuestItem('Push_Steelix_Magikarp_Jump', 'Push Steelix', 'One of the pushing Pokémons Dr. Splash asked you for his laboratory', 'Dr. Splash\'s Research Project');
 ItemList.Prison_Bottle = new QuestItem('Prison_Bottle', 'Prison Bottle', 'A magical bottle used to bind Hoopa', 'Clash of Ages');
-ItemList.Great_Twisted_Spoon = new QuestItem('Great_Twisted_Spoon', 'Great Twisted Spoon', 'A larger version of the Twisted Spoon made specifically for Mewtwo', 'An Unrivaled Power');
 ItemList.Island_Challenge_Amulet = new QuestItem('Island_Challenge_Amulet', 'Island Challenge Amulet', 'A symbol that denotes your pilgramige on the Island Challenge of Alola. Stronger Trials await you with this in your bag!', 'Island Challenge');
 ItemList.Fighting_Memory_Silvally = new QuestItem('Fighting_Memory_Silvally', 'Fighting Memory', 'One of Silvally\'s memories, obtained from Kahuna Hala in Iki Town', 'Typing some Memories');
 ItemList.Rock_Memory_Silvally = new QuestItem('Rock_Memory_Silvally', 'Rock Memory', 'One of Silvally\'s memories, obtained from Kahuna Olivia in Konikoni City', 'Typing some Memories');
 ItemList.Dark_Memory_Silvally = new QuestItem('Dark_Memory_Silvally', 'Dark Memory', 'One of Silvally\'s memories, obtained from Kahuna Nanu in Malie City', 'Typing some Memories');
 ItemList.Fairy_Memory_Silvally = new QuestItem('Fairy_Memory_Silvally', 'Fairy Memory', 'One of Silvally\'s memories, obtained from Captain Mina in Seafolk Village', 'Typing some Memories');
-ItemList.Water_Memory_Silvally = new QuestItem('Water_Memory_Silvally', 'Water Memory', 'One of Silvally\'s memories, obtained from Captain Lana in Brooklet Hill', 'Typing some Memories', 'Typing some Memories', 125000000, Currency.dungeonToken);
-ItemList.Grass_Memory_Silvally = new QuestItem('Grass_Memory_Silvally', 'Grass Memory', 'One of Silvally\'s memories, obtained from Captain Mallow in Lush Jungle', 'Typing some Memories', 'Typing some Memories', 125000, Currency.questPoint);
-ItemList.Fire_Memory_Silvally = new QuestItem('Fire_Memory_Silvally', 'Fire Memory', 'One of Silvally\'s memories, obtained from Captain Kiawe in Wela Volcano Park', 'Typing some Memories', 'Typing some Memories', 75000, Currency.battlePoint);
-ItemList.Electric_Memory_Silvally = new QuestItem('Electric_Memory_Silvally', 'Electric Memory', 'One of Silvally\'s memories, obtained from Captain Sophocles in Hokulani Observatory', 'Typing some Memories', 'Typing some Memories', 500000000, Currency.money);
-ItemList.Ice_Memory_Silvally = new QuestItem('Ice_Memory_Silvally', 'Ice Memory', 'One of Silvally\'s memories, obtained from Veteran Aristo in Mt. Lanakila', 'Typing some Memories', 'Typing some Memories', 1000, Currency.diamond);
-ItemList.Ground_Memory_Silvally = new QuestItem('Ground_Memory_Silvally', 'Ground Memory', 'One of Silvally\'s memories, obtained from Kahuna Hapu on Exeggutor Island Hill', 'Typing some Memories', 'Typing some Memories', 200000, Currency.farmPoint);
+ItemList.Water_Memory_Silvally = new QuestItem('Water_Memory_Silvally', 'Water Memory', 'One of Silvally\'s memories, obtained from Captain Lana in Brooklet Hill', 'Typing some Memories', 125000000, Currency.dungeonToken);
+ItemList.Grass_Memory_Silvally = new QuestItem('Grass_Memory_Silvally', 'Grass Memory', 'One of Silvally\'s memories, obtained from Captain Mallow in Lush Jungle', 'Typing some Memories', 125000, Currency.questPoint);
+ItemList.Fire_Memory_Silvally = new QuestItem('Fire_Memory_Silvally', 'Fire Memory', 'One of Silvally\'s memories, obtained from Captain Kiawe in Wela Volcano Park', 'Typing some Memories', 75000, Currency.battlePoint);
+ItemList.Electric_Memory_Silvally = new QuestItem('Electric_Memory_Silvally', 'Electric Memory', 'One of Silvally\'s memories, obtained from Captain Sophocles in Hokulani Observatory', 'Typing some Memories', 500000000, Currency.money);
+ItemList.Ice_Memory_Silvally = new QuestItem('Ice_Memory_Silvally', 'Ice Memory', 'One of Silvally\'s memories, obtained from Veteran Aristo in Mt. Lanakila', 'Typing some Memories', 100000, Currency.diamond);
+ItemList.Ground_Memory_Silvally = new QuestItem('Ground_Memory_Silvally', 'Ground Memory', 'One of Silvally\'s memories, obtained from Kahuna Hapu on Exeggutor Island Hill', 'Typing some Memories', 200000, Currency.farmPoint);
 ItemList.Bug_Memory_Silvally = new QuestItem('Bug_Memory_Silvally', 'Bug Memory', 'One of Silvally\'s memories, obtained from Guzma in Po Town', 'Typing some Memories');
 ItemList.Flying_Memory_Silvally = new QuestItem('Flying_Memory_Silvally', 'Flying Memory', 'One of Silvally\'s memories, obtained from Kahili on Ten Carat Hill', 'Typing some Memories');
 ItemList.Poison_Memory_Silvally = new QuestItem('Poison_Memory_Silvally', 'Poison Memory', 'One of Silvally\'s memories, obtained from Plumeria in Vast Poni Canyon', 'Typing some Memories');
@@ -233,6 +242,9 @@ ItemList.Max_Mushroom_IoA = new QuestItem('Max_Mushroom_IoA', 'Max Mushroom', 'A
 ItemList.Shaderoot_Carrot_Calyrex = new QuestItem('Shaderoot_Carrot_Calyrex', 'Shaderoot Carrot', 'Carrot that the King of Bountiful Harvest\'s beloved steed likes to eat. It grew in a gloomy field.', 'The Crown of Galar');
 ItemList.Iceroot_Carrot_Calyrex = new QuestItem('Iceroot_Carrot_Calyrex', 'Iceroot Carrot', 'Carrot that the King of Bountiful Harvest\'s beloved steed likes to eat. It grew in a field covered in snow.', 'The Crown of Galar');
 ItemList.Wishing_Piece = new QuestItem('Wishing_Piece', 'Wishing Piece', 'Attracts Gigantamax Pokémon to the Max Lair', 'The Lair of Giants');
+
+// Other Collectible Items
+ItemList.Christmas_present = new ChristmasPresent();
 
 // Vitamins
 ItemList.Protein   = new Vitamin(VitaminType.Protein, 1e4, Currency.money, {
@@ -254,11 +266,8 @@ ItemList.Carbos   = new Vitamin(VitaminType.Carbos, 1e5, Currency.money, {
 }, undefined, 'Reduces steps required when hatching');
 
 // Consumables
-ItemList.Rare_Candy = new AttackGainConsumable(ConsumableType.Rare_Candy, Infinity, undefined, undefined, 'Rare Candy', 'Permanently increases the attack of a Pokémon');
+ItemList.Rare_Candy = new AttackGainConsumable(ConsumableType.Rare_Candy, Infinity, undefined, undefined, 'Rare Candy', 'Raises the level of a Pokémon and permanently increases its attack');
 ItemList.Magikarp_Biscuit = new AttackGainConsumable(ConsumableType.Magikarp_Biscuit, Infinity, undefined, undefined, undefined, 'Strengthen your Magikarp', 6, (pokemon) => Math.floor(pokemon.id) === pokemonMap.Magikarp.id);
-
-// Miscellaneous
-ItemList.Christmas_present = new ChristmasPresent();
 
 // Underground Items
 // Sellable (Diamonds)
@@ -329,6 +338,8 @@ ItemList.Rose_shard = new TreasureItem('Rose_shard', UndergroundItemValueType.Sh
 ItemList.Brown_shard = new TreasureItem('Brown_shard', UndergroundItemValueType.Shard, 'Brown Shard');
 ItemList.Beige_shard = new TreasureItem('Beige_shard', UndergroundItemValueType.Shard, 'Beige Shard');
 ItemList.Slate_shard = new TreasureItem('Slate_shard', UndergroundItemValueType.Shard, 'Slate Shard');
+// Other
+ItemList.Palaeontologist_token = new TreasureItem('Palaeontologist_token', UndergroundItemValueType.Special, 'Palaeontologist Token');
 
 
 // Pokemon shop items
@@ -348,27 +359,30 @@ ItemList['Pinkan Electabuzz']  = new PokemonItem('Pinkan Electabuzz');
 ItemList.Jynx                 = new PokemonItem('Jynx', 2000);
 ItemList.Magikarp             = new PokemonItem('Magikarp', 50000, Currency.money, true);
 ItemList['Magikarp Brown Stripes'] = new PokemonItem('Magikarp Brown Stripes', 100);
-ItemList['Magikarp Blue Raindrops'] = new PokemonItem('Magikarp Blue Raindrops', 2000, Currency.diamond);
+ItemList['Magikarp Blue Raindrops'] = new PokemonItem('Magikarp Blue Raindrops', 200000, Currency.diamond);
 ItemList['Magikarp Saucy Violet'] = new PokemonItem('Magikarp Saucy Violet', 7500000000, Currency.money);
 ItemList['Probably Feebas']   = new PokemonItem('Magikarp (Feebas)', 5999, Currency.battlePoint, false, 'Probably Feebas');
 ItemList.Eevee                = new PokemonItem('Eevee', 4000);
 ItemList.Porygon              = new PokemonItem('Porygon', 2000);
 ItemList.Togepi               = new PokemonItem('Togepi', 15000);
+ItemList['Pikachu (Palaeontologist)'] = new PokemonItem('Pikachu (Palaeontologist)');
+
 // Hoenn
-ItemList['Probably Chimecho']  = new PokemonItem('Hoppip (Chimecho)', 358, Currency.diamond, false, 'Probably Chimecho');
+ItemList['Probably Chimecho']  = new PokemonItem('Hoppip (Chimecho)', 35800, Currency.diamond, false, 'Probably Chimecho');
 ItemList.Beldum               = new PokemonItem('Beldum', 22500);
+ItemList['Deoxys (Clone)'] = new PokemonItem('Deoxys (Clone)', 100);
 // Sinnoh
 ItemList['Grotle (Acorn)']  = new PokemonItem('Grotle (Acorn)');
 ItemList.Combee               = new PokemonItem('Combee', 6750);
 ItemList['Burmy (Plant)']     = new PokemonItem('Burmy (Plant)', 6750);
 ItemList.Cherubi              = new PokemonItem('Cherubi', 6750);
-ItemList.Spiritomb            = new PokemonItem('Spiritomb', 6750);
+ItemList.Spiritomb            = new PokemonItem('Spiritomb', 20000, Currency.diamond);
 // Unova
 ItemList.Zorua                = new PokemonItem('Zorua', 50625);
 ItemList['Meloetta (Pirouette)'] = new PokemonItem('Meloetta (Pirouette)', 200000);
 // Kalos
 ItemList['Furfrou (Debutante)']  = new PokemonItem('Furfrou (Debutante)', 5000000000, Currency.money);
-ItemList['Furfrou (Diamond)']    = new PokemonItem('Furfrou (Diamond)', 3000, Currency.diamond);
+ItemList['Furfrou (Diamond)']    = new PokemonItem('Furfrou (Diamond)', 300000, Currency.diamond);
 ItemList['Furfrou (Matron)']     = new PokemonItem('Furfrou (Matron)', 1500000, Currency.farmPoint);
 ItemList['Furfrou (Dandy)']      = new PokemonItem('Furfrou (Dandy)', 250000);
 ItemList['Furfrou (Kabuki)']     = new PokemonItem('Furfrou (Kabuki)', 75000, Currency.battlePoint);
@@ -376,76 +390,77 @@ ItemList['Furfrou (Pharaoh)']    = new PokemonItem('Furfrou (Pharaoh)', 30000000
 ItemList['Furfrou (Star)']    = new PokemonItem('Furfrou (Star)', 10000);
 ItemList['Furfrou (La Reine)']    = new PokemonItem('Furfrou (La Reine)');
 ItemList['Furfrou (Heart)']    = new PokemonItem('Furfrou (Heart)', 15000, Currency.contestToken);
+ItemList['Probably Not Pikachu']   = new PokemonItem('Inkay (Pikachu)', 100000000, Currency.dungeonToken, false, 'Probably Not Pikachu');
 // Alola
 ItemList['Type: Null']           = new PokemonItem('Type: Null', 114000);
 ItemList.Poipole              = new PokemonItem('Poipole', 90000);
 // Silvally Forms
 ItemList['Silvally (Fighting) 1'] = new PokemonItem('Silvally (Fighting)', undefined, undefined, false, 'Silvally (Fighting)',
-    { visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 3, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Fighting)', true)]) }, 'Silvally (Fighting) 1');
+    { maxAmount: 1, visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 3, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Fighting)', true)]) }, 'Silvally (Fighting) 1');
 ItemList['Silvally (Fighting) 2'] = new PokemonItem('Silvally (Fighting)', undefined, undefined, false, 'Silvally (Fighting)',
     { visible: new ObtainedPokemonRequirement('Silvally (Fighting)') }, 'Silvally (Fighting) 2');
 ItemList['Silvally (Rock) 1'] = new PokemonItem('Silvally (Rock)', undefined, undefined, false, 'Silvally (Rock)',
-    { visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 3, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Rock)', true)]) }, 'Silvally (Rock) 1');
+    { maxAmount: 1, visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 3, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Rock)', true)]) }, 'Silvally (Rock) 1');
 ItemList['Silvally (Rock) 2'] = new PokemonItem('Silvally (Rock)', undefined, undefined, false, 'Silvally (Rock)',
     { visible: new ObtainedPokemonRequirement('Silvally (Rock)') }, 'Silvally (Rock) 2');
 ItemList['Silvally (Dark) 1'] = new PokemonItem('Silvally (Dark)', undefined, undefined, false, 'Silvally (Dark)',
-    { visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 3, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Dark)', true)]) }, 'Silvally (Dark) 1');
+    { maxAmount: 1, visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 3, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Dark)', true)]) }, 'Silvally (Dark) 1');
 ItemList['Silvally (Dark) 2'] = new PokemonItem('Silvally (Dark)', undefined, undefined, false, 'Silvally (Dark)',
     { visible: new ObtainedPokemonRequirement('Silvally (Dark)') }, 'Silvally (Dark) 2');
 ItemList['Silvally (Fairy) 1'] = new PokemonItem('Silvally (Fairy)', undefined, undefined, false, 'Silvally (Fairy)',
-    { visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 3, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Fairy)', true)]) }, 'Silvally (Fairy) 1');
+    { maxAmount: 1, visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 3, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Fairy)', true)]) }, 'Silvally (Fairy) 1');
 ItemList['Silvally (Fairy) 2'] = new PokemonItem('Silvally (Fairy)', undefined, undefined, false, 'Silvally (Fairy)',
     { visible: new ObtainedPokemonRequirement('Silvally (Fairy)') }, 'Silvally (Fairy) 2');
 ItemList['Silvally (Water) 1'] = new PokemonItem('Silvally (Water)', undefined, undefined, false, 'Silvally (Water)',
-    { visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 17, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Water)', true)]) }, 'Silvally (Water) 1');
+    { maxAmount: 1, visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 17, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Water)', true)]) }, 'Silvally (Water) 1');
 ItemList['Silvally (Water) 2'] = new PokemonItem('Silvally (Water)', undefined, undefined, false, 'Silvally (Water)',
     { visible: new ObtainedPokemonRequirement('Silvally (Water)') }, 'Silvally (Water) 2');
 ItemList['Silvally (Grass) 1'] = new PokemonItem('Silvally (Grass)', undefined, undefined, false, 'Silvally (Grass)',
-    { visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 17, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Grass)', true)]) }, 'Silvally (Grass) 1');
+    { maxAmount: 1, visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 17, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Grass)', true)]) }, 'Silvally (Grass) 1');
 ItemList['Silvally (Grass) 2'] = new PokemonItem('Silvally (Grass)', undefined, undefined, false, 'Silvally (Grass)',
     { visible: new ObtainedPokemonRequirement('Silvally (Grass)') }, 'Silvally (Grass) 2');
 ItemList['Silvally (Fire) 1'] = new PokemonItem('Silvally (Fire)', undefined, undefined, false, 'Silvally (Fire)',
-    { visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 17, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Fire)', true)]) }, 'Silvally (Fire) 1');
+    { maxAmount: 1, visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 17, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Fire)', true)]) }, 'Silvally (Fire) 1');
 ItemList['Silvally (Fire) 2'] = new PokemonItem('Silvally (Fire)', undefined, undefined, false, 'Silvally (Fire)',
     { visible: new ObtainedPokemonRequirement('Silvally (Fire)') }, 'Silvally (Fire) 2');
 ItemList['Silvally (Electric) 1'] = new PokemonItem('Silvally (Electric)', undefined, undefined, false, 'Silvally (Electric)',
-    { visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 17, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Electric)', true)]) }, 'Silvally (Electric) 1');
+    { maxAmount: 1, visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 17, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Electric)', true)]) }, 'Silvally (Electric) 1');
 ItemList['Silvally (Electric) 2'] = new PokemonItem('Silvally (Electric)', undefined, undefined, false, 'Silvally (Electric)',
     { visible: new ObtainedPokemonRequirement('Silvally (Electric)') }, 'Silvally (Electric) 2');
 ItemList['Silvally (Ice) 1'] = new PokemonItem('Silvally (Ice)', undefined, undefined, false, 'Silvally (Ice)',
-    { visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 17, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Ice)', true)]) }, 'Silvally (Ice) 1');
+    { maxAmount: 1, visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 17, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Ice)', true)]) }, 'Silvally (Ice) 1');
 ItemList['Silvally (Ice) 2'] = new PokemonItem('Silvally (Ice)', undefined, undefined, false, 'Silvally (Ice)',
     { visible: new ObtainedPokemonRequirement('Silvally (Ice)') }, 'Silvally (Ice) 2');
 ItemList['Silvally (Ground) 1'] = new PokemonItem('Silvally (Ground)', undefined, undefined, false, 'Silvally (Ground)',
-    { visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 17, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Ground)', true)]) }, 'Silvally (Ground) 1');
+    { maxAmount: 1, visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 17, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Ground)', true)]) }, 'Silvally (Ground) 1');
 ItemList['Silvally (Ground) 2'] = new PokemonItem('Silvally (Ground)', undefined, undefined, false, 'Silvally (Ground)',
     { visible: new ObtainedPokemonRequirement('Silvally (Ground)') }, 'Silvally (Ground) 2');
 ItemList['Silvally (Bug) 1'] = new PokemonItem('Silvally (Bug)', undefined, undefined, false, 'Silvally (Bug)',
-    { visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 33, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Bug)', true)]) }, 'Silvally (Bug) 1');
+    { maxAmount: 1, visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 33, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Bug)', true)]) }, 'Silvally (Bug) 1');
 ItemList['Silvally (Bug) 2'] = new PokemonItem('Silvally (Bug)', undefined, undefined, false, 'Silvally (Bug)',
     { visible: new ObtainedPokemonRequirement('Silvally (Bug)') }, 'Silvally (Bug) 2');
 ItemList['Silvally (Flying) 1'] = new PokemonItem('Silvally (Flying)', undefined, undefined, false, 'Silvally (Flying)',
-    { visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 33, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Flying)', true)]) }, 'Silvally (Flying) 1');
+    { maxAmount: 1, visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 33, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Flying)', true)]) }, 'Silvally (Flying) 1');
 ItemList['Silvally (Flying) 2'] = new PokemonItem('Silvally (Flying)', undefined, undefined, false, 'Silvally (Flying)',
     { visible: new ObtainedPokemonRequirement('Silvally (Flying)') }, 'Silvally (Flying) 2');
 ItemList['Silvally (Poison) 1'] = new PokemonItem('Silvally (Poison)', undefined, undefined, false, 'Silvally (Poison)',
-    { visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 33, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Poison)', true)]) }, 'Silvally (Poison) 1');
+    { maxAmount: 1, visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 33, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Poison)', true)]) }, 'Silvally (Poison) 1');
 ItemList['Silvally (Poison) 2'] = new PokemonItem('Silvally (Poison)', undefined, undefined, false, 'Silvally (Poison)',
     { visible: new ObtainedPokemonRequirement('Silvally (Poison)') }, 'Silvally (Poison) 2');
 ItemList['Silvally (Ghost) 1'] = new PokemonItem('Silvally (Ghost)', undefined, undefined, false, 'Silvally (Ghost)',
-    { visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 33, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Ghost)', true)]) }, 'Silvally (Ghost) 1');
+    { maxAmount: 1, visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 33, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Ghost)', true)]) }, 'Silvally (Ghost) 1');
 ItemList['Silvally (Ghost) 2'] = new PokemonItem('Silvally (Ghost)', undefined, undefined, false, 'Silvally (Ghost)',
     { visible: new ObtainedPokemonRequirement('Silvally (Ghost)') }, 'Silvally (Ghost) 2');
 ItemList['Silvally (Psychic) 1'] = new PokemonItem('Silvally (Psychic)', undefined, undefined, false, 'Silvally (Psychic)',
-    { visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 33, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Psychic)', true)]) }, 'Silvally (Psychic) 1');
+    { maxAmount: 1, visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 33, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Psychic)', true)]) }, 'Silvally (Psychic) 1');
 ItemList['Silvally (Psychic) 2'] = new PokemonItem('Silvally (Psychic)', undefined, undefined, false, 'Silvally (Psychic)',
     { visible: new ObtainedPokemonRequirement('Silvally (Psychic)') }, 'Silvally (Psychic) 2');
 ItemList['Silvally (Steel) 1'] = new PokemonItem('Silvally (Steel)', undefined, undefined, false, 'Silvally (Steel)',
-    { visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 33, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Steel)', true)]) }, 'Silvally (Steel) 1');
+    { maxAmount: 1, visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 33, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Steel)', true)]) }, 'Silvally (Steel) 1');
 ItemList['Silvally (Steel) 2'] = new PokemonItem('Silvally (Steel)', undefined, undefined, false, 'Silvally (Steel)',
     { visible: new ObtainedPokemonRequirement('Silvally (Steel)') }, 'Silvally (Steel) 2');
 ItemList['Silvally (Dragon) 1'] = new PokemonItem('Silvally (Dragon)', undefined, undefined, false, 'Silvally (Dragon)',
-    { visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 33, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Dragon)', true)]) }, 'Silvally (Dragon) 1');
+    { maxAmount: 1, visible: new MultiRequirement([new QuestLineStepCompletedRequirement('Typing some Memories', 33, AchievementOption.more), new ObtainedPokemonRequirement('Silvally (Dragon)', true)]) }, 'Silvally (Dragon) 1');
 ItemList['Silvally (Dragon) 2'] = new PokemonItem('Silvally (Dragon)', undefined, undefined, false, 'Silvally (Dragon)',
     { visible: new ObtainedPokemonRequirement('Silvally (Dragon)') }, 'Silvally (Dragon) 2');
 //Galar
@@ -486,3 +501,26 @@ ItemList['Pikachu (Libre)'] = new PokemonItem('Pikachu (Libre)', 1000, Currency.
 // Event
 ItemList['Elf Munchlax'] = new PokemonItem('Elf Munchlax', 3108, Currency.questPoint, undefined, undefined,
     { visible: new MultiRequirement([new SpecialEventRequirement('Merry Christmas!'), new ObtainedPokemonRequirement('Santa Snorlax')]) });
+// Fossils
+ItemList.Omanyte = new PokemonItem('Omanyte');
+ItemList.Omastar = new PokemonItem('Omastar');
+ItemList.Kabuto = new PokemonItem('Kabuto');
+ItemList.Kabutops = new PokemonItem('Kabutops');
+ItemList.Aerodactyl = new PokemonItem('Aerodactyl');
+ItemList.Lileep = new PokemonItem('Lileep');
+ItemList.Cradily = new PokemonItem('Cradily');
+ItemList.Anorith = new PokemonItem('Anorith');
+ItemList.Armaldo = new PokemonItem('Armaldo');
+ItemList.Cranidos = new PokemonItem('Cranidos');
+ItemList.Rampardos = new PokemonItem('Rampardos');
+ItemList.Shieldon = new PokemonItem('Shieldon');
+ItemList.Bastiodon = new PokemonItem('Bastiodon');
+ItemList.Tirtouga = new PokemonItem('Tirtouga');
+ItemList.Carracosta = new PokemonItem('Carracosta');
+ItemList.Archen = new PokemonItem('Archen');
+ItemList.Archeops = new PokemonItem('Archeops');
+ItemList.Tyrunt = new PokemonItem('Tyrunt');
+ItemList.Tyrantrum = new PokemonItem('Tyrantrum');
+ItemList.Amaura = new PokemonItem('Amaura');
+ItemList.Aurorus = new PokemonItem('Aurorus');
+

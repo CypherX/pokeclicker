@@ -9,8 +9,8 @@ class DefeatDungeonBossQuest extends Quest implements QuestInterface {
         this.focus = ko.observable(0);
     }
 
-    get description() {
-        return this.customDescription ?? `Defeat ${this.dungeonBoss} in ${this.dungeon}.`;
+    get defaultDescription() {
+        return `Defeat ${this.dungeonBoss} in ${this.dungeon}.`;
     }
 
     onLoad() {
@@ -19,7 +19,7 @@ class DefeatDungeonBossQuest extends Quest implements QuestInterface {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         ko.when(
-            () =>  DungeonRunner.defeatedBoss() === this.dungeonBoss && DungeonRunner.dungeon?.name === this.dungeon,
+            () => DungeonRunner.defeatedBoss() === this.dungeonBoss && DungeonRunner.dungeon?.name === this.dungeon,
             () => this.focus(1)
         );
     }

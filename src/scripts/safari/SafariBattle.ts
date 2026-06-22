@@ -175,9 +175,13 @@ class SafariBattle {
 
     private static capturePokemon() {
         SafariBattle.text(`GOTCHA!<br>${SafariBattle.enemy.displayName} was caught!`);
+        App.game.oakItems.use(OakItemType.Magic_Ball);
         GameHelper.incrementObservable(App.game.statistics.safariPokemonCaptured, 1);
         if (SafariBattle.enemy.shiny) {
             GameHelper.incrementObservable(App.game.statistics.safariShinyPokemonCaptured, 1);
+            if (Safari.balls() <= 0) {
+                AchievementHandler.unlockAchievement('A Glimmer of Luck');
+            }
         }
         const pokemonID = PokemonHelper.getPokemonByName(SafariBattle.enemy.name).id;
         App.game.party.gainPokemonById(pokemonID, SafariBattle.enemy.shiny);
@@ -186,7 +190,7 @@ class SafariBattle {
         switch (player.region) {
             case (GameConstants.Region.johto):
                 const shinyModifier = SafariBattle.enemy.shiny ? GameConstants.BUG_SAFARI_SHINY_MODIFIER : 1;
-                const bugReward = Math.floor(partyPokemon.baseAttack / 5) * shinyModifier;
+                const bugReward = Math.round(partyPokemon.baseAttack ** .5 + 16) * shinyModifier;
                 App.game.wallet.gainContestTokens(bugReward);
                 Notifier.notify({
                     title: 'Bug Catching Contest',
@@ -270,9 +274,21 @@ class SafariBattle {
         }
     }
 
-    public static run() {
+    public static async run() {
         if (Safari.inBattle() && !SafariBattle.busy()) {
             SafariBattle.busy(true);
+            if (SafariBattle.enemy.shiny) {
+                if (!await Notifier.confirm({
+                    title: 'Shiny Encounter',
+                    message: 'Are you sure you want to run away from this battle?',
+                    type: NotificationConstants.NotificationOption.danger,
+                    confirm: 'Yes',
+                    cancel: 'No',
+                })) {
+                    SafariBattle.busy(false);
+                    return;
+                }
+            }
             SafariBattle.text('You flee.');
             SafariBattle.delay(SafariBattle.Speed.turnLength)
                 .then(() => SafariBattle.endBattle());

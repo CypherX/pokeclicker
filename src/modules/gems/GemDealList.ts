@@ -15,20 +15,20 @@ const hoennFluteDeals = [
     ),
     new GemDeal(
 	    [
-	        { gemType: PokemonType.Ground, amount: 5000 },
-	        { gemType: PokemonType.Poison, amount: 5000 },
-	        { gemType: PokemonType.Steel, amount: 5000 },
-	    ],
-	    ItemList.Time_Flute,
-	    1,
-    ),
-    new GemDeal(
-	    [
 	        { gemType: PokemonType.Dark, amount: 5000 },
 	        { gemType: PokemonType.Psychic, amount: 5000 },
 	        { gemType: PokemonType.Fighting, amount: 5000 },
 	    ],
 	    ItemList.Black_Flute,
+	    1,
+    ),
+    new GemDeal(
+	    [
+	        { gemType: PokemonType.Ground, amount: 5000 },
+	        { gemType: PokemonType.Poison, amount: 5000 },
+	        { gemType: PokemonType.Steel, amount: 5000 },
+	    ],
+	    ItemList.Time_Flute,
 	    1,
     ),
 ];
@@ -86,6 +86,14 @@ const unovaFluteDeals = [
             { gemType: PokemonType.Ghost, amount: 10000 },
         ],
         ItemList.Blue_Flute,
+        1,
+    ),
+];
+
+const hoennBattleFrontierDeoxysDeal = [
+    new GemDeal(
+        [{ gemType: PokemonType.Psychic, amount: 3860 }],
+        ItemList['Deoxys (Clone)'],
         1,
     ),
 ];
@@ -333,6 +341,7 @@ const alolaMagikarpJumpDeal = [
 const dealList = {
     [GemShops.HoennFluteMaster]: ko.observableArray(hoennFluteDeals),
     [GemShops.HoennStoneSalesman]: ko.observableArray(hoennStoneDeals),
+    [GemShops.hoennBattleFrontierDeoxysDeal]: ko.observableArray(hoennBattleFrontierDeoxysDeal),
     [GemShops.UnovaFluteMaster]: ko.observableArray(unovaFluteDeals),
     [GemShops.FurfrouGemTrader]: ko.observableArray(kalosFurfrouDeal),
     [GemShops.KalosStoneSalesman]: ko.observableArray(kalosStoneDeals),
