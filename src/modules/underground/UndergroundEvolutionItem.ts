@@ -11,8 +11,7 @@ export default class UndergroundEvolutionItem extends UndergroundItem {
         public type: StoneType,
         value = 1,
         requirement?: Requirement,
-        weight?: (() => number) | number,
     ) {
-        super(id, itemName, space, value, UndergroundItemValueType.EvolutionItem, requirement, weight);
+        super(id, itemName, space, value, UndergroundItemValueType.EvolutionItem, requirement, 1);
     }
 }

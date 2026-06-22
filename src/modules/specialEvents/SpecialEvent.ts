@@ -3,8 +3,9 @@ import Notifier from '../notifications/Notifier';
 import NotificationConstants from '../notifications/NotificationConstants';
 import { DAY, HOUR, formatTimeShortWords, formatTime, Currency, SPECIAL_EVENT_TICK, SECOND } from '../GameConstants';
 import NotificationOption from '../notifications/NotificationOption';
+import { SpecialEventTitleType } from './SpecialEventTitleType';
 
-type EmptyCallback = () => void;
+export type EventCallback = () => void;
 
 export enum SpecialEventStatus {
     none,
@@ -13,13 +14,13 @@ export enum SpecialEventStatus {
 }
 
 export default class SpecialEvent {
-    title: string;
+    title: SpecialEventTitleType;
     description: string;
     status: KnockoutObservable<SpecialEventStatus>;
     startTime: Date;
-    startFunction: EmptyCallback;
+    startFunction: EventCallback;
     endTime: Date;
-    endFunction: EmptyCallback;
+    endFunction: EventCallback;
     hideFromEventCalendar: boolean;
     eventCalendarTimeLeft: KnockoutObservable<number>;
     isActive: KnockoutObservable<boolean>;
@@ -27,7 +28,7 @@ export default class SpecialEvent {
     // TODO: only notify once initially until event about to start/end
     notified: SpecialEventNotifiedStatus;
 
-    constructor(title: string, description: string, startTime: Date, startFunction: EmptyCallback, endTime: Date, endFunction: EmptyCallback, hideFromEventCalendar: boolean) {
+    constructor(title: SpecialEventTitleType, description: string, startTime: Date, startFunction: EventCallback, endTime: Date, endFunction: EventCallback, hideFromEventCalendar: boolean) {
         this.title = title;
         this.description = description;
         this.startTime = startTime;
@@ -37,6 +38,7 @@ export default class SpecialEvent {
         this.status = ko.observable(SpecialEventStatus.none);
         this.hideFromEventCalendar = hideFromEventCalendar;
         this.eventCalendarTimeLeft = ko.observable(0);
+        this.eventCalendarTimeLeft.equalityComparer = () => false; // Forcefully update timeLeft
         this.isActive = ko.pureComputed<boolean>(() => this.status() == SpecialEventStatus.started || this.eventCalendarTimeLeft() > 0);
     }
 
@@ -67,19 +69,18 @@ export default class SpecialEvent {
     }
 
     timeLeft(): string {
+        const eventCalendarTimeLeft = this.eventCalendarTimeLeft();
         if (this.hasStarted()) {
             return formatTime(this.timeTillEnd() / 1000);
         }
-        if (this.eventCalendarTimeLeft() > 0) {
-            return formatTime(this.eventCalendarTimeLeft());
+        if (eventCalendarTimeLeft > 0) {
+            return formatTime(eventCalendarTimeLeft);
         }
         return '';
     }
 
     tick(): void {
-        if (this.eventCalendarTimeLeft() > 0) {
-            this.eventCalendarTimeLeft(Math.max(0, this.eventCalendarTimeLeft() - SPECIAL_EVENT_TICK / SECOND));
-        }
+        this.eventCalendarTimeLeft(Math.max(0, this.eventCalendarTimeLeft() - SPECIAL_EVENT_TICK / SECOND));
     }
 
     eventCalendarActivate(): void {
@@ -87,7 +88,7 @@ export default class SpecialEvent {
             return;
         }
         const daysLeft = Math.floor(this.timeTillStart() / 1000 / 60 / 60 / 24);
-        const price = 500 * daysLeft;
+        const price = 500 * (daysLeft + 1);
         if (price > App.game.wallet.currencies[Currency.questPoint]()) {
             Notifier.notify({
                 title: 'Cannot afford',
@@ -98,7 +99,7 @@ export default class SpecialEvent {
         }
         Notifier.confirm({
             title: 'Do you want to start this event early?',
-            message: `Starting '${this.title}' early will cost you ${price.toLocaleString('en-US')} QP for 24 hours of event time.`,
+            message: `Starting '${this.title}' early will cost you ${price.toLocaleString('en-US')} Quest Points for 24 hours of event time.`,
         }).then((result: boolean) => {
             if (result) {
                 App.game.wallet.loseAmount({ amount: price, currency: Currency.questPoint });

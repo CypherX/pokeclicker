@@ -10,16 +10,25 @@ class DefeatGymQuest extends Quest implements QuestInterface {
     ) {
         super(amount, reward);
         this.region = GameConstants.getGymRegion(this.gymTown);
+        if (this.region == GameConstants.Region.none) {
+            throw new Error(`Invalid gym town for quest: ${this.gymTown}`);
+        }
         this.focus = App.game.statistics.gymsDefeated[GameConstants.getGymIndex(this.gymTown)];
+    }
+
+    // Only add Defeat Gym Quest if the player has defeated the first gym (Brock).
+    public static canComplete() {
+        return App.game.badgeCase.hasBadge(BadgeEnums.Boulder);
     }
 
     public static generateData(): any[] {
         const amount = SeededRand.intBetween(5, 20);
-        const region = SeededRand.intBetween(0, player.highestRegion());
-        // Only use unlocked gyms
-        const possibleGyms = GameConstants.RegionGyms[region].filter(gymTown => GymList[gymTown].flags.quest && GymList[gymTown].isUnlocked());
-        // If no gyms unlocked in this region, just use the first gym of the region
-        const gymTown = possibleGyms.length ? SeededRand.fromArray(possibleGyms) : GameConstants.RegionGyms[region][0];
+        // Make a list of all regions where at least one gym has been cleared.
+        const validRegionGyms = GameConstants.RegionGyms.filter(gyms => gyms.some(gym => GymList[gym].flags.quest && GymList[gym].clears() && GymList[gym].isUnlocked()));
+        const chosenRegionGyms = SeededRand.fromArray(validRegionGyms);
+        // Only use cleared and unlocked gyms.
+        const possibleGyms = chosenRegionGyms.filter(gymTown => GymList[gymTown].flags.quest && GymList[gymTown].clears() && GymList[gymTown].isUnlocked());
+        const gymTown = SeededRand.fromArray(possibleGyms);
         const reward = this.calcReward(amount, gymTown);
         return [amount, reward, gymTown];
     }
@@ -35,26 +44,28 @@ class DefeatGymQuest extends Quest implements QuestInterface {
         return super.randomizeReward(reward);
     }
 
-    get description(): string {
-        if (this.customDescription) {
-            return this.customDescription;
-        }
-        const elite = this.gymTown.includes('Elite') || this.gymTown.includes('Champion');
+    get defaultDescription(): string {
+        const elite = this.gymTown.includes('Elite') || this.gymTown.includes('Champion') || this.gymTown.includes('Supreme') || this.gymTown.includes('Challenge');
         const displayName = GymList[this.gymTown]?.displayName;
-        const leaderName = GymList[this.gymTown].leaderName.replace(/\d/g, '');
-        const desc = [];
+        const leaderName = GymList[this.gymTown].leaderName.replace(/\d+/g, '').trim();
+        const { region, subRegion } = GymList[this.gymTown].parent;
+        const subRegionName = SubRegions.getSubRegionById(region, subRegion).name;
 
-        desc.push('Defeat');
-        if (displayName?.includes('Trial')) {
-            desc.push(`${displayName} at ${this.gymTown}`);
-        } else if (displayName || elite) {
-            desc.push(displayName ?? this.gymTown);
+        let gymString;
+        if (displayName) {
+            gymString = displayName;
+            if (displayName.includes('Trial')) {
+                gymString += ` at ${this.gymTown}`;
+            } else if (displayName.includes('Challenge')) {
+                gymString = displayName.replace('Challenge ', '');
+            }
+        } else if (elite) {
+            gymString = this.gymTown;
         } else {
-            desc.push(`${leaderName}'s Gym at ${this.gymTown}`);
+            gymString = `${leaderName}'s Gym at ${this.gymTown}`;
         }
-        desc.push(`in ${GameConstants.camelCaseToString(GameConstants.Region[this.region])}`);
-        desc.push(`${this.amount.toLocaleString('en-US')} times.`);
-        return desc.join(' ');
+
+        return `Defeat ${gymString} in ${subRegionName} ${this.amount.toLocaleString('en-US')} times.`;
     }
 
     toJSON() {

@@ -1,9 +1,10 @@
 import { AchievementOption } from '../GameConstants';
+import { SpecialEventTitleType } from '../specialEvents/SpecialEventTitleType';
 
 import Requirement from './Requirement';
 
 export default class SpecialEventRequirement extends Requirement {
-    constructor(private specialEventName: string) {
+    constructor(private specialEventName: SpecialEventTitleType) {
         super(1, AchievementOption.equal);
     }
 
@@ -12,6 +13,6 @@ export default class SpecialEventRequirement extends Requirement {
     }
 
     public hint(): string {
-        return `Event ${this.specialEventName} has not started.`;
+        return `${this.specialEventName} must be started.`;
     }
 }

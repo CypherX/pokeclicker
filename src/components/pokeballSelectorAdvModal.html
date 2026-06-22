@@ -32,15 +32,20 @@
                                 Reset Filters
                             </button>
                         </div>
+                        <p class="mb-1 small">
+                            ** Filters closer to the
+                            <strong class="text-warning" data-bind="text: Settings.getSetting('catchFilters.invertPriorityOrder').observableValue() ? 'bottom' : 'top'">top</strong>
+                            have a higher priority! **
+                        </p>
                         <div id="pokeballFilterConfigs"
                             data-bind="sortable: {
                                 foreach: App.game.pokeballFilters.list,
+                                getDataId: (filter) => filter.uuid,
                                 options: {
                                     group: 'pokeballFilters',
                                     draggable: '.pokeballFilterWrapper',
                                     handle: '.pokeballFilterDragHandle',
                                     dataIdAttr: 'data-key',
-                                    getId: (filter) => filter.uuid,
                                 }
                             }">
                             <div class="pokeballFilterWrapper" data-bind="
@@ -231,6 +236,9 @@
                         </p>
                         <p>
                             You can hover (or tap) the <button class="btn-circle btn-info float-none">&#8505;</button> icon for a description of what the filter will catch.
+                        </p>
+                        <p>
+                            Right click (or long press on mobile) can be used to enable/disable filters from the main screen without opening this menu.
                         </p>
 
                         <h2>Test Filters</h2>

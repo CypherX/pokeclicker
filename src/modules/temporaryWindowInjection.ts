@@ -6,7 +6,6 @@ import Profile from './profile/Profile';
 import DataStore from './DataStore';
 import * as GameConstants from './GameConstants';
 import GameHelper from './GameHelper';
-import LogEvent from './LogEvent';
 // enums
 import AuraType from './enums/AuraType';
 import BadgeEnums from './enums/Badges';
@@ -26,12 +25,19 @@ import PlotStage from './enums/PlotStage';
 import QuestLineState from './quests/QuestLineState';
 import WeatherForecastStatus from './enums/WeatherForecastStatus';
 import SafariEnvironments from './enums/SafariEnvironments';
+import FarmingTool from './enums/FarmingTool';
 // end enums
+import Battle from './battles/Battle';
+import BattlePokemon from './battles/BattlePokemon';
+import Trainer from './battles/Trainer';
+import GymPokemon from './gym/GymPokemon';
+import CustomGymPokemon from './gym/CustomGymPokemon';
+import Berry from './farming/Berry';
+import { BerryList } from './farming/BerryList';
 import BooleanSetting from './settings/BooleanSetting';
 import RangeSetting from './settings/RangeSetting';
 import Setting from './settings/Setting';
 import SettingOption from './settings/SettingOption';
-import BreedingFilters from './settings/BreedingFilters';
 import WeatherType from './weather/WeatherType';
 import Weather from './weather/Weather';
 import WeatherApp from './weather/WeatherApp';
@@ -40,10 +46,13 @@ import WeatherForecast from './weather/WeatherForecast';
 import DayCycle from './dayCycle/DayCycle';
 import DayCyclePart from './dayCycle/DayCyclePart';
 import DayCyclePartRequirement from './requirements/DayCyclePartRequirement';
+import MoonCycle from './moonCycle/MoonCycle';
+import MoonCyclePhase from './moonCycle/MoonCyclePhase';
+import MoonCyclePhaseRequirement from './requirements/MoonCyclePhaseRequirement';
 import SeededRand from './utilities/SeededRand';
 import SeededDateRand from './utilities/SeededDateRand';
 import Rand from './utilities/Rand';
-import Settings from './settings/index';
+import Settings, { breedingFilterSettingKeys, pokedexFilterSettingKeys } from './settings/index';
 import { SortOptionConfigs, SortOptions } from './settings/SortOptions';
 import { AchievementSortOptionConfigs, AchievementSortOptions } from './achievements/AchievementSortOptions';
 import AchievementCategory from './achievements/AchievementCategory';
@@ -59,12 +68,13 @@ import EggType from './breeding/EggType';
 import Multiplier from './multiplier/Multiplier';
 import MultiplierType from './multiplier/MultiplierType';
 import SpecialEvent from './specialEvents/SpecialEvent';
+import SpecialEvents from './specialEvents/SpecialEvents';
 import Challenges from './challenges/Challenges';
 import LevelType, { levelRequirements } from './party/LevelType';
 import WalletClasses from './wallet/inject';
 import GenericProxy from './utilities/GenericProxy';
 import { SpriteCredits, CodeCredits } from './Credits';
-import * as modalUtils from './utilities/Modal';
+import * as DisplayObservables from './utilities/DisplayObservables';
 import PokemonCategories from './party/Category';
 import Information from './utilities/Information';
 import TypeHelper from './types/TypeHelper';
@@ -90,7 +100,7 @@ import OneFromManyRequirement from './requirements/OneFromManyRequirement';
 import AttackRequirement from './requirements/AttackRequirement';
 import BattleFrontierHighestStageRequirement from './requirements/BattleFrontierHighestStageRequirement';
 import BattleFrontierTotalStageRequirement from './requirements/BattleFrontierTotalStageRequirement';
-import BerriesUnlockedRequirement from './requirements/BerriesUnlockedRequirement';
+import TotalBerriesUnlockedRequirement from './requirements/TotalBerriesUnlockedRequirement';
 import CapturedRequirement from './requirements/CapturedRequirement';
 import CaughtPokemonRequirement from './requirements/CaughtPokemonRequirement';
 import ClearDungeonRequirement from './requirements/ClearDungeonRequirement';
@@ -124,6 +134,7 @@ import PokemonDefeatedSelectNRequirement from './requirements/PokemonDefeatedSel
 import SeviiCaughtRequirement from './requirements/SeviiCaughtRequirement';
 import ShinyPokemonRequirement from './requirements/ShinyPokemonRequirement';
 import ShadowPokemonRequirement from './requirements/ShadowPokemonRequirement';
+import BerryUnlockedRequirement from './requirements/BerryUnlockedRequirement';
 import StatisticRequirement from './requirements/StatisticRequirement';
 import SubregionRequirement from './requirements/SubregionRequirement';
 import StarterRequirement from './requirements/StarterRequirement';
@@ -134,14 +145,31 @@ import UndergroundItemValueType from './enums/UndergroundItemValueType';
 import UndergroundItem from './underground/UndergroundItem';
 import UndergroundItems from './underground/UndergroundItems';
 import UndergroundLayersMinedRequirement from './requirements/UndergroundLayersMinedRequirement';
+import UndergroundHelperRequirement from './requirements/UndergroundHelperRequirement';
+import UndergroundLevelRequirement from './requirements/UndergroundLevelRequirement';
+import UndergroundUseToolRequirement from './requirements/UndergroundUseToolRequirement';
+import UndergroundLayersFullyMinedRequirement from './requirements/UndergroundLayersFullyMinedRequirement';
+import CaptureSpecificPokemonRequirement from './requirements/CaptureSpecificPokemonRequirement';
+import ClearAnyDungeonRequirement from './requirements/ClearAnyDungeonRequirement';
+import EVBonusRequirement from './requirements/EVBonusRequirement';
+import TimePlayedRequirement from './requirements/TimePlayedRequirement';
+import TotalSpecialEventsActiveRequirement from './requirements/TotalSpecialEventsActiveRequirement';
+import PokeballFilterCountRequirement from './requirements/PokeballFilterCountRequirement';
+import DefeatedPokemonTypeRequirement from './requirements/DefeatedPokemonTypeRequirement';
+import AllFlutesTimeActiveRequirement from './requirements/AllFlutesTimeActiveRequirement';
+import DummyRequirement from './requirements/DummyRequirement';
 import WeatherRequirement from './requirements/WeatherRequirement';
 import MegaEvolveRequirement from './requirements/MegaEvolveRequirement';
+import PokemonAttackRequirement from './requirements/PokemonAttackRequirement';
 import { SortModules, SortSaves } from './Sortable';
 import KeyItemController from './keyItems/KeyItemController';
 import KeyItem from './keyItems/KeyItem';
 import KeyItems from './keyItems/KeyItems';
 import Achievement from './achievements/Achievement';
+import SecretAchievement from './achievements/SecretAchievement';
 import Gems from './gems/Gems';
+import GemDeals from './gems/GemDeals';
+import FluteEffectRunner from './gems/FluteEffectRunner';
 import QuestLineCompletedRequirement from './requirements/QuestLineCompletedRequirement';
 import QuestLineStepCompletedRequirement from './requirements/QuestLineStepCompletedRequirement';
 import QuestLineStartedRequirement from './requirements/QuestLineStartedRequirement';
@@ -150,15 +178,13 @@ import Translate from './translation/Translation';
 import DayOfWeekRequirement from './requirements/DayOfWeekRequirement';
 import SaveReminder from './saveReminder/SaveReminder';
 import ClientRequirement from './requirements/ClientRequirement';
-import ContestWonRequirement from './requirements/ContestWonRequirement';
-import lazyLoad from './utilities/LazyLoader';
+import { lazyLoad, lazyLoadCallback } from './utilities/LazyLoader';
 import {
     beforeEvolve, EvoTrigger, LevelEvolution, StoneEvolution,
 } from './pokemons/evolutions/Base';
 import * as OtherEvos from './pokemons/evolutions/Methods';
 import { pokemonBabyPrevolutionMap, pokemonList, pokemonMap } from './pokemons/PokemonList';
-import TmpPokemonHelper from './pokemons/TmpPokemonHelper';
-import PokedexFilters from './settings/PokedexFilters';
+import * as PokemonHelper from './pokemons/PokemonHelper';
 import { createLogContent } from './logbook/helpers';
 import { ItemList } from './items/ItemList';
 import Item from './items/Item';
@@ -167,10 +193,13 @@ import EnergyRestore from './items/EnergyRestore';
 import EffectEngineRunner from './effectEngine/effectEngineRunner';
 import ItemHandler from './items/ItemHandler';
 import CaughtIndicatingItem from './items/CaughtIndicatingItem';
+import PokerusIndicatingItem from './items/PokerusIndicatingItem';
+import PokemonItem from './items/PokemonItem';
 import EggItem from './items/EggItem';
 import MegaStoneItem from './items/MegaStoneItem';
 import PokeballItem from './items/PokeballItem';
-import QuestItem from './items/QuestItem';
+import MulchItem from './items/MulchItem';
+import { ShovelItem, MulchShovelItem } from './items/ShovelItem';
 import Vitamin from './items/Vitamin';
 import VitaminController from './items/VitaminController';
 import Consumable from './items/Consumable';
@@ -183,11 +212,14 @@ import PokeballFilter from './pokeballs/PokeballFilter';
 import PokeballFilters from './pokeballs/PokeballFilters';
 import TextMerger from './utilities/TextMerger';
 import { pokeballFilterOptions } from './pokeballs/PokeballFilterOptions';
-import { DailyDeal } from './underground/DailyDeal';
-import { Mine } from './underground/Mine';
+import { Mine } from './underground/mine/Mine';
+import { MineConfigs, MineType } from './underground/mine/MineConfig';
 import { ShardDeal } from './underground/ShardDeal';
 import { Underground } from './underground/Underground';
-import UndergroundUpgrade from './underground/UndergroundUpgrade';
+import { UndergroundController } from './underground/UndergroundController';
+import { UndergroundTrading } from './underground/UndergroundTrading';
+import { UndergroundHelper } from './underground/helper/UndergroundHelper';
+import UndergroundToolType from './underground/tools/UndergroundToolType';
 import SpecialEventRandomRequirement from './requirements/SpecialEventRandomRequirement';
 import SpecialEventRequirement from './requirements/SpecialEventRequirement';
 import EncounterType from './enums/EncounterType';
@@ -196,8 +228,16 @@ import SafariStepsRequirement from './requirements/SafariStepsRequirement';
 import SafariRocksRequirement from './requirements/SafariRocksRequirement';
 import SafariItemsRequirement from './requirements/SafariItemsRequirement';
 import SafariCatchRequirement from './requirements/SafariCatchRequirement';
-import ItemRequirement from './requirements/ItemRequirement';
+import ItemOwnedRequirement from './requirements/ItemOwnedRequirement';
+import UniqueItemOwnedRequirement from './requirements/UniqueItemOwnedRequirement';
 import ChristmasPresent from './items/ChristmasPresent';
+import DamageCalculator from './types/DamageCalculator';
+import GameLoadState from './utilities/GameLoadState';
+import GenericDeal, { DealCostOrProfitType } from './deal/GenericDeal';
+import CollectibleItem from './items/CollectibleItem';
+import areaStatus from './enums/AreaStatus';
+import TranslationHelper from './translation/TranslationHelper';
+import * as DownloadUtil from './utilities/DownloadUtil';
 import LocationNavigatorOption from './locationNavigator/LocationNavigatorOption';
 
 Object.assign(<any>window, {
@@ -205,7 +245,6 @@ Object.assign(<any>window, {
     Profile,
     GameConstants,
     GameHelper,
-    LogEvent,
     DataStore,
     BadgeCase: DataStore.badge,
     Statistics: DataStore.statistics,
@@ -227,6 +266,14 @@ Object.assign(<any>window, {
     QuestLineState,
     WeatherForecastStatus,
     SafariEnvironments,
+    FarmingTool,
+    Battle,
+    BattlePokemon,
+    Trainer,
+    GymPokemon,
+    CustomGymPokemon,
+    Berry,
+    BerryList,
     BooleanSetting,
     RangeSetting,
     Setting,
@@ -239,13 +286,17 @@ Object.assign(<any>window, {
     DayCycle,
     DayCyclePart,
     DayCyclePartRequirement,
+    MoonCycle,
+    MoonCyclePhase,
+    MoonCyclePhaseRequirement,
     SeededRand,
     SeededDateRand,
     Rand,
     Settings,
+    breedingFilterSettingKeys,
+    pokedexFilterSettingKeys,
     NotificationConstants,
     Notifier,
-    BreedingFilters,
     SortOptionConfigs,
     SortOptions,
     AchievementSortOptionConfigs,
@@ -262,6 +313,7 @@ Object.assign(<any>window, {
     Multiplier,
     MultiplierType,
     SpecialEvent,
+    SpecialEvents,
     Challenges,
     LevelType,
     levelRequirements,
@@ -269,7 +321,7 @@ Object.assign(<any>window, {
     GenericProxy,
     SpriteCredits,
     CodeCredits,
-    modalUtils,
+    DisplayObservables,
     PokemonCategories,
     Information,
     TypeHelper,
@@ -296,7 +348,7 @@ Object.assign(<any>window, {
     AttackRequirement,
     BattleFrontierHighestStageRequirement,
     BattleFrontierTotalStageRequirement,
-    BerriesUnlockedRequirement,
+    TotalBerriesUnlockedRequirement,
     CapturedRequirement,
     CaughtPokemonRequirement,
     ClearDungeonRequirement,
@@ -330,6 +382,7 @@ Object.assign(<any>window, {
     SeviiCaughtRequirement,
     ShinyPokemonRequirement,
     ShadowPokemonRequirement,
+    BerryUnlockedRequirement,
     StatisticRequirement,
     SubregionRequirement,
     StarterRequirement,
@@ -340,15 +393,32 @@ Object.assign(<any>window, {
     UndergroundItem,
     UndergroundItems,
     UndergroundLayersMinedRequirement,
+    UndergroundHelperRequirement,
+    UndergroundLevelRequirement,
+    UndergroundUseToolRequirement,
+    UndergroundLayersFullyMinedRequirement,
+    CaptureSpecificPokemonRequirement,
+    ClearAnyDungeonRequirement,
+    EVBonusRequirement,
+    TimePlayedRequirement,
+    TotalSpecialEventsActiveRequirement,
+    PokeballFilterCountRequirement,
+    DefeatedPokemonTypeRequirement,
+    AllFlutesTimeActiveRequirement,
+    DummyRequirement,
     WeatherRequirement,
     MegaEvolveRequirement,
+    PokemonAttackRequirement,
     SortModules,
     SortSaves,
     KeyItemController,
     KeyItem,
     KeyItems,
     Achievement,
+    SecretAchievement,
     Gems,
+    GemDeals,
+    FluteEffectRunner,
     QuestLineCompletedRequirement,
     QuestLineStepCompletedRequirement,
     QuestLineStartedRequirement,
@@ -359,8 +429,8 @@ Object.assign(<any>window, {
     DayOfWeekRequirement,
     SaveReminder,
     ClientRequirement,
-    ContestWonRequirement,
     lazyLoad,
+    lazyLoadCallback,
     LevelEvolution,
     StoneEvolution,
     EvoTrigger,
@@ -369,8 +439,7 @@ Object.assign(<any>window, {
     pokemonList,
     pokemonMap,
     pokemonBabyPrevolutionMap,
-    TmpPokemonHelper,
-    PokedexFilters,
+    PokemonHelper,
     ItemList,
     Item,
     MultiplierDecreaser,
@@ -378,10 +447,15 @@ Object.assign(<any>window, {
     EffectEngineRunner,
     ItemHandler,
     CaughtIndicatingItem,
+    PokerusIndicatingItem,
+    PokemonItem,
     EggItem,
     MegaStoneItem,
     PokeballItem,
-    QuestItem,
+    MulchItem,
+    ShovelItem,
+    MulchShovelItem,
+    CollectibleItem,
     Vitamin,
     VitaminController,
     Consumable,
@@ -395,17 +469,29 @@ Object.assign(<any>window, {
     TextMerger,
     pokeballFilterOptions,
     Mine,
+    MineType,
+    MineConfigs,
     Underground,
-    UndergroundUpgrade,
+    UndergroundController,
+    UndergroundTrading,
+    UndergroundHelper,
+    UndergroundToolType,
     ShardDeal,
-    DailyDeal,
+    GenericDeal,
+    DealCostOrProfitType,
     EncounterType,
     SafariBaitRequirement,
     SafariStepsRequirement,
     SafariRocksRequirement,
     SafariItemsRequirement,
     SafariCatchRequirement,
-    ItemRequirement,
+    ItemOwnedRequirement,
+    UniqueItemOwnedRequirement,
     ChristmasPresent,
+    DamageCalculator,
+    GameLoadState,
+    areaStatus,
+    TranslationHelper,
+    DownloadUtil,
     LocationNavigatorOption,
 });

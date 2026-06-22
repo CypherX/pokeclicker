@@ -17,6 +17,11 @@
     padding: 16px 0;
   }
 
+  .pokedex-pokemon-sprite {
+    width: 80px;
+    height: 112px; /* includes padding */
+  }
+
   span {
     position: absolute;
     color: whitesmoke;
@@ -34,7 +39,9 @@
     content: 'Attack: ';
   }
 
-
+  &.category-highlight {
+    box-shadow: 0 0 6px 8px var(--danger);
+  }
 }
 
 .pokemon-not-seen {
@@ -129,4 +136,8 @@
 /* For white dropdown buttons, they have white text in dark themes. Shouldn't affect light themes */
 .btn-dropdown:hover {
   color:#444 !important;
+}
+
+.scrolling-div-pokedex .form-group {
+    margin-bottom: 0.75rem;
 }

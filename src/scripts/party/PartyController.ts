@@ -1,4 +1,6 @@
-declare const modalUtils: { observableState: typeof observableState };
+///<reference path="../../declarations/globals.d.ts"/>
+
+declare const DisplayObservables: { modalState: typeof modalState };
 
 class PartyController {
 
@@ -52,7 +54,7 @@ class PartyController {
         }).sort((a, b) => a.id - b.id);
     }
 
-    static getStoneEvolutions<T>(id: number, getStatus: (evo: EvoData) => T, evoType?: GameConstants.StoneType): { status: T, locked: boolean, lockHint: string }[] {
+    static getStoneEvolutions<T>(id: number, getStatus: (evo: EvoData) => T, evoType?: GameConstants.StoneType): { status: T, evs:number, locked: boolean, lockHint: string }[] {
         const pokemon = App.game.party.getPokemon(id);
         return PartyController.getPokemonStoneEvos(pokemon, evoType)
             .map((evo) => ({
@@ -68,7 +70,7 @@ class PartyController {
         return this.getStoneEvolutions(id, getStatus, evoType);
     }
 
-    static getStoneEvolutionsPokerusData(id: number, evoType?: GameConstants.StoneType): { status: GameConstants.Pokerus, locked: boolean, lockHint: string }[] {
+    static getStoneEvolutionsPokerusData(id: number, evoType?: GameConstants.StoneType): { status: GameConstants.Pokerus, evs: number, locked: boolean, lockHint: string }[] {
         const getStatus = (evo: EvoData) => this.getPokerusStatusByName(evo.evolvedPokemon);
         return this.getStoneEvolutions(id, getStatus, evoType);
     }
@@ -91,11 +93,21 @@ class PartyController {
             }
         }
 
+        let arePokemonInHatchery = false;
         App.game.party.caughtPokemon.forEach((p) => {
-            if (p.vitaminsUsed[vitamin]() > 0) {
+            if (p.vitaminsUsed[vitamin]() > 0 && !p.breeding) {
                 p.removeVitamin(vitamin, amount);
             }
+            if (p.breeding && !arePokemonInHatchery) {
+                arePokemonInHatchery = true;
+            }
         });
+        if (arePokemonInHatchery) {
+            Notifier.notify({
+                message: `${GameConstants.VitaminType[vitamin]} couldn\'t be modified for Pokémon in Hatchery or Queue.`,
+                type: NotificationConstants.NotificationOption.warning,
+            });
+        }
     }
 
     public static async removeAllVitaminsFromParty(shouldConfirm = true) {
@@ -111,13 +123,23 @@ class PartyController {
         }
 
         const vitamins = GameHelper.enumNumbers(GameConstants.VitaminType);
+        let arePokemonInHatchery = false;
         App.game.party.caughtPokemon.forEach((p) => {
             vitamins.forEach((v) => {
-                if (p.vitaminsUsed[v]() > 0) {
+                if (p.vitaminsUsed[v]() > 0 && !p.breeding) {
                     p.removeVitamin(v, Infinity);
+                }
+                if (p.breeding && !arePokemonInHatchery) {
+                    arePokemonInHatchery = true;
                 }
             });
         });
+        if (arePokemonInHatchery) {
+            Notifier.notify({
+                message: 'Vitamins couldn\'t be modified for Pokémon in Hatchery or Queue.',
+                type: NotificationConstants.NotificationOption.warning,
+            });
+        }
     }
 
     public static getMaxLevelPokemonList(): Array<PartyPokemon> {
@@ -131,22 +153,10 @@ class PartyController {
         return list.sort(PartyController.compareBy(Settings.getSetting('partySort').observableValue(), Settings.getSetting('partySortDirection').observableValue()));
     }).extend({ rateLimit: 500 });
 
-    private static hatcherySortedList = [];
-    static getHatcherySortedList = ko.pureComputed(() => {
-        // If the breeding modal is open, we should sort it.
-        if (modalUtils.observableState.breedingModal === 'show') {
-            // Don't adjust attack based on region if debuff is disabled
-            const region = App.game.challenges.list.regionalAttackDebuff.active() ? BreedingController.regionalAttackDebuff() : -1;
-            PartyController.hatcherySortedList = [...App.game.party.caughtPokemon];
-            return PartyController.hatcherySortedList.sort(PartyController.compareBy(Settings.getSetting('hatcherySort').observableValue(), Settings.getSetting('hatcherySortDirection').observableValue(), region));
-        }
-        return PartyController.hatcherySortedList;
-    }).extend({ rateLimit: 500 });
-
     private static vitaminSortedList = [];
-    static getvitaminSortedList = ko.pureComputed(() => {
+    static getVitaminSortedList = ko.pureComputed(() => {
         // If the vitamin modal is open, we should sort it.
-        if (modalUtils.observableState.pokemonVitaminModal === 'show' || modalUtils.observableState.pokemonVitaminExpandedModal === 'show') {
+        if (DisplayObservables.modalState.pokemonVitaminExpandedModal === 'show') {
             PartyController.vitaminSortedList = PartyController.getVitaminFilteredList();
             return PartyController.vitaminSortedList.sort(PartyController.compareBy(Settings.getSetting('vitaminSort').observableValue(), Settings.getSetting('vitaminSortDirection').observableValue()));
         }
@@ -154,8 +164,12 @@ class PartyController {
     }).extend({ rateLimit: 100 });
 
     static getVitaminFilteredList(): Array<PartyPokemon> {
-        return [...App.game.party.caughtPokemon].filter((pokemon) => {
-            if (!new RegExp(Settings.getSetting('vitaminSearchFilter').observableValue() , 'i').test(pokemon.displayName)) {
+        return App.game.party.caughtPokemon.filter((pokemon) => {
+            if (pokemon.id <= 0) {
+                return false;
+            }
+            const searchFilterSetting = Settings.getSetting('vitaminSearchFilter') as SearchSetting;
+            if (searchFilterSetting.observableValue() != '' && !PokemonHelper.matchPokemonByNames(searchFilterSetting.regex(), pokemon.name, pokemon)) {
                 return false;
             }
             if (Settings.getSetting('vitaminRegionFilter').observableValue() > -2) {
@@ -181,7 +195,7 @@ class PartyController {
     private static heldItemSortedList = [];
     static getHeldItemSortedList = ko.pureComputed(() => {
         // If the held item modal is open, we should sort it.
-        if (modalUtils.observableState.heldItemModal === 'show') {
+        if (DisplayObservables.modalState.heldItemModal === 'show') {
             PartyController.heldItemSortedList = PartyController.getHeldItemFilteredList();
             return PartyController.heldItemSortedList.sort(PartyController.compareBy(Settings.getSetting('heldItemSort').observableValue(), Settings.getSetting('heldItemSortDirection').observableValue()));
         }
@@ -189,26 +203,57 @@ class PartyController {
     }).extend({ rateLimit: 100 });
 
     static getHeldItemFilteredList(): Array<PartyPokemon> {
-        return [...App.game.party.caughtPokemon].filter((pokemon) => {
+        return App.game.party.caughtPokemon.filter((pokemon) => {
+            if (pokemon.id <= 0) {
+                return false;
+            }
             if (!HeldItem.heldItemSelected()?.canUse(pokemon)) {
                 return false;
             }
-            if (!new RegExp(Settings.getSetting('heldItemSearchFilter').observableValue() , 'i').test(pokemon.displayName)) {
-                return false;
+
+            const searchFilterSetting = Settings.getSetting('heldItemSearchFilter') as SearchSetting;
+            if (searchFilterSetting.observableValue() != '') {
+                const regex = searchFilterSetting.regex();
+                let match;
+                if (Settings.getSetting('heldItemDropdownPokemonOrItem').observableValue() === 'pokemon') {
+                    match = PokemonHelper.matchPokemonByNames(regex, pokemon.name, pokemon);
+                } else {
+                    match = regex.test(pokemon.heldItem()?.displayName);
+                }
+                if (!match) {
+                    return false;
+                }
             }
+
             if (Settings.getSetting('heldItemRegionFilter').observableValue() > -2) {
                 if (PokemonHelper.calcNativeRegion(pokemon.name) !== Settings.getSetting('heldItemRegionFilter').observableValue()) {
                     return false;
                 }
             }
-            const type = Settings.getSetting('heldItemTypeFilter').observableValue();
-            if (type > -2 && !pokemonMap[pokemon.name].type.includes(type)) {
+            const type1 = Settings.getSetting('heldItemTypeFilter').observableValue();
+            const type2 = Settings.getSetting('heldItemType2Filter').observableValue();
+            if (type1 !== -2 || type2 !== -2) {
+                const { type: types } = pokemonMap[pokemon.name];
+                if ([type1, type2].includes(PokemonType.None)) {
+                    const type = (type1 == PokemonType.None) ? type2 : type1;
+                    if (!BreedingController.isPureType(pokemon, type === -2 ? null : type)) {
+                        return false;
+                    }
+                } else if ((type1 !== -2 && !types.includes(type1)) || (type2 !== -2 && !types.includes(type2))) {
+                    return false;
+                }
+            }
+            const heldItemCurrentItemFilter = Settings.getSetting('heldItemCurrentItemFilter').observableValue();
+            if (heldItemCurrentItemFilter == 'HideHoldingAnyItem' && pokemon.heldItem()) {
                 return false;
             }
-            if (Settings.getSetting('heldItemHideHoldingPokemon').observableValue() && pokemon.heldItem()) {
+            if (heldItemCurrentItemFilter == 'HideHoldingThisItem' && pokemon.heldItem() === HeldItem.heldItemSelected()) {
                 return false;
             }
-            if (Settings.getSetting('heldItemShowHoldingThisItem').observableValue() && pokemon.heldItem() !== HeldItem.heldItemSelected()) {
+            if (heldItemCurrentItemFilter == 'HideHoldingSameOrBetter' && pokemon.heldItem() && pokemon.heldItem().isSameOrBetter(HeldItem.heldItemSelected())) {
+                return false;
+            }
+            if (heldItemCurrentItemFilter == 'OnlyShowWorse' && pokemon.heldItem() && !pokemon.heldItem().isInferior(HeldItem.heldItemSelected())) {
                 return false;
             }
 
@@ -219,7 +264,7 @@ class PartyController {
     private static consumableSortedList = [];
     static getConsumableSortedList = ko.pureComputed(() => {
         // If the consumable modal is open, we should sort it.
-        if (modalUtils.observableState.consumableModal === 'show') {
+        if (DisplayObservables.modalState.consumableModal === 'show') {
             PartyController.consumableSortedList = PartyController.getConsumableFilteredList();
             return PartyController.consumableSortedList.sort(PartyController.compareBy(Settings.getSetting('consumableSort').observableValue(), Settings.getSetting('consumableSortDirection').observableValue()));
         }
@@ -227,8 +272,16 @@ class PartyController {
     }).extend({ rateLimit: 100 });
 
     static getConsumableFilteredList(): Array<PartyPokemon> {
-        return [...App.game.party.caughtPokemon].filter((pokemon) => {
-            if (!new RegExp(Settings.getSetting('consumableSearchFilter').observableValue() , 'i').test(pokemon.displayName)) {
+        return App.game.party.caughtPokemon.filter((pokemon) => {
+            if (pokemon.id <= 0) {
+                return false;
+            }
+            const consumable = ItemList[ConsumableController.currentlySelectedName()] as Consumable;
+            if (!consumable.canUse(pokemon)) {
+                return false;
+            }
+            const searchFilterSetting = Settings.getSetting('consumableSearchFilter') as SearchSetting;
+            if (searchFilterSetting.observableValue() != '' && !PokemonHelper.matchPokemonByNames(searchFilterSetting.regex(), pokemon.name, pokemon)) {
                 return false;
             }
             if (Settings.getSetting('consumableRegionFilter').observableValue() > -2) {
@@ -248,17 +301,6 @@ class PartyController {
         });
     }
 
-    private static pokemonsWithHeldItemSortedList = [];
-    static getPokemonsWithHeldItemSortedList = ko.pureComputed(() => {
-        // If the held item modal is open, we should sort it.
-        if (modalUtils.observableState.heldItemModal === 'show') {
-            PartyController.pokemonsWithHeldItemSortedList = [...App.game.party.caughtPokemon.filter(p => p.heldItem())];
-            return PartyController.pokemonsWithHeldItemSortedList.sort(PartyController.compareBy(Settings.getSetting('heldItemSort').observableValue(), Settings.getSetting('heldItemSortDirection').observableValue()));
-        }
-        return PartyController.pokemonsWithHeldItemSortedList;
-    }).extend({ rateLimit: 500 });
-
-
     public static calculateRegionalMultiplier(pokemon: PartyPokemon, region: number): number {
         if (region > -1 && PokemonHelper.calcNativeRegion(pokemon.name) !== region) {
             return App.game.party.getRegionAttackMultiplier();
@@ -267,16 +309,63 @@ class PartyController {
     }
 
     public static moveCategoryPokemon(fromCategory: number, toCategory: number) {
-        // Category should exist, otherwise use the None category
+        // Category should exist
         if (!PokemonCategories.categories().some((c) => c.id === toCategory)) {
-            toCategory = 0;
+            return;
+        }
+
+        if (fromCategory === toCategory) {
+            return;
         }
 
         App.game.party.caughtPokemon.forEach((p) => {
-            if (p.category === fromCategory) {
-                p.category = toCategory;
+            if (p.category.includes(fromCategory)) {
+                if (toCategory > 0) {
+                    p.addCategory(toCategory);
+                }
+                p.removeCategory(fromCategory);
             }
         });
+    }
+
+    public static async addCategory(pokemonList: Array<PartyPokemon>, category: number, shouldConfirm = true) {
+        if (!pokemonList.length) {
+            return;
+        }
+
+        if (shouldConfirm) {
+            const categoryName = PokemonCategories.categories().find((c) => c.id === category).name();
+            if (!await Notifier.confirm({
+                title: 'Batch Add Category',
+                message: `Add the <strong>${categoryName}</strong> category to ${pokemonList.length.toLocaleString('en-US')} Pokémon?`,
+                type: NotificationConstants.NotificationOption.warning,
+                confirm: 'Yes',
+            })) {
+                return;
+            }
+        }
+
+        pokemonList.forEach((p) => p.addCategory(category));
+    }
+
+    public static async removeCategory(pokemonList: Array<PartyPokemon>, category: number, shouldConfirm = true) {
+        if (!pokemonList.length) {
+            return;
+        }
+
+        if (shouldConfirm) {
+            const categoryName = PokemonCategories.categories().find((c) => c.id === category).name();
+            if (!await Notifier.confirm({
+                title: 'Batch Remove Category',
+                message: `Remove the <strong>${categoryName}</strong> category from ${pokemonList.length.toLocaleString('en-US')} Pokémon?`,
+                type: NotificationConstants.NotificationOption.warning,
+                confirm: 'Yes',
+            })) {
+                return;
+            }
+        }
+
+        pokemonList.forEach((p) => p.removeCategory(category));
     }
 
     public static compareBy(option: SortOptions, direction: boolean, region = -1): (a: PartyPokemon, b: PartyPokemon) => number {
@@ -291,6 +380,11 @@ class PartyController {
             if (region > -1 && [SortOptions.attack, SortOptions.breedingEfficiency, SortOptions.attackBonus].includes(option)) {
                 aValue *= PartyController.calculateRegionalMultiplier(a, region);
                 bValue *= PartyController.calculateRegionalMultiplier(b, region);
+            }
+
+            if (option === SortOptions.category) {
+                aValue = direction ? Math.max(...aValue) : Math.min(...aValue);
+                bValue = direction ? Math.max(...bValue) : Math.min(...bValue);
             }
 
             if (config.invert) {
@@ -315,3 +409,5 @@ class PartyController {
 
 
 }
+
+PartyController satisfies TmpPartyControllerType;

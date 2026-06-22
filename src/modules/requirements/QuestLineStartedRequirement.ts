@@ -1,11 +1,12 @@
 import { AchievementOption } from '../GameConstants';
 import QuestLineState from '../quests/QuestLineState';
 import { QuestLineNameType } from '../quests/QuestLineNameType';
+import type { TmpQuestType } from '../TemporaryScriptTypes';
 
 import Requirement from './Requirement';
 
 export default class QuestLineStartedRequirement extends Requirement {
-    cachedQuest: any;
+    cachedQuest: TmpQuestType;
     get quest() {
         if (!this.cachedQuest) {
             this.cachedQuest = App.game.quests.getQuestLine(this.questLineName);
@@ -18,12 +19,10 @@ export default class QuestLineStartedRequirement extends Requirement {
     }
 
     public getProgress(): number {
-        return (this.quest.state() === QuestLineState.started
-            || this.quest.state() === QuestLineState.ended)
-            ? 1 : 0;
+        return +(this.quest.state() !== QuestLineState.inactive);
     }
 
     public hint(): string {
-        return `Questline ${this.questLineName} needs to be started.`;
+        return `Questline ${this.quest.displayName} needs to ${this.option !== AchievementOption.less ? 'be started' : 'not be started yet'}.`;
     }
 }

@@ -1,7 +1,11 @@
-// Override system date
-vi.useFakeTimers().setSystemTime(new Date(1675298702433));
-// Override Math.random() to always return the same value
-vi.spyOn(global.Math, 'random').mockReturnValue(0.123456789);
+const { testDate } = vi.hoisted(() => {
+    // Override system date
+    const date = new Date(1675298702433);
+    vi.useFakeTimers().setSystemTime(date);
+    // Override Math.random() to always return the same value
+    vi.spyOn(global.Math, 'random').mockReturnValue(0.123456789);
+    return { testDate: date };
+});
 
 import { SpriteCredits, CodeCredits } from './Credits';
 
@@ -99,7 +103,7 @@ describe('Test GameConstants', () => {
         expect(getGymRegion('Not a real gym')).toEqual(-1);
     });
     it('return the dungeons total index', () => {
-        expect(getDungeonIndex('Abundant Shrine')).toEqual(115);
+        expect(getDungeonIndex('Abundant Shrine')).toEqual(116);
         expect(getDungeonIndex('Not a real dungeon')).toEqual(-1);
     });
     it('return the region a dungeon is in', () => {
@@ -118,6 +122,9 @@ import * as ko from 'knockout';
 import { AchievementOption } from './GameConstants';
 
 describe('Test GameHelper', () => {
+    it('current time', () => {
+        expect(GameHelper.currentTime().toString()).toBe(testDate.toString());
+    });
     it('time until tomorrow', () => {
         expect(GameHelper.formattedTimeUntilTomorrow()).toBe('23:14');
         expect(GameHelper.formattedLetterTimeUntilTomorrow()).toBe('23h14m');
@@ -147,10 +154,11 @@ describe('Test GameHelper', () => {
         expect(GameHelper.counter).toEqual(0);
     });
 
-    it('update time, tomorrow', () => {
-        GameHelper.tomorrow = GameHelper.currentTime();
-        GameHelper.updateTime();
-        expect(GameHelper.tomorrow).not.toEqual(GameHelper.currentTime());
+    it('update day, today', () => {
+        const tomorrow = GameHelper.tomorrow();
+        GameHelper.today(tomorrow);
+        GameHelper.updateDay();
+        expect(GameHelper.today()).not.toEqual(tomorrow);
     });
 
     it('format number amount string', () => {

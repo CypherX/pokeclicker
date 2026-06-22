@@ -3,10 +3,11 @@
 import { Observable as KnockoutObservable } from 'knockout';
 import { Feature } from '../DataStore/common/Feature';
 import GameHelper from '../GameHelper';
-import { Currency } from '../GameConstants';
+import { Currency, formatNumber } from '../GameConstants';
 import Multiplier from '../multiplier/Multiplier';
 import Amount from './Amount';
 import { animateCurrency } from '../utilities/UI';
+import Settings from '../settings';
 
 export default class Wallet implements Feature {
     name = 'Wallet';
@@ -128,6 +129,12 @@ export default class Wallet implements Feature {
         return true;
     }
 
+    public amountText(currency: Currency) {
+        return Settings.getSetting('currencyMainDisplayReduced').observableValue()
+            ? formatNumber(this.currencies[currency]())
+            : this.currencies[currency]().toLocaleString('en-US');
+    }
+
     initialize(): void {
     }
 
@@ -153,9 +160,5 @@ export default class Wallet implements Feature {
         return {
             currencies: this.currencies.map(ko.unwrap),
         };
-    }
-
-    update(): void {
-        // This method intentionally left blank
     }
 }

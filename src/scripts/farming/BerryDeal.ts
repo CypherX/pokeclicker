@@ -2,7 +2,7 @@ class BerryDeal {
     public berries: { berryType: BerryType, amount: number}[];
     public item: { itemType: Item, amount: number};
 
-    public static list: Record<GameConstants.BerryTraderLocations, KnockoutObservableArray<BerryDeal>> = {};
+    public static list: Partial<Record<GameConstants.BerryTraderLocations, KnockoutObservableArray<BerryDeal>>> = {};
 
     constructor(berry: BerryType[], berryAmount: number[], item: Item, itemAmount: number) {
         this.berries = [];
@@ -10,6 +10,10 @@ class BerryDeal {
             this.berries.push({berryType: berry, amount: berryAmount[idx]});
         });
         this.item = {itemType: item, amount: itemAmount};
+    }
+
+    public calculateMaxTrades(): number {
+        return Math.min(...this.berries.map(b => Math.floor(App.game.farming.berryInventory[b.berryType]() / b.amount)));
     }
 
     public static getDeals(town: GameConstants.BerryTraderLocations) {
@@ -26,12 +30,12 @@ class BerryDeal {
     }
 
     private static randomEvoItem(): Item {
-        const evoItem = SeededRand.fromArray(GameHelper.enumStrings(GameConstants.StoneType).filter(name => !(['None', 'Black_DNA', 'White_DNA', 'Solar_light', 'Key_stone', 'Lunar_light', 'Pure_light', 'Black_mane_hair', 'White_mane_hair']).includes(name)));
+        const evoItem = SeededRand.fromArray(GameHelper.enumStrings(GameConstants.StoneType).filter(name => !(['None', 'Black_DNA', 'White_DNA', 'Solar_light', 'Key_stone', 'Lunar_light', 'Pure_light', 'Crystallized_shadow', 'Black_mane_hair', 'White_mane_hair']).includes(name)));
         return ItemList[evoItem];
     }
 
     private static randomUndergroundItem(): Item {
-        return ItemList[SeededRand.fromArray(UndergroundItems.list.filter(item => item.valueType !== UndergroundItemValueType.MegaStone)).itemName];
+        return ItemList[SeededRand.fromArray(UndergroundItems.list.filter(item => item.valueType !== UndergroundItemValueType.MegaStone && item.valueType !== UndergroundItemValueType.Special)).itemName];
     }
 
     private static randomPokeballDeal(): BerryDeal {
@@ -50,6 +54,18 @@ class BerryDeal {
                     SeededRand.intBetween(5, 15),
                 ],
                 ItemList.Fastball,
+                1
+            ),
+            new BerryDeal(
+                [
+                    this.randomBerry(firstGen),
+                    this.randomBerry(secondGen),
+                ],
+                [
+                    SeededRand.intBetween(20, 40),
+                    SeededRand.intBetween(5, 15),
+                ],
+                ItemList.Moonball,
                 1
             ),
             new BerryDeal(
@@ -411,7 +427,7 @@ class BerryDeal {
         if (!deal) {
             return false;
         } else {
-            return deal.berries.every((value) => App.game.farming.berryList[value.berryType]() >= value.amount);
+            return deal.berries.every((value) => App.game.farming.berryInventory[value.berryType]() >= value.amount);
         }
     }
 
@@ -419,14 +435,14 @@ class BerryDeal {
         const deal = BerryDeal.list[town]?.peek()[i];
         if (BerryDeal.canUse(town, i)) {
             const trades = deal.berries.map(berry => {
-                const amt = App.game.farming.berryList[berry.berryType]();
+                const amt = App.game.farming.berryInventory[berry.berryType]();
                 const maxTrades = Math.floor(amt / berry.amount);
                 return maxTrades;
             });
             const maxTrades = trades.reduce((a,b) => Math.min(a,b), tradeTimes);
-            deal.berries.forEach((value) => GameHelper.incrementObservable(App.game.farming.berryList[value.berryType], -value.amount * maxTrades));
+            deal.berries.forEach((value) => GameHelper.incrementObservable(App.game.farming.berryInventory[value.berryType], -value.amount * maxTrades));
             if (deal.item.itemType instanceof UndergroundItem) {
-                Underground.gainMineItem(deal.item.itemType.id, deal.item.amount * maxTrades);
+                UndergroundController.gainMineItem(deal.item.itemType.id, deal.item.amount * maxTrades);
             } else {
                 deal.item.itemType.gain(deal.item.amount * maxTrades);
             }

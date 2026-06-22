@@ -9,16 +9,19 @@ class PurifyChamberTownContent extends TownContent {
         return 'Purify Chamber';
     }
     public onclick(): void {
-        $('#purifyChamberModal').modal('show');
+        PurifyChamber.openPurifyChamberModal();
     }
 
     public isUnlocked(): boolean {
         return PurifyChamber.requirements.isCompleted();
     }
 
-    public areaStatus(): areaStatus {
+    public areaStatus(): areaStatus[] {
+        if (!this.isUnlocked()) {
+            return [areaStatus.locked];
+        }
         const canPurify = App.game.purifyChamber.currentFlow() >= App.game.purifyChamber.flowNeeded() && App.game.party.caughtPokemon.some(p => p.shadow == GameConstants.ShadowStatus.Shadow);
-        return Math.min(canPurify ? areaStatus.uncaughtPokemon : areaStatus.completed, super.areaStatus());
+        return [canPurify ? areaStatus.incomplete : areaStatus.completed];
     }
 
 }
@@ -30,6 +33,14 @@ class PurifyChamber implements Saveable {
     public currentFlow: KnockoutObservable<number>;
     public flowNeeded: KnockoutComputed<number>;
     private notified = false;
+
+    private static shortcutRequirement = new MultiRequirement([
+        new ShadowPokemonRequirement(1, GameConstants.ShadowStatus.Purified),
+        new ShadowPokemonRequirement(131, GameConstants.ShadowStatus.Purified, GameConstants.AchievementOption.less),
+    ]);
+    public static shortcutVisible = ko.pureComputed((): boolean => {
+        return PurifyChamber.shortcutRequirement.isCompleted();
+    });
 
     constructor() {
         this.selectedPokemon = ko.observable(undefined);
@@ -66,20 +77,31 @@ class PurifyChamber implements Saveable {
     }
 
     public gainFlow(exp: number) {
-        if (!PurifyChamber.requirements.isCompleted() || !App.game.party.caughtPokemon.some((p) => p.shadow == GameConstants.ShadowStatus.Shadow)) {
+        if (!PurifyChamber.requirements.isCompleted() || !App.game.party.hasShadowPokemon()) {
             return;
         }
-        const newFlow = Math.round(this.currentFlow() + exp / 1000);
+        const newFlow = Math.round(this.currentFlow() + exp * FluteEffectRunner.getFluteMultiplier(GameConstants.FluteItemType.Time_Flute) / 1000);
         this.currentFlow(Math.min(newFlow, this.flowNeeded()));
 
         if (!this.notified && this.currentFlow() >= this.flowNeeded()) {
             this.notified = true;
             Notifier.notify({
                 title: 'Purify Chamber',
-                message: 'Maximum Flow has accumulated at the Purify Chamber!',
+                message: 'Maximum Flow has accumulated at the Purify Chamber in Orre!',
                 type: NotificationConstants.NotificationOption.primary,
                 sound: NotificationConstants.NotificationSound.General.max_flow,
-                timeout: 6e4,
+                timeout: 15 * GameConstants.MINUTE,
+            });
+        }
+    }
+
+    public static openPurifyChamberModal() {
+        if (PurifyChamber.requirements.isCompleted()) {
+            $('#purifyChamberModal').modal('show');
+        } else {
+            Notifier.notify({
+                message: 'You need to progress in the Shadows in the Desert quest line to unlock this feature.',
+                type: NotificationConstants.NotificationOption.warning,
             });
         }
     }
@@ -97,7 +119,7 @@ class PurifyChamber implements Saveable {
         if (json) {
             if (json.selectedPokemon) {
                 let selectedPokemon = App.game.party.getPokemon(json.selectedPokemon);
-                if (selectedPokemon.shadow != GameConstants.ShadowStatus.Shadow) {
+                if (!selectedPokemon || selectedPokemon.shadow != GameConstants.ShadowStatus.Shadow) {
                     selectedPokemon = undefined;
                 }
                 this.selectedPokemon(selectedPokemon);

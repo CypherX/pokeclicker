@@ -7,11 +7,13 @@ type TemporaryBattleOptionalArgument = {
     imageName?: string,
     visibleRequirement?: Requirement,
     hideTrainer?: boolean,
-    environment?: GameConstants.Environment,
-    resetDaily?: boolean
+    environment?: GameConstants.Environment[],
+    battleBackground?: GameConstants.BattleBackground,
+    resetDaily?: boolean,
+    finalPokemonImage?: string // trainer image when on final pokemon
 };
 
-class TemporaryBattle extends TownContent {
+class TemporaryBattle extends TownContent implements TmpTemporaryBattleType {
     completeRequirements: (Requirement | OneFromManyRequirement)[];
 
     public cssClass(): string {
@@ -30,32 +32,29 @@ class TemporaryBattle extends TownContent {
     }
     public areaStatus() {
         if (!this.isUnlocked()) {
-            return areaStatus.locked;
-        } else if (App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(this.name)]() == 0 && this.isVisible()) {
-            return areaStatus.incomplete;
-        } else {
-            return areaStatus.completed;
+            return [areaStatus.locked];
         }
+        if (App.game.statistics.temporaryBattleDefeated[GameConstants.getTemporaryBattlesIndex(this.name)]() == 0 && this.isVisible()) {
+            return [areaStatus.incomplete];
+        }
+        return [areaStatus.completed];
     }
     public getDisplayName() {
-        return this.optionalArgs.displayName ?? this.name;
+        return this.optionalArgs.displayName ?? this.name.replace(/( route)? \d+$/, '');
     }
 
-    public getImageName() {
-        return this.optionalArgs.imageName ?? this.name;
-    }
-
-    public getTown() {
-        return this.parent ?? TownList[this.optionalArgs.returnTown] ?? TownList[GameConstants.DockTowns[player.region]];
+    public getTown(): Town | undefined {
+        return this.parent ?? TownList[this.optionalArgs.returnTown];
     }
     public getImage() {
         const imageName = this.optionalArgs?.imageName ?? this.name;
-        return `assets/images/npcs/${imageName}.png`;
+        const finalMonImageName = this.optionalArgs?.finalPokemonImage ?? imageName;
+        return TemporaryBattleRunner.finalPokemon() ? `assets/images/npcs/${finalMonImageName}.png` : `assets/images/npcs/${imageName}.png`;
     }
 
     constructor(
         public name: string,
-        private pokemons: GymPokemon[],
+        public readonly pokemons: GymPokemon[],
         public defeatMessage: string,
         requirements: Requirement[] = [],
         completeRequirements: Requirement[] = undefined,

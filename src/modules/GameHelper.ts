@@ -1,4 +1,4 @@
-import {
+import type {
     Observable as KnockoutObservable,
     Computed as KnockoutComputed,
 } from 'knockout';
@@ -8,10 +8,15 @@ import {
 export default class GameHelper {
     public static counter = 0;
     public static currentTime: KnockoutObservable<Date> = ko.observable(new Date());
-    public static tomorrow: Date = GameHelper.getTomorrow();
+    public static today: KnockoutObservable<Date> = ko.observable(GameHelper.getToday());
+    public static tomorrow: KnockoutComputed<Date> = ko.pureComputed<Date>(() => {
+        const tomorrow = new Date(GameHelper.today());
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        return tomorrow;
+    });
 
     public static msUntilTomorrow: KnockoutComputed<number>
-    = ko.pureComputed<number>(() => Number(GameHelper.tomorrow) - Number(GameHelper.currentTime()));
+    = ko.pureComputed<number>(() => Number(GameHelper.tomorrow()) - Number(GameHelper.currentTime()));
 
     public static formattedTimeUntilTomorrow: KnockoutComputed<string>
     = ko.pureComputed<string>(() => {
@@ -67,15 +72,14 @@ export default class GameHelper {
 
     public static tick(): void {
         this.counter = 0;
-        this.updateTime();
+        GameHelper.currentTime(new Date());
     }
 
-    public static updateTime(): void {
+    public static updateDay(): void {
         const now = new Date();
-        if (now.getDate() === GameHelper.tomorrow.getDate()) {
-            GameHelper.tomorrow = GameHelper.getTomorrow();
+        if (now.getDate() !== GameHelper.today().getDate()) {
+            GameHelper.today(GameHelper.getToday());
         }
-        GameHelper.currentTime(new Date());
     }
 
     public static formatAmount(n: number): string {
@@ -158,20 +162,33 @@ export default class GameHelper {
         return s.replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&');
     }
 
+    public static safelyBuildRegex(pattern: string, allowRaw = true, flags = 'i'): RegExp {
+        if (allowRaw && /^\/.+\/$/.test(pattern)) {
+            // pattern is a string representation of regex e.g. /pattern/, remove the slashes
+            const rawPattern = pattern.slice(1, -1);
+            try {
+                return new RegExp(rawPattern, flags);
+            } catch {
+                return new RegExp(GameHelper.escapeStringRegex(rawPattern), flags);
+            }
+        } else {
+            return new RegExp(GameHelper.escapeStringRegex(pattern), flags);
+        }
+    }
+
     public static twoDigitNumber(n: number): string {
         // For use in clocks / showing time
         // Turns 4 into 04, does nothing to 23, turns 173 into 73
         return (`0${n}`).slice(-2);
     }
 
-    private static getTomorrow() {
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        tomorrow.setHours(0);
-        tomorrow.setMinutes(0);
-        tomorrow.setSeconds(0);
-        tomorrow.setMilliseconds(0);
-        return tomorrow;
+    private static getToday() {
+        const today = new Date();
+        today.setHours(0);
+        today.setMinutes(0);
+        today.setSeconds(0);
+        today.setMilliseconds(0);
+        return today;
     }
 
     // Check if HTML container with the given ID is overflowing horizontally
@@ -196,9 +213,6 @@ export default class GameHelper {
         let hash = 0;
         let i = 0;
         let chr = 0;
-        if (text.length === 0) {
-            return hash;
-        }
 
         for (i = 0; i < text.length; i++) {
             chr = text.charCodeAt(i);
@@ -208,6 +222,14 @@ export default class GameHelper {
             hash |= 0; // Convert to 32bit integer
         }
         return hash;
+    }
+
+    /**
+     *  Same algorithm as GameHelper.hash() but only produces positive numbers and pads to a constant number of chars
+     *  This makes hash collisions twice as likely, but avoids unwanted '-' when output is used as a string.
+     */
+    public static nonnegativeHashString(text: string): string {
+        return `${Math.abs(GameHelper.hash(text))}`.padStart(10, '0');
     }
 
     public static isColorLight(color: string): boolean {
@@ -223,5 +245,13 @@ export default class GameHelper {
         } catch (e) {
             return false;
         }
+    }
+
+    public static focusedOnEditableElement(): boolean {
+        const activeEl = document.activeElement as HTMLElement;
+        const localName: string = activeEl.localName.toLowerCase();
+        const editables = ['textarea', 'input', 'select'];
+
+        return (editables.includes(localName) || activeEl.isContentEditable);
     }
 }

@@ -6,7 +6,7 @@ class SafariPokemon implements PokemonInterface {
     shiny: boolean;
     baseCatchFactor: number;
     baseEscapeFactor: number;
-    gender: number;
+    gender: GameConstants.BattlePokemonGender;
     shadow = GameConstants.ShadowStatus.None;
 
     // Used for overworld sprites
@@ -20,8 +20,9 @@ class SafariPokemon implements PokemonInterface {
     private _eatingBait: KnockoutObservable<BaitType>;
     private _displayName: KnockoutObservable<string>;
     levelModifier: number;
+    spriteID: number;
 
-    constructor(name: PokemonNameType) {
+    constructor(name: PokemonNameType, sprite: OverworldSpriteType) {
         const data = PokemonHelper.getPokemonByName(name);
 
         this.name = data.name;
@@ -29,22 +30,18 @@ class SafariPokemon implements PokemonInterface {
         this.type1 = data.type1;
         this.type2 = data.type2;
         this.shiny = PokemonFactory.generateShiny(GameConstants.SHINY_CHANCE_SAFARI);
-        this._displayName = PokemonHelper.displayName(name);
+        this._displayName = PokemonHelper.displayNameObservable(name);
         this.gender = PokemonFactory.generateGender(data.gender.femaleRatio, data.gender.type);
         PokemonHelper.incrementPokemonStatistics(this.id, GameConstants.PokemonStatisticsType.Encountered, this.shiny, this.gender, GameConstants.ShadowStatus.None);
         // Shiny
         if (this.shiny) {
             Notifier.notify({
                 message: `✨ You encountered a shiny ${this.displayName}! ✨`,
-                pokemonImage: PokemonHelper.getImage(this.id, this.shiny, this.gender == GameConstants.BattlePokemonGender.Female),
+                pokemonImage: PokemonHelper.getImage(this.id, this.shiny, this.gender, GameConstants.ShadowStatus.None),
                 type: NotificationConstants.NotificationOption.warning,
                 sound: NotificationConstants.NotificationSound.General.shiny_long,
                 setting: NotificationConstants.NotificationSetting.General.encountered_shiny,
             });
-
-            // Track shinies encountered, and rate of shinies
-            LogEvent('encountered shiny', 'shiny pokemon', 'safari encounter',
-                Math.floor(App.game.statistics.totalPokemonEncountered() / App.game.statistics.totalShinyPokemonEncountered()));
         }
         this.baseCatchFactor = data.catchRate * 1 / 6;
         this.baseEscapeFactor = 30;
@@ -52,10 +49,14 @@ class SafariPokemon implements PokemonInterface {
         this._eating = ko.observable(0);
         this._eatingBait = ko.observable(BaitType.Bait);
         this.levelModifier = (Safari.safariLevel() - 1) / 50;
-    }
 
-    public static calcPokemonWeight(pokemon): number {
-        return pokemon.weight * (App.game.party.alreadyCaughtPokemonByName(pokemon.name) ? 1 : 2);
+        switch (sprite) {
+            case 'base' : this.spriteID = Math.floor(this.id);
+                break;
+            case 'self' : this.spriteID = this.id;
+                break;
+            default : this.spriteID = PokemonHelper.getPokemonByName(sprite).id;
+        }
     }
 
     public get catchFactor(): number {
@@ -67,7 +68,7 @@ class SafariPokemon implements PokemonInterface {
         if (this.angry > 0) {
             catchF *= 2 + this.levelModifier;
         }
-        if (this.eatingBait === BaitType.Nanab) {
+        if (this.eatingBait === BaitType.Razz) {
             catchF *= 1.5 + this.levelModifier;
         }
 
@@ -82,7 +83,7 @@ class SafariPokemon implements PokemonInterface {
         if (this.angry > 0) {
             escapeF *= 2 - this.levelModifier;
         }
-        if (this.eatingBait === BaitType.Razz) {
+        if (this.eatingBait === BaitType.Nanab) {
             escapeF /= 1.5 + this.levelModifier;
         }
 
@@ -119,10 +120,14 @@ class SafariPokemon implements PokemonInterface {
             (p) => p.isAvailable() && p.environments.includes(environment)
         );
         const pokemon = Rand.fromWeightedArray(safariPokemon, safariPokemon.map(p => p.weight));
-        return new SafariPokemon(pokemon.name);
+        return new SafariPokemon(pokemon.name, pokemon.sprite);
     }
 
     public get displayName() {
         return this._displayName();
+    }
+
+    public getImage(): string {
+        return PokemonHelper.getImage(this.id, this.shiny, this.gender, this.shadow);
     }
 }

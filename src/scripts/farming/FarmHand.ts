@@ -46,6 +46,7 @@ class FarmHand {
         hired: false,
         plots: [],
         name: undefined,
+        shouldCatch : false,
     };
     // Maximum Efficiency value
     public maxEfficiency = 50;
@@ -64,6 +65,7 @@ class FarmHand {
     public hired: KnockoutObservable<boolean> = ko.observable(false).extend({ boolean: null });
     public plots: KnockoutObservableArray<number> = ko.observableArray(new Array(GameConstants.FARM_PLOT_WIDTH * GameConstants.FARM_PLOT_HEIGHT).fill(0).map((v, i) => i));
     public tooltip: KnockoutComputed<string>;
+    public shouldCatch: KnockoutObservable<boolean> = ko.observable(false);
     // public level: number;
     // public experience: number;
 
@@ -90,7 +92,8 @@ class FarmHand {
 
         this.tooltip = ko.pureComputed(() => `<strong>${this.name}</strong><br/>
             Energy: ${this.energy()}/${this.maxEnergy}<br/>
-            Work Cycle: ${GameConstants.formatTimeFullLetters((this.workTick - this.workTicks()) / 1000)}`
+            Work Cycle: ${GameConstants.formatTimeFullLetters((this.workTick - this.workTicks()) / GameConstants.SECOND)}<br/>
+            Next Payment: ${GameConstants.formatTimeFullLetters((this.costTick - this.costTicks()) / GameConstants.SECOND)}`
         );
     }
 
@@ -154,18 +157,15 @@ class FarmHand {
     }
 
     tick(): void {
-        // If not hired and energy full, there's nothing to do
+
         if (!this.hired() && this.energy() >= this.maxEnergy) {
             return;
         }
-
         // Charge player when cost tick reached
         GameHelper.incrementObservable(this.costTicks, GameConstants.TICK_TIME);
-        if (this.costTicks() % this.costTick < GameConstants.TICK_TIME) {
+        if (this.costTicks() % this.costTick < GameConstants.TICK_TIME && this.hired()) {
             this.costTicks(0);
-            if (this.hired()) {
-                this.charge();
-            }
+            this.charge();
         }
 
         // Work/Restore energy when work ticks reached
@@ -174,9 +174,10 @@ class FarmHand {
             this.workTicks(0);
             if (this.hired()) {
                 this.work();
-            } else {
+            } else if (this.energy() < this.maxEnergy) {
                 this.addEnergy();
             }
+
         }
     }
 
@@ -241,6 +242,29 @@ class FarmHand {
             } while (emptyPlotIndex >= 0 && workTimes > 0 && App.game.farming.hasBerry(berry));
         }
 
+        if (this.shouldCatch()) {
+            // First handle plots whose wanderer might flee soon
+            const prioPlots = App.game.farming.plotList.filter(p => p.wanderer && p.wanderer.distractTime() > 0 && !p.wanderer.catching());
+            while (prioPlots.length > 0 && workTimes > 0) {
+                const plot = prioPlots.shift();
+                if (this.plots().includes(plot.index)) {
+                    App.game.farming.handleWanderer(plot);
+                    workTimes--;
+                    worked = true;
+                }
+            }
+            // Then handle any plot
+            const plots = App.game.farming.plotList.filter(p => p.wanderer && !p.wanderer.catching());
+            while (plots.length > 0 && workTimes > 0) {
+                const plot = plots.shift();
+                if (this.plots().includes(plot.index)) {
+                    App.game.farming.handleWanderer(plot);
+                    workTimes--;
+                    worked = true;
+                }
+            }
+        }
+
         if (!worked) {
             this.addEnergy();
         } else {
@@ -294,6 +318,7 @@ class FarmHand {
             plots: this.plots(),
             // It uses the name to look up the farmhand on load
             name: this.name,
+            shouldCatch: this.shouldCatch(),
         };
 
         // Don't save anything that is the default option
@@ -317,6 +342,7 @@ class FarmHand {
         this.energy(json.energy ?? this.defaults.energy);
         this.hired(json.hired ?? this.defaults.hired);
         this.plots(json.plots ?? this.defaults.plots);
+        this.shouldCatch(json.shouldCatch ?? this.defaults.shouldCatch);
     }
 }
 
@@ -332,7 +358,7 @@ class FarmHands {
     public hired: KnockoutComputed<FarmHand[]>;
     public availableBerries: KnockoutComputed<FarmHandBerryTypes[]>;
     public canHire: KnockoutComputed<boolean>;
-    public requirement = new BerriesUnlockedRequirement(8);
+    public requirement = new TotalBerriesUnlockedRequirement(8);
 
     constructor() {
         this.available = ko.pureComputed(() => FarmHands.list.filter(f => f.isUnlocked()));
@@ -346,8 +372,8 @@ class FarmHands {
     }
 
     public tick() {
-        // run game tick for all hired farmhands
-        FarmHands.list.forEach(f => f.hired() && f.tick());
+        // run game tick for all farmhands
+        FarmHands.list.forEach(f => f.tick());
     }
 
     public toJSON(): Record<string, any>[] {
@@ -369,12 +395,12 @@ class FarmHands {
 }
 
 // Note: Gender-neutral names used as the trainer sprite is (seeded) randomly generated
-FarmHands.add(new FarmHand('Alex', 10, 1, FarmHandSpeeds.Lazy, 1, 1, new BerriesUnlockedRequirement(8)));
-FarmHands.add(new FarmHand('Logan', 15, 3, FarmHandSpeeds.Slowest, 2, 4, new BerriesUnlockedRequirement(16)));
-FarmHands.add(new FarmHand('Joey', 10, 5, FarmHandSpeeds.Slow, 2, 5, new BerriesUnlockedRequirement(24)));
-FarmHands.add(new FarmHand('Charlie', 30, 10, FarmHandSpeeds.BelowAverage, 7, 6, new BerriesUnlockedRequirement(32)));
-FarmHands.add(new FarmHand('Bailey', 10, 12, FarmHandSpeeds.Average, 7, 7, new ItemOwnedRequirement('FarmHandBailey')));
-FarmHands.add(new FarmHand('Kerry', 50, 16, FarmHandSpeeds.AboveAverage, 8, 8, new ItemOwnedRequirement('FarmHandKerry')));
-FarmHands.add(new FarmHand('Riley', 70, 25, FarmHandSpeeds.Fast, 8, 10, new ItemOwnedRequirement('FarmHandRiley')));
-FarmHands.add(new FarmHand('Jamie', 65, 5, FarmHandSpeeds.Faster, 9, 10, new ItemOwnedRequirement('FarmHandJamie')));
-FarmHands.add(new FarmHand('Jessie', 100, 50, FarmHandSpeeds.Fastest, 10, 12, new BerriesUnlockedRequirement(56)));
+FarmHands.add(new FarmHand('Alex', 10, 1, FarmHandSpeeds.Lazy, 1, 1, new TotalBerriesUnlockedRequirement(8)));
+FarmHands.add(new FarmHand('Logan', 15, 3, FarmHandSpeeds.Slowest, 2, 4, new TotalBerriesUnlockedRequirement(16)));
+FarmHands.add(new FarmHand('Joey', 10, 5, FarmHandSpeeds.Slow, 2, 5, new TotalBerriesUnlockedRequirement(24)));
+FarmHands.add(new FarmHand('Charlie', 30, 10, FarmHandSpeeds.BelowAverage, 7, 6, new TotalBerriesUnlockedRequirement(32)));
+FarmHands.add(new FarmHand('Bailey', 10, 12, FarmHandSpeeds.Average, 7, 7, new UniqueItemOwnedRequirement('FarmHandBailey', 'purchase', 'Purchased in the Johto region.')));
+FarmHands.add(new FarmHand('Kerry', 50, 16, FarmHandSpeeds.AboveAverage, 8, 8, new UniqueItemOwnedRequirement('FarmHandKerry', 'purchase', 'Purchased in the Hoenn region.')));
+FarmHands.add(new FarmHand('Riley', 70, 25, FarmHandSpeeds.Fast, 8, 10, new UniqueItemOwnedRequirement('FarmHandRiley', 'purchase', 'Purchased in the Sinnoh region.')));
+FarmHands.add(new FarmHand('Jamie', 65, 5, FarmHandSpeeds.Faster, 9, 10, new UniqueItemOwnedRequirement('FarmHandJamie', 'purchase', 'Purchased in the Hoenn region.')));
+FarmHands.add(new FarmHand('Jessie', 100, 50, FarmHandSpeeds.Fastest, 10, 12, new TotalBerriesUnlockedRequirement(56)));
