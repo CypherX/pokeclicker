@@ -871,9 +871,19 @@ button.btn-circle {
 }
 
 // Location Navigator module
-#locationNavigatorContainer {
-    #locationNavigatorItems {
-        max-height: 400px;
-        overflow: auto;
+#locationNavigator {
+    position: absolute;
+    left: 32px;
+    top: 0;
+
+    .dropdown-menu {
+        min-width: 16rem;
+    }
+
+    #locationNavigatorContainer {
+        #locationNavigatorItems {
+            max-height: 400px;
+            overflow: auto;
+        }
     }
 }

@@ -23,11 +23,11 @@
                 </div>
             </div>`}">ⓘ</button>
 
-        <div class="dropdown position-absolute" style="left: 32px; top: 0;">
+        <div id="locationNavigator" class="dropdown">
             <button class="btn btn-sm p-1 dropdown-toggle" style="width: auto; height: 41px;" data-toggle="dropdown">
                 Nav
             </button>
-            <div class="dropdown-menu m-0 p-1" style="min-width: 18rem;">
+            <div class="dropdown-menu m-0 p-1">
                 <div id="locationNavigatorContainer">
                     <div id="locationNavigatorTabs" data-bind="click: () => { event.stopPropagation(); }">
                         <ul class="nav nav-pills border-bottom border-secondary small" data-bind="foreach: GameHelper.enumNumbers(LocationNavigatorOption)">
