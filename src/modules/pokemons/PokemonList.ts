@@ -6147,7 +6147,7 @@ export const pokemonList = createPokemonArray(
         'id': 130.02,
         'name': 'Gyarados (Captain)',
         'catchRate': 45,
-        'type': [PokemonType.Water],
+        'type': [PokemonType.Water, PokemonType.Ghost],
         'levelType': LevelType.slow,
         'exp': 189,
         'eggCycles': 5,
