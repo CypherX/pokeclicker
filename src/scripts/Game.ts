@@ -501,7 +501,7 @@ class Game implements TmpGameType {
                 // Refresh Friend Safari Pokemon List
                 SafariPokemonList.generateKalosSafariList();
 
-                QuestLineHelper.quitQuestLine('Pirate Treasure Map');
+                QuestLineHelper.rebuildTreasureMapQuestLine();
                 player.itemList.Pirate_receipt(0);
                 // Reset some temporary battles
                 Object.values(TemporaryBattleList).forEach(t => {

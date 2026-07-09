@@ -4241,9 +4241,8 @@ class QuestLineHelper {
         App.game.quests.questLines().push(easterQuestLine);
     }
 
-    public static createTreasureMapQuestLine() {
+    private static addTreasureMapQuest(treasureMapQuest: QuestLine) {
         SeededRand.seedWithDate(new Date());
-        const treasureMapQuest = new QuestLine('Pirate Treasure Map', 'You obtained a Treasure Map.');
         let treasureDungeon = SeededRand.fromArray(Object.values(dungeonList).filter(x => x.difficulty == player.highestRegion() && TownList[x.name].isUnlocked()));
         if (!treasureDungeon) {
             treasureDungeon = Object.values(dungeonList).find(() => true);
@@ -4260,7 +4259,30 @@ class QuestLineHelper {
                 setting: NotificationConstants.NotificationSetting.Items.dropped_item,
             });
         }));
+    }
+
+    public static createTreasureMapQuestLine() {
+        const treasureMapQuest = new QuestLine('Pirate Treasure Map', 'You obtained a Treasure Map.');
+        this.addTreasureMapQuest(treasureMapQuest);
         App.game.quests.questLines().push(treasureMapQuest);
+    }
+
+    public static rebuildTreasureMapQuestLine() {
+        const treasureMapQuest = App.game.quests.getQuestLine('Pirate Treasure Map');
+        if (!treasureMapQuest) {
+            this.createTreasureMapQuestLine();
+            return;
+        }
+
+        this.quitQuestLine('Pirate Treasure Map');
+        treasureMapQuest.quests().forEach(q => {
+            q.deleteAutoCompleter();
+            q.deleteFocusSub(true);
+        });
+        treasureMapQuest.state(QuestLineState.inactive);
+        treasureMapQuest.totalQuests = 0;
+        treasureMapQuest.quests.removeAll();
+        this.addTreasureMapQuest(treasureMapQuest);
     }
 
     public static isQuestLineCompleted(name: QuestLineNameType) {
