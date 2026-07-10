@@ -4241,7 +4241,8 @@ class QuestLineHelper {
         App.game.quests.questLines().push(easterQuestLine);
     }
 
-    private static addTreasureMapQuest(treasureMapQuest: QuestLine) {
+    private static buildTreasureMapQuestLine(): QuestLine {
+        const treasureMapQuest = new QuestLine('Pirate Treasure Map', 'You obtained a Treasure Map.');
         SeededRand.seedWithDate(new Date());
         let treasureDungeon = SeededRand.fromArray(Object.values(dungeonList).filter(x => x.difficulty == player.highestRegion() && TownList[x.name].isUnlocked()));
         if (!treasureDungeon) {
@@ -4259,71 +4260,24 @@ class QuestLineHelper {
                 setting: NotificationConstants.NotificationSetting.Items.dropped_item,
             });
         }));
+        return treasureMapQuest;
     }
 
     public static createTreasureMapQuestLine() {
-        const treasureMapQuest = new QuestLine('Pirate Treasure Map', 'You obtained a Treasure Map.');
-        this.addTreasureMapQuest(treasureMapQuest);
-        App.game.quests.questLines().push(treasureMapQuest);
+        App.game.quests.questLines().push(this.buildTreasureMapQuestLine());
     }
 
     public static rebuildTreasureMapQuestLine() {
-        const treasureMapQuest = App.game.quests.getQuestLine('Pirate Treasure Map');
-        if (!treasureMapQuest) {
+        if (!App.game.quests.getQuestLine('Pirate Treasure Map')) {
             this.createTreasureMapQuestLine();
             return;
         }
 
-        this.quitQuestLine('Pirate Treasure Map');
-        treasureMapQuest.quests().forEach(q => {
-            q.deleteAutoCompleter();
-            q.deleteFocusSub(true);
-        });
-        treasureMapQuest.state(QuestLineState.inactive);
-        treasureMapQuest.totalQuests = 0;
-        treasureMapQuest.quests.removeAll();
-        this.addTreasureMapQuest(treasureMapQuest);
+        App.game.quests.replaceQuestLine(this.buildTreasureMapQuestLine());
     }
 
     public static isQuestLineCompleted(name: QuestLineNameType) {
         return App.game.quests.getQuestLine(name)?.state() == QuestLineState.ended;
-    }
-
-    public static resetQuestLineToInitialState(name: QuestLineNameType) {
-        const questline = App.game.quests.getQuestLine(name);
-        questline.quests().forEach(q => {
-            q.claimed(false);
-            q.createAutoCompleter();
-        });
-    }
-
-    private static quitQuest(quest: Quest) {
-        if (quest instanceof MultipleQuestsQuest) {
-            quest.quests.forEach(q => QuestLineHelper.quitQuest(q));
-        }
-        quest.quit();
-        quest.claimed(false);
-        quest.notified = false;
-        quest.suspended = false;
-    }
-
-    public static quitQuestLine(name: QuestLineNameType): boolean {
-        const questline = App.game.quests.getQuestLine(name);
-        if (!questline || ![QuestLineState.started, QuestLineState.suspended].includes(questline.state())) {
-            return false;
-        }
-
-        if (questline.state() === QuestLineState.suspended) {
-            questline.resumeSuspendedQuest();
-        }
-
-        questline.quests().forEach(q => QuestLineHelper.quitQuest(q));
-        questline.quests().forEach(q => {
-            q.deleteAutoCompleter();
-            q.createAutoCompleter();
-        });
-        questline.state(QuestLineState.inactive);
-        return true;
     }
 
     public static loadQuestLines() {
