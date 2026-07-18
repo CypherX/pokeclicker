@@ -291,6 +291,7 @@ export type TmpPartyPokemonType = {
     eggCycles: number,
     level: number,
     attack: number,
+    attackIgnoreLevel: number,
     attackBonusAmount: number,
     attackBonusPercent: number,
     breeding: boolean,
@@ -306,6 +307,7 @@ export type TmpPartyPokemonType = {
     heldItem: KnockoutObservable<TmpHeldItemType>;
     defaultFemaleSprite: KnockoutObservable<boolean>;
     hideShinyImage: KnockoutObservable<boolean>;
+    clickAttackBonus: KnockoutComputed<number>;
     canUseStone(stoneType: GameConstants.StoneType): boolean;
     addCategory(id: number): void;
     removeCategory(id: number): void;

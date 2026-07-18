@@ -2,6 +2,31 @@
 /// <reference path="../../declarations/DataStore/common/Feature.d.ts" />
 ///<reference path="../../declarations/enums/CaughtStatus.d.ts"/>
 
+// The party members able to attack in a given area
+type ActiveParty = {
+    aggregator: PartyAttackAggregator,
+    members: () => ReadonlyArray<PartyPokemon>,
+    ignoreRegionalDebuff: boolean,
+};
+
+// Declares an area where only part of the party can attack
+type ActivePartyDefinition = {
+    appliesTo: (region: GameConstants.Region, subregion: GameConstants.SubRegions) => boolean,
+    // Must be species-immutable (id/types/native region)
+    canAttack: (p: PartyPokemon) => boolean,
+    ignoreRegionalDebuff: boolean,
+};
+
+const specialActivePartyDefinitions: ActivePartyDefinition[] = [
+    // Magikarp Jump
+    {
+        appliesTo: (region, subregion) => region == GameConstants.Region.alola
+            && subregion == GameConstants.AlolaSubRegions.MagikarpJump,
+        canAttack: (p) => Math.floor(p.id) == 129,
+        ignoreRegionalDebuff: true,
+    },
+];
+
 class Party implements Feature, TmpPartyType {
     name = 'Pokemon Party';
     saveKey = 'party';
@@ -20,8 +45,32 @@ class Party implements Feature, TmpPartyType {
 
     calculateBaseClickAttack: KnockoutComputed<number>;
 
+    public attackAggregator: PartyAttackAggregator;
+
+    private defaultActiveParty: ActiveParty;
+
+    private specialActiveParties: Array<ActiveParty & { appliesTo: ActivePartyDefinition['appliesTo'] }>;
+
     constructor(private multiplier: Multiplier) {
         this._caughtPokemon = ko.observableArray([]);
+        this.attackAggregator = new PartyAttackAggregator(this._caughtPokemon);
+
+        this.defaultActiveParty = {
+            aggregator: this.attackAggregator,
+            members: () => this.caughtPokemon,
+            ignoreRegionalDebuff: false,
+        };
+
+        this.specialActiveParties = specialActivePartyDefinitions.map((def) => {
+            const members = ko.pureComputed(() => this._caughtPokemon().filter(def.canAttack))
+                .extend({ trackArrayChanges: true });
+            return {
+                appliesTo: def.appliesTo,
+                aggregator: new PartyAttackAggregator(members),
+                members,
+                ignoreRegionalDebuff: def.ignoreRegionalDebuff,
+            };
+        });
 
         this.hasMaxLevelPokemon = ko.pureComputed(() => {
             return this.caughtPokemon.some(p => p.level === 100);
@@ -44,7 +93,8 @@ class Party implements Feature, TmpPartyType {
             // Base power
             // Shiny pokemon help with a 100% boost
             // Resistant pokemon give a 100% boost
-            const partyClickBonus = this.activePartyPokemon.reduce((total, p) => total + p.clickAttackBonus(), 1);
+            const activeParty = this.getActiveParty(player.region, player.subregion);
+            const partyClickBonus = activeParty.aggregator.getClickBonusSum() + 1;
             return Math.pow(partyClickBonus, 1.4);
         });
 
@@ -169,16 +219,28 @@ class Party implements Feature, TmpPartyType {
         includeTempBonuses = true,
         subregion: GameConstants.SubRegions = player.subregion
     ): number {
-        let attack = 0;
-        const pokemon = this.partyPokemonActiveInSubRegion(region, subregion);
-        const ignoreRegionMultiplierOrMKJ = ignoreRegionMultiplier || region == GameConstants.Region.alola && subregion == GameConstants.AlolaSubRegions.MagikarpJump;
+        const activeParty = this.getActiveParty(region, subregion);
+        const regionalDebuff = !activeParty.ignoreRegionalDebuff && !ignoreRegionMultiplier && App.game.challenges.list.regionalAttackDebuff.active()
+            ? this.getRegionAttackMultiplier()
+            : 1;
 
-        for (const p of pokemon) {
-            attack += this.calculateOnePokemonAttack(p, type1, type2, region, ignoreRegionMultiplierOrMKJ, includeBreeding, useBaseAttack, overrideWeather, ignoreLevel, includeTempBonuses);
-        }
-
+        const attack = activeParty.aggregator.calculateTotalAttack({
+            type1,
+            type2,
+            region,
+            regionalDebuff,
+            includeBreeding,
+            useBaseAttack,
+            weather: overrideWeather ?? Weather.currentWeather(),
+            ignoreLevel,
+            includeTempBonuses,
+        });
         const bonus = this.multiplier.getBonus('pokemonAttack');
         return Math.round(attack * bonus);
+    }
+
+    private getActiveParty(region: GameConstants.Region, subregion: GameConstants.SubRegions): ActiveParty {
+        return this.specialActiveParties.find((p) => p.appliesTo(region, subregion)) ?? this.defaultActiveParty;
     }
 
     public calculateOnePokemonAttack(
@@ -194,7 +256,7 @@ class Party implements Feature, TmpPartyType {
         includeTempBonuses = true
     ): number {
         let multiplier = 1, attack = 0;
-        const pAttack = useBaseAttack ? pokemon.baseAttack : (ignoreLevel ? pokemon.calculateAttack(ignoreLevel) : pokemon.attack);
+        const pAttack = useBaseAttack ? pokemon.baseAttack : (ignoreLevel ? pokemon.attackIgnoreLevel : pokemon.attack);
         const nativeRegion = PokemonHelper.calcNativeRegion(pokemon.name);
         const dataPokemon = PokemonHelper.getPokemonByName(pokemon.name);
 
@@ -209,35 +271,9 @@ class Party implements Feature, TmpPartyType {
 
         // Check if the Pokemon is currently breeding (no attack)
         if (includeBreeding || !pokemon.breeding) {
-            if (type1 == PokemonType.None) {
-                attack = pAttack * multiplier;
-            } else {
-                attack = pAttack * TypeHelper.getAttackModifier(dataPokemon.type1, dataPokemon.type2, type1, type2) * multiplier;
-            }
-        }
-
-        // Weather boost
-        const weather = Weather.weatherConditions[overrideWeather ?? Weather.currentWeather()];
-        weather.multipliers?.forEach(value => {
-            if (value.type == dataPokemon.type1) {
-                attack *= value.multiplier;
-            }
-            if (value.type == dataPokemon.type2) {
-                attack *= value.multiplier;
-            }
-        });
-
-        // Should we take flute boost into account
-        if (includeTempBonuses) {
-            FluteEffectRunner.activeGemTypes().forEach(value => {
-                if (value == dataPokemon.type1) {
-                    attack *= GameConstants.FLUTE_TYPE_ATTACK_MULTIPLIER;
-                }
-                if (value == dataPokemon.type2) {
-                    attack *= GameConstants.FLUTE_TYPE_ATTACK_MULTIPLIER;
-                }
-            });
-            attack *= App.game.zMoves.getMultiplier(dataPokemon.type1, dataPokemon.type2);
+            // Type effectiveness, weather, flutes, z-moves
+            const context = AttackModifiers.buildContext(type1, type2, overrideWeather ?? Weather.currentWeather(), includeTempBonuses);
+            attack = pAttack * multiplier * AttackModifiers.attackModifier(context, dataPokemon.type1, dataPokemon.type2);
         }
 
         return attack;
@@ -287,12 +323,7 @@ class Party implements Feature, TmpPartyType {
     }
 
     public partyPokemonActiveInSubRegion(region: GameConstants.Region, subregion: GameConstants.SubRegions): Array<PartyPokemon> {
-        let caughtPokemon = this.caughtPokemon as Array<PartyPokemon>;
-        if (region == GameConstants.Region.alola && subregion == GameConstants.AlolaSubRegions.MagikarpJump) {
-            // Only magikarps can attack in magikarp jump subregion
-            caughtPokemon = caughtPokemon.filter((p) => Math.floor(p.id) == 129);
-        }
-        return caughtPokemon;
+        return this.getActiveParty(region, subregion).members() as Array<PartyPokemon>;
     }
 
     alreadyCaughtPokemonByName(name: PokemonNameType, shiny = false) {

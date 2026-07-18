@@ -24,6 +24,7 @@ class PartyPokemon implements Saveable, TmpPartyPokemonType {
     public exp = 0;
     public evs: KnockoutComputed<number>;
     _attack: KnockoutComputed<number>;
+    _attackIgnoreLevel: KnockoutComputed<number>;
     private _canUseHeldItem: KnockoutComputed<boolean>;
 
     defaults = {
@@ -120,6 +121,7 @@ class PartyPokemon implements Saveable, TmpPartyPokemonType {
         this._shadow = ko.observable(shadow);
         this._showShadowImage = ko.observable(false);
         this._attack = ko.computed(() => this.calculateAttack());
+        this._attackIgnoreLevel = ko.pureComputed(() => this.calculateAttack(true));
         this._canUseHeldItem = ko.pureComputed(() => this.heldItem()?.canUse(this));
         this._canUseHeldItem.subscribe((canUse) => {
             if (!canUse && this.heldItem()) {
@@ -715,6 +717,10 @@ class PartyPokemon implements Saveable, TmpPartyPokemonType {
 
     get attack(): number {
         return this._attack();
+    }
+
+    get attackIgnoreLevel(): number {
+        return this._attackIgnoreLevel();
     }
 
     get attackBonusAmount(): number {

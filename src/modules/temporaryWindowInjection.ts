@@ -232,6 +232,8 @@ import ItemOwnedRequirement from './requirements/ItemOwnedRequirement';
 import UniqueItemOwnedRequirement from './requirements/UniqueItemOwnedRequirement';
 import ChristmasPresent from './items/ChristmasPresent';
 import DamageCalculator from './types/DamageCalculator';
+import PartyAttackAggregator from './party/PartyAttackAggregator';
+import AttackModifiers from './party/AttackModifiers';
 import GameLoadState from './utilities/GameLoadState';
 import GenericDeal, { DealCostOrProfitType } from './deal/GenericDeal';
 import CollectibleItem from './items/CollectibleItem';
@@ -488,6 +490,8 @@ Object.assign(<any>window, {
     UniqueItemOwnedRequirement,
     ChristmasPresent,
     DamageCalculator,
+    PartyAttackAggregator,
+    AttackModifiers,
     GameLoadState,
     areaStatus,
     TranslationHelper,
