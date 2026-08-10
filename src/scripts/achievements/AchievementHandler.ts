@@ -191,9 +191,20 @@ class AchievementHandler {
         });
     }
 
+    private static sumBonusWeightByCategory(include: (achievement: Achievement) => boolean): Map<AchievementCategory, number> {
+        const weights = new Map<AchievementCategory, number>();
+        AchievementHandler.achievementList.forEach(achievement => {
+            if (include(achievement)) {
+                weights.set(achievement.category, (weights.get(achievement.category) ?? 0) + achievement.bonusWeight);
+            }
+        });
+        return weights;
+    }
+
     public static calculateMaxBonus(): void {
+        const weights = AchievementHandler.sumBonusWeightByCategory(a => a.achievable());
         AchievementHandler.getAchievementCategories().forEach(category => {
-            category.totalWeight = AchievementHandler.achievementList.filter(a => a.category == category && a.achievable()).reduce((sum, a) => sum + a.bonusWeight, 0);
+            category.totalWeight = weights.get(category) ?? 0;
         });
         AchievementHandler.calculateBonus();
         AchievementHandler.updateAchievementBonus();
@@ -204,11 +215,10 @@ class AchievementHandler {
     }
 
     public static updateAchievementBonus() {
+        const weights = AchievementHandler.sumBonusWeightByCategory(a => a.isCompleted());
         let sum = 0;
         AchievementHandler.getAchievementCategories().forEach(category => {
-            const total = AchievementHandler.achievementList.filter(a => {
-                return a.category == category && a.isCompleted();
-            }).reduce((acc, a) => acc + a.bonusWeight, 0) / category.totalWeight * category.achievementBonus / 100;
+            const total = (weights.get(category) ?? 0) / category.totalWeight * category.achievementBonus / 100;
             if (!isNaN(total)) {
                 sum += total;
             }
@@ -220,8 +230,10 @@ class AchievementHandler {
         return `${AchievementHandler.achievementBonus().toLocaleString('en-US', { style: 'percent', minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     }
 
+    private static _achievementsByName: Map<string, Achievement> = new Map();
     public static findByName(name: string): Achievement {
-        return AchievementHandler.achievementList.find((achievement) => achievement.name === name && achievement.achievable());
+        const achievement = AchievementHandler._achievementsByName.get(name);
+        return achievement?.achievable() ? achievement : undefined;
     }
 
     private static _achievementCategories : AchievementCategory[]
@@ -911,6 +923,8 @@ class AchievementHandler {
             new PokerusStatusByFilterRequirement(furfrouDexFilter, furfrouAmount, GameConstants.Pokerus.Resistant),
             '' // need hint
         );*/
+
+        AchievementHandler._achievementsByName = new Map(AchievementHandler.achievementList.map((a) => [a.name, a]));
 
         // load filters
         this.load();
