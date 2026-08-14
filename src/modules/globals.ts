@@ -18,7 +18,6 @@ declare global {
     const PartyController: TempTypes.TmpPartyControllerType;
     const TemporaryBattleList: TempTypes.TmpTemporaryBattleListType;
     const BagHandler: TempTypes.TmpBagHandlerType;
-    const HeldItem: TempTypes.TmpHeldItemType;
     const EvolutionStone: TempTypes.TmpEvolutionStoneType;
     const GymList: TempTypes.TmpGymListType;
     const VeteranShop: TempTypes.TmpVeteranShopType;
