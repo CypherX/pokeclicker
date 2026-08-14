@@ -161,6 +161,7 @@ import DummyRequirement from './requirements/DummyRequirement';
 import WeatherRequirement from './requirements/WeatherRequirement';
 import MegaEvolveRequirement from './requirements/MegaEvolveRequirement';
 import PokemonAttackRequirement from './requirements/PokemonAttackRequirement';
+import VeteranUnlockRequirement from './requirements/VeteranUnlockRequirement';
 import { SortModules, SortSaves } from './Sortable';
 import KeyItemController from './keyItems/KeyItemController';
 import KeyItem from './keyItems/KeyItem';
@@ -198,10 +199,14 @@ import PokemonItem from './items/PokemonItem';
 import EggItem from './items/EggItem';
 import MegaStoneItem from './items/MegaStoneItem';
 import PokeballItem from './items/PokeballItem';
+import { HeldItem, AttackBonusHeldItem, PokemonRestrictedAttackBonusHeldItem, TypeRestrictedAttackBonusHeldItem, TypeRestrictedExceptionAttackBonusHeldItem, HybridAttackBonusHeldItem, EVsGainedBonusHeldItem, ExpGainedBonusHeldItem  } from './items/HeldItem';
+import MulchItem from './items/MulchItem';
+import { ShovelItem, MulchShovelItem } from './items/ShovelItem';
 import Vitamin from './items/Vitamin';
 import VitaminController from './items/VitaminController';
 import Consumable from './items/Consumable';
 import ConsumableController from './items/ConsumableController';
+import BuyKeyItem from './items/buyKeyItem';
 import RoamingPokemonList from './pokemons/RoamingPokemonList';
 import DataPokemon from './pokemons/DataPokemon';
 import RoamingPokemon from './pokemons/RoamingPokemon';
@@ -232,6 +237,7 @@ import ChristmasPresent from './items/ChristmasPresent';
 import DamageCalculator from './types/DamageCalculator';
 import GameLoadState from './utilities/GameLoadState';
 import GenericDeal, { DealCostOrProfitType } from './deal/GenericDeal';
+import DealHelper from './deal/DealHelper';
 import CollectibleItem from './items/CollectibleItem';
 import areaStatus from './enums/AreaStatus';
 import TranslationHelper from './translation/TranslationHelper';
@@ -408,6 +414,7 @@ Object.assign(<any>window, {
     WeatherRequirement,
     MegaEvolveRequirement,
     PokemonAttackRequirement,
+    VeteranUnlockRequirement,
     SortModules,
     SortSaves,
     KeyItemController,
@@ -451,11 +458,23 @@ Object.assign(<any>window, {
     EggItem,
     MegaStoneItem,
     PokeballItem,
+    HeldItem,
+    AttackBonusHeldItem,
+    PokemonRestrictedAttackBonusHeldItem,
+    TypeRestrictedAttackBonusHeldItem,
+    TypeRestrictedExceptionAttackBonusHeldItem,
+    HybridAttackBonusHeldItem,
+    EVsGainedBonusHeldItem,
+    ExpGainedBonusHeldItem,
+    MulchItem,
+    ShovelItem,
+    MulchShovelItem,
     CollectibleItem,
     Vitamin,
     VitaminController,
     Consumable,
     ConsumableController,
+    BuyKeyItem,
     RoamingPokemonList,
     DataPokemon,
     RoamingPokemon,
@@ -474,6 +493,7 @@ Object.assign(<any>window, {
     UndergroundToolType,
     ShardDeal,
     GenericDeal,
+    DealHelper,
     DealCostOrProfitType,
     EncounterType,
     SafariBaitRequirement,

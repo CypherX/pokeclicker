@@ -299,13 +299,18 @@ class PokemonFactory {
             case 'Christmas_present':
                 chance = GameConstants.CHRISTMAS_ITEM_CHANCE;
                 break;
+            case 'Relic_copper':
+            case 'Relic_silver':
+                chance = GameConstants.LESSER_RELIC_ITEM_CHANCE;
+                break;
+            case 'Relic_gold':
+                chance = GameConstants.RELIC_GOLD_ITEM_CHANCE;
+                break;
         }
 
         chance /= modifier;
 
-        if (EffectEngineRunner.isActive(GameConstants.BattleItemType.Dowsing_machine)()) {
-            chance /= 1.5;
-        }
+        chance /= App.game.multiplier.getBonus('rareItemDropRate');
 
         if (Rand.chance(chance)) {
             return item;

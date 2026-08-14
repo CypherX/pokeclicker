@@ -34,6 +34,7 @@ import type WeatherType from './weather/WeatherType';
 import type { MultiplierDecreaser } from './items/types';
 import type BagItem from './interfaces/BagItem';
 import type BattlePokemon from './battles/BattlePokemon';
+import type { HeldItem } from './items/HeldItem';
 import BadgeEnums from './enums/Badges';
 
 /*
@@ -93,7 +94,6 @@ export type TmpGemsType = any;
 export type TmpFarmingType = any;
 export type TmpRedeemableCodesType = any;
 export type TmpQuestsType = any;
-export type TmpQuestType = any;
 export type TmpDiscordType = any;
 export type TmpAchievementTrackerType = any;
 export type TmpBattleFrontierType = any;
@@ -102,7 +102,7 @@ export type TmpDreamOrbControllerType = any;
 export type TmpPurifyChamberType = any;
 export type TmpWeatherAppType = any;
 export type TmpZMovesType = any;
-export type TmpHeldItemType = any;
+//export type TmpHeldItemType = any;
 export type TmpGoalTrackerType = any;
 export type TmpEvolutionStoneType = any;
 
@@ -228,6 +228,7 @@ export type TmpDungeonRunnerType = {
     dungeon: {
         name: string
     };
+    fightingBoss(): boolean,
 };
 
 export type TmpGymType = {
@@ -308,7 +309,7 @@ export type TmpPartyPokemonType = {
     shadow: GameConstants.ShadowStatus,
     showShadowImage: boolean,
     vitaminsUsed: Record<GameConstants.VitaminType, KnockoutObservable<number>>;
-    heldItem: KnockoutObservable<TmpHeldItemType>;
+    heldItem: KnockoutObservable<HeldItem>;
     defaultFemaleSprite: KnockoutObservable<boolean>;
     hideShinyImage: KnockoutObservable<boolean>;
     canUseStone(stoneType: GameConstants.StoneType): boolean;
@@ -401,4 +402,9 @@ export type TmpTownListType = {
 
 export type TmpDisplayObservablesType = {
     modalState: Record<string, any>;
+};
+
+export type TmpVeteranShopType = {
+    list: Record<GameConstants.VeteranUnlock, any>;
+    isUnlockAvailable: (unlock: GameConstants.VeteranUnlock) => boolean;
 };

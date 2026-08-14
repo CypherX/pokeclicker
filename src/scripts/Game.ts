@@ -150,11 +150,12 @@ class Game implements TmpGameType {
         Weather.generateWeather(now);
         GemDeals.generateDeals();
         ShardDeal.generateDeals();
-        GenericDeal.generateDeals();
+        GenericDeal.generateDeals(now);
         SafariPokemonList.generateSafariLists();
         RoamingPokemonList.generateIncreasedChanceRoutes(now);
         WeatherApp.initialize();
         DamageCalculator.initialize();
+        VeteranShop.initialize();
 
         if (Settings.getSetting('disableOfflineProgress').value === false) {
             this.computeOfflineEarnings();
@@ -492,6 +493,7 @@ class Game implements TmpGameType {
                         timeout: 3e4,
                     });
                 }
+                GenericDeal.generateDeals(now);
                 // Give the players more Battle Cafe spins
                 if (this.party.getPokemonByName('Milcery')) {
                     BattleCafeController.accumulateSpins();
@@ -502,6 +504,8 @@ class Game implements TmpGameType {
                 // Refresh Friend Safari Pokemon List
                 SafariPokemonList.generateKalosSafariList();
 
+                QuestLineHelper.rebuildTreasureMapQuestLine();
+                player.itemList.Pirate_receipt(0);
                 // Reset some temporary battles
                 Object.values(TemporaryBattleList).forEach(t => {
                     if (t.optionalArgs?.resetDaily) {

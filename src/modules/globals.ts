@@ -21,6 +21,7 @@ declare global {
     const HeldItem: TempTypes.TmpHeldItemType;
     const EvolutionStone: TempTypes.TmpEvolutionStoneType;
     const GymList: TempTypes.TmpGymListType;
+    const VeteranShop: TempTypes.TmpVeteranShopType;
     const dungeonList: TempTypes.TmpDungeonListType;
     const TownList: TempTypes.TmpTownListType;
     const DisplayObservables: TempTypes.TmpDisplayObservablesType;
