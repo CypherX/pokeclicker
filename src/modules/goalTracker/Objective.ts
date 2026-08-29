@@ -173,10 +173,9 @@ export default class Objective {
     fromJSON(json: Record<string, any>): void {
         if (!json) return;
 
-        this._type(json.type);
         this._targetAmount(json.targetAmount ?? 0);
 
-        const config = objectiveOptions[this.type]?.createConfig();
+        const config = objectiveOptions[json.type]?.createConfig();
         if (config && json.config) {
             for (const key of Object.keys(config)) {
                 if (json.config[key] !== undefined) {
@@ -185,9 +184,10 @@ export default class Objective {
             }
         }
 
-        this._config(config);
         this._lastRawValue = json.lastRawValue ?? 0;
         this._trackingMode(json.trackingMode ?? TrackingMode.Total);
         this._accumulatedProgress(json.accumulatedProgress ?? 0);
+        this._config(config);
+        this._type(json.type);
     }
 }

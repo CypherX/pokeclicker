@@ -114,7 +114,7 @@ export default class Goal {
 
     fromJSON(json: Record<string, any>): void {
         this.name = json.name;
-
+        this.dispose();
         const objectives = [];
         json.objectives?.forEach((objectiveJson) => {
             try {

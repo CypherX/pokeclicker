@@ -53,7 +53,7 @@ export const partyAggregateObjectiveOption: ObjectiveOption<PartyAggregateObject
             if (metric === undefined || type === undefined) return 0;
 
             const sortOption = SortOptions[metric];
-            if (!sortOption) return 0;
+            if (sortOption === undefined) return 0;
 
             const values = App.game.party.caughtPokemon.map(p => SortOptionConfigs[sortOption].getValue(p));
             switch (type) {

@@ -34,7 +34,7 @@ export const dungeonClearObjectiveOption: ObjectiveOption<DungeonClearObjectiveC
                 const dungeons = Object.values(dungeonList)
                     .filter((dungeon) => {
                         const town = TownList[dungeon.name];
-                        if (town.region !== region) {
+                        if (town?.region !== region) {
                             return false;
                         }
                         const subRegion = town.subRegion ?? 0;

@@ -91,14 +91,19 @@ export default class GoalTracker implements Feature {
     }
 
     fromJSON(json: Record<string, any>): void {
-        if (json === null) {
+        if (!json) {
             return;
         }
 
+        this.goals().forEach(goal => goal.dispose());
+
+        const goals = [];
         json.goals?.forEach((goalJson) => {
             const goal = new Goal();
             goal.fromJSON(goalJson);
-            this.goals.push(goal);
+            goals.push(goal);
         });
+
+        this.goals(goals);
     }
 }

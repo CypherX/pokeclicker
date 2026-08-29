@@ -60,7 +60,7 @@ export const pokemonObjectiveOption: ObjectiveOption<PokemonObjectiveConfig> = {
 
             const partyPokemon = App.game.party.getPokemonByName(pokemonName);
             const sortOption = SortOptions[property];
-            if (partyPokemon && sortOption) {
+            if (partyPokemon && sortOption !== undefined) {
                 return SortOptionConfigs[sortOption].getValue(partyPokemon);
             }
 
