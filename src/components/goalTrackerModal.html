@@ -15,7 +15,7 @@
                     Import Goal
                 </button>
 
-                <div id="pokeballFilterConfigs" class="px-3"
+                <div id="goalTrackerGoalList" class="px-3"
                     data-bind="sortable: {
                         foreach: App.game.goalTracker.goals,
                         getDataId: (goal) => goal.uuid,
@@ -63,31 +63,7 @@
                                     <div class="goalObjectiveWrapper" style="cursor: move;">
                                         <div class="goalObjective">
                                             <div class="border-bottom border-secondary mb-2 pb-1">
-                                                <div class="d-flex mb-1" style="gap: 4px; align-items: center;">
-                                                    <div class="flex-grow-1 text-wrap align-items-center" data-bind="text: displayName"></div>
-                                                    <button type="button" class="btn btn-primary btn-sm px-1 py-0 no-emoji-font" style="width: 25px;" title="Edit Objective" data-bind="click: () => {
-                                                        App.game.goalTracker.selectedObjective($data);
-                                                        $('#goalTrackerObjectiveModal').modal('show');
-                                                    }">✎</button>
-                                                    <div class="dropdown">
-                                                        <button class="btn btn-primary btn-sm dropdown-toggle px-1 py-0" type="button" data-toggle="dropdown" style="width: 25px;"></button>
-                                                        <div class="dropdown-menu">
-                                                            <button type="button" class="dropdown-item small" data-bind="click: () => $parent.duplicateObjective($data), visible: $data.isConfigured">
-                                                                Clone Objective
-                                                            </button>
-                                                            <button type="button" class="dropdown-item small" data-bind="click: () => $parent.exportObjective($data)">
-                                                                Export Objective
-                                                            </button>
-                                                            <button type="button" class="dropdown-item small" data-bind="click: () => $parent.deleteObjective($data)">
-                                                                Delete Objective
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="text-danger" data-bind="hidden: isConfigured">Not configured!</div>
-                                                <div data-bind="visible: isConfigured">
-                                                    <knockout data-bind="template: { name: 'goalTrackerObjectiveTemplate', data: $data }"></knockout>
-                                                </div>
+                                                <knockout data-bind="template: { name: 'goalTrackerObjectiveTemplate', data: { objective: $data, goal: $parent, showControls: true } }"></knockout>
                                             </div>
                                         </div>
                                     </div>

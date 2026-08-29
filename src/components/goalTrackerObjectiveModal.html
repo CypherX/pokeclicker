@@ -66,10 +66,6 @@
                 <div class="form-group" data-bind="visible: $parent.hasGoal">
                     <label>Goal Amount</label>
                     <input type="number" class="form-control" data-bind="value: $parent.targetAmount" />
-                    <!--<small class="form-text text-muted">
-                        Current Amount:
-                        <span data-bind="text: $parent.isConfigured() ? $parent.getProgress().toLocaleString('en-US') : 'N/A'"></span>
-                    </small>-->
                 </div>
                 <div class="form-group">
                     <label>Tracking Mode</label>
@@ -90,7 +86,7 @@
             </div>
             <div class="modal-footer">
                 <div class="card-body text-left small p-0">
-                    <knockout data-bind="template: { name: 'goalTrackerObjectiveTemplate', data: $data }"></knockout>
+                    <knockout data-bind="template: { name: 'goalTrackerObjectiveTemplate', data: { objective: $data, showControls: false } }"></knockout>
                 </div>
             </div>
             <div class="modal-footer justify-content-start">

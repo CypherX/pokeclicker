@@ -29,7 +29,7 @@
                     css: { 'border-top pt-2': $index() },
                     event: { contextmenu: () => { App.game.goalTracker.selectedObjective($data); $('#goalTrackerObjectiveModal').modal('show'); } }
                 ">
-                    <knockout data-bind="template: { name: 'goalTrackerObjectiveTemplate', data: $data }"></knockout>
+                    <knockout data-bind="template: { name: 'goalTrackerObjectiveTemplate', data: { objective: $data, showControls: false } }"></knockout>
                 </div>
             </div>
         </div>

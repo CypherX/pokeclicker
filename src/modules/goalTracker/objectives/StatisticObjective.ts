@@ -7,7 +7,7 @@ export interface StatisticObjectiveConfig {
 }
 
 const statisticValues = ko.pureComputed(() => {
-    return App.game.statistics.observables
+    return [...App.game.statistics.observables]
         .sort((a, b) => a.localeCompare(b))
         .map(s => ({ name: camelCaseToString(s), value: s }));
 });

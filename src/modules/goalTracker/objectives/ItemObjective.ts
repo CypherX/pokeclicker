@@ -32,7 +32,7 @@ export const itemObjectiveOption: ObjectiveOption<ItemObjectiveConfig> = {
                     return [];
                 }
 
-                return itemsByCategory()[category]
+                return [...itemsByCategory()[category]]
                     .sort((a, b) => a.displayName.localeCompare(b.displayName))
                     .map(item => ({ name: item.displayName, value: item.name }));
             }),

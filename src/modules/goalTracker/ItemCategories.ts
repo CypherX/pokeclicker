@@ -34,7 +34,7 @@ export const itemCategoryDefinitions: ItemCategoryDefinition[] = [
     { key: 'fossil', label: 'Fossil', filter: (i) => i instanceof TreasureItem &&
         (i.valueType === UndergroundItemValueType.Fossil || i.valueType === UndergroundItemValueType.FossilPiece) },
     { key: 'shard', label: 'Shard', filter: (i) => i instanceof TreasureItem && i.valueType === UndergroundItemValueType.Shard },
-    { key: 'heldItem', label: 'Held Item', filter: (i) => i instanceof HeldItem && ((i as HeldItem).isUnlocked() || i.getBagAmount() > 0) },
+    { key: 'heldItem', label: 'Held Item', filter: (i) => i instanceof HeldItem && (i.isUnlocked() || i.getBagAmount() > 0) },
     { key: 'evolutionStone', label: 'Evolution Stone', filter: (i) => i instanceof EvolutionStone && ((i as TmpEvolutionStoneType).unlockedRegion <= player.highestRegion() || i.getBagAmount() > 0) },
     //{ key: 'quest', label: 'Quest', filter: (i) => i.name === 'Wishing_Piece' },
 ];
