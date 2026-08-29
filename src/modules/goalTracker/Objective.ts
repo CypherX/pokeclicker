@@ -4,12 +4,13 @@ import NotificationConstants from '../notifications/NotificationConstants';
 import Notifier from '../notifications/Notifier';
 import { ObjectiveConfig, objectiveOptions } from './ObjectiveOptions';
 import { ObjectiveOption, ObjectiveType } from './objectives/ObjectiveTypes';
+import { TrackingMode } from './TrackingMode';
 
 export default class Objective {
     private _type = ko.observable<ObjectiveType | undefined>(undefined);
     private _config = ko.observable<ObjectiveConfig | undefined>(undefined);
     private _targetAmount = ko.observable(0).extend({ numeric: 0 });
-    private _startFromZero = ko.observable<boolean>(false);
+    private _trackingMode = ko.observable<TrackingMode>(TrackingMode.Total);
     private _accumulatedProgress = ko.observable<number>(0).extend({ numeric: 0 });
     private _lastRawValue: number = 0;
 
@@ -28,7 +29,7 @@ export default class Objective {
 
     public getProgress = ko.pureComputed(() => {
         if (!this.isConfigured()) return 0;
-        return this.startFromZero ? this.accumulatedProgress : this.getRawProgress();
+        return this.trackingMode === TrackingMode.Gain ? this.accumulatedProgress : this.getRawProgress();
     });
 
     public getOptions = ko.pureComputed(() => {
@@ -46,7 +47,7 @@ export default class Objective {
     });
 
     private isComplete = ko.pureComputed(() => {
-        return this.isConfigured() && DisplayObservables.modalState.goalTrackerObjectiveModal !== 'show'
+        return this.hasGoal && this.isConfigured() && DisplayObservables.modalState.goalTrackerObjectiveModal !== 'show'
             && this.targetAmount > 0 && this.getProgress() >= this.targetAmount;
     });
 
@@ -68,7 +69,7 @@ export default class Objective {
 
         this._rawProgressSub = this.getRawProgress.subscribe((newValue) => {
             const modalOpen = DisplayObservables.modalState.goalTrackerObjectiveModal === 'show';
-            if (this.startFromZero && this.isConfigured() && !modalOpen) {
+            if (this.trackingMode === TrackingMode.Gain && this.isConfigured() && !modalOpen) {
                 const diff = newValue - this._lastRawValue;
                 if (diff > 0) {
                     this.accumulatedProgress = this.accumulatedProgress + diff;
@@ -89,10 +90,13 @@ export default class Objective {
     }
 
     public progressText(): string {
-        return `${this.getProgress().toLocaleString('en-US')} / ${this.targetAmount.toLocaleString('en-US')}`;
+        const progress = this.getProgress().toLocaleString('en-US');
+        if (!this.hasGoal) return progress;
+        return `${progress} / ${this.targetAmount.toLocaleString('en-US')}`;
     }
 
     public progressPercent(): number {
+        if (!this.hasGoal) return 0;
         if (this.targetAmount <= 0) return 0;
         return Math.floor((this.getProgress() / this.targetAmount) * 100) / 100;
     }
@@ -128,12 +132,16 @@ export default class Objective {
         this._targetAmount(value);
     }
 
-    get startFromZero(): boolean {
-        return this._startFromZero();
+    get trackingMode(): TrackingMode {
+        return this._trackingMode();
     }
 
-    set startFromZero(value: boolean) {
-        this._startFromZero(value);
+    set trackingMode(value: TrackingMode) {
+        this._trackingMode(value);
+    }
+
+    get hasGoal(): boolean {
+        return this.trackingMode !== TrackingMode.Display;
     }
 
     get accumulatedProgress(): number {
@@ -155,7 +163,7 @@ export default class Objective {
             type: this.type,
             config: config,
             targetAmount: this.targetAmount,
-            startFromZero: this.startFromZero,
+            trackingMode: this.trackingMode,
             accumulatedProgress: this.accumulatedProgress,
             lastRawValue: this._lastRawValue,
         };
@@ -179,7 +187,7 @@ export default class Objective {
 
         this._config(config);
         this._lastRawValue = json.lastRawValue ?? 0;
-        this._startFromZero(json.startFromZero ?? false);
+        this._trackingMode(json.trackingMode ?? TrackingMode.Total);
         this._accumulatedProgress(json.accumulatedProgress ?? 0);
     }
 }

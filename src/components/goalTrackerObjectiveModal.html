@@ -63,7 +63,7 @@
                     </div>
                     <!-- /ko -->
                 </div>
-                <div class="form-group">
+                <div class="form-group" data-bind="visible: $parent.hasGoal">
                     <label>Goal Amount</label>
                     <input type="number" class="form-control" data-bind="value: $parent.targetAmount" />
                     <!--<small class="form-text text-muted">
@@ -73,33 +73,28 @@
                 </div>
                 <div class="form-group">
                     <label>Tracking Mode</label>
-                    <div class="custom-control custom-radio">
-                        <input type="radio" id="trackingModeTotal" class="custom-control-input" name="trackingMode"
-                            data-bind="checkedValue: false, checked: $parent.startFromZero">
-                        <label class="custom-control-label" for="trackingModeTotal">Total</label>
-                        <small class="form-text text-muted mt-0">
-                            Tracks the current amount of the configured objective, including decreases.
-                        </small>
+                    <!-- ko foreach: GameHelper.enumSelectOption(TrackingMode) -->
+                    <div class="custom-control custom-radio" data-bind="css: { 'mt-1': $index() }">
+                        <input type="radio" class="custom-control-input" name="trackingMode"
+                            data-bind="attr: { id: 'trackingMode_' + $data.value },
+                                checkedValue: $data.value, checked: $parents[1].trackingMode">
+                        <label class="custom-control-label"
+                            data-bind="attr: { for: 'trackingMode_' + $data.value },
+                                text: TrackingModeConfigs[$data.value].text"></label>
+                        <small class="form-text text-muted mt-0"
+                            data-bind="text: TrackingModeConfigs[$data.value].description"></small>
                     </div>
-                    <div class="custom-control custom-radio mt-1">
-                        <input type="radio" id="trackingModeGain" class="custom-control-input" name="trackingMode"
-                            data-bind="checkedValue: true, checked: $parent.startFromZero">
-                        <label class="custom-control-label" for="trackingModeGain">Gain</label>
-                        <small class="form-text text-muted mt-0">
-                            Starts the current amount from zero, does not track decreases.
-                        </small>
-                    </div>
+                    <!-- /ko -->
                 </div>
                 <!-- /ko -->
             </div>
             <div class="modal-footer">
                 <div class="card-body text-left small p-0">
-                    <div data-bind="text: displayName"></div>
                     <knockout data-bind="template: { name: 'goalTrackerObjectiveTemplate', data: $data }"></knockout>
                 </div>
             </div>
             <div class="modal-footer justify-content-start">
-                <div data-bind="visible: startFromZero">
+                <div data-bind="visible: trackingMode === TrackingMode.Gain">
                     <button type="button" class="btn btn-danger btn-sm" data-bind="click: () => resetAccumulatedProgress(),
                         tooltip: {
                             title: 'Resets accumulated progress to zero when using the Gain tracking mode.',

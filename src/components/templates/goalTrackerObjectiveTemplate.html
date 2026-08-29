@@ -1,4 +1,12 @@
 <script type="text/html" id="goalTrackerObjectiveTemplate">
+    <!-- ko ifnot: hasGoal -->
+    <div class="d-flex align-items-center" style="min-height: 1.25rem;">
+        <div class="flex-grow-1" data-bind="text: displayName"></div>
+        <div class="pl-2 text-nowrap" data-bind="text: progressText()"></div>
+    </div>
+    <!-- /ko -->
+    <!-- ko if: hasGoal -->
+    <div data-bind="text: displayName"></div>
     <div class="progress" style="height: 1.25rem;">
         <div class="progress-bar text-left" role="progressbar"
             data-bind="attr: { style: 'width:' + (Math.min(progressPercent(), 1) * 100) + '%'},
@@ -12,4 +20,5 @@
             </div>
         </div>
     </div>
+    <!-- /ko -->
 </script>

@@ -244,6 +244,7 @@ import TranslationHelper from './translation/TranslationHelper';
 import * as DownloadUtil from './utilities/DownloadUtil';
 import GoalTracker from './goalTracker/GoalTracker';
 import { ObjectiveType } from './goalTracker/objectives/ObjectiveTypes';
+import { TrackingMode, TrackingModeConfigs } from './goalTracker/TrackingMode';
 
 Object.assign(<any>window, {
     SaveSelector,
@@ -511,4 +512,6 @@ Object.assign(<any>window, {
     DownloadUtil,
     GoalTracker,
     ObjectiveType,
+    TrackingMode,
+    TrackingModeConfigs,
 });
