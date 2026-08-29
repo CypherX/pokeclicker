@@ -13,25 +13,21 @@ export const gemObjectiveOption: ObjectiveOption<GemObjectiveConfig> = {
         {
             key: 'gem',
             label: 'Gem',
-            values: () => ko.pureComputed(() => {
+            values: () => {
                 return GameHelper.enumNumbers(PokemonType)
                     .filter(t => t !== PokemonType.None)
                     .map(t => ({ name: PokemonType[t], value: t }));
-            }),
+            },
         },
     ],
-    getProgress: (config: GemObjectiveConfig) => {
-        return ko.pureComputed((): number => {
-            const gem = config.gem?.();
-            return App.game.gems.gemWallet[gem]?.() ?? 0;
-        });
+    getProgress: (config: GemObjectiveConfig): number => {
+        const gem = config.gem?.();
+        return App.game.gems.gemWallet[gem]?.() ?? 0;
     },
     createConfig: (): GemObjectiveConfig => ({ gem: ko.observable() }),
     getDisplayName: (config: GemObjectiveConfig) => {
-        return ko.pureComputed(() => {
-            const gem = config.gem();
-            if (gem === undefined) return 'Unconfigured Objective';
-            return `${pluralizeString(PokemonType[gem], 2)} Gems`;
-        });
+        const gem = config.gem();
+        if (gem === undefined) return 'Unconfigured Objective';
+        return `${pluralizeString(PokemonType[gem], 2)} Gems`;
     },
 };

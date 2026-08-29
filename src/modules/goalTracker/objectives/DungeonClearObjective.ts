@@ -16,16 +16,16 @@ export const dungeonClearObjectiveOption: ObjectiveOption<DungeonClearObjectiveC
         {
             key: 'region',
             label: 'Region',
-            values: () => ko.pureComputed(() => {
+            values: () => {
                 return GameHelper.enumNumbers(Region)
                     .filter((r) => (r <= player.highestRegion() && r > Region.none))
                     .map((r) => ({ name: camelCaseToString(Region[r]), value: r }));
-            }),
+            },
         },
         {
             key: 'dungeonName',
             label: 'Dungeon',
-            values: (config: DungeonClearObjectiveConfig) => ko.pureComputed(() => {
+            values: (config: DungeonClearObjectiveConfig) => {
                 const region = config.region?.();
                 if (region === undefined) {
                     return [];
@@ -46,15 +46,13 @@ export const dungeonClearObjectiveOption: ObjectiveOption<DungeonClearObjectiveC
                     name: dungeonName,
                     value: dungeonName,
                 }));
-            }),
+            },
         },
     ],
-    getProgress: (config: DungeonClearObjectiveConfig) => {
-        return ko.pureComputed((): number => {
-            const dungeonName = config.dungeonName?.();
-            if (!dungeonName) return 0;
-            return App.game.statistics.dungeonsCleared[getDungeonIndex(dungeonName)]();
-        });
+    getProgress: (config: DungeonClearObjectiveConfig): number => {
+        const dungeonName = config.dungeonName?.();
+        if (!dungeonName) return 0;
+        return App.game.statistics.dungeonsCleared[getDungeonIndex(dungeonName)]();
     },
     createConfig: (): DungeonClearObjectiveConfig => {
         const dungeonName = ko.observable();
@@ -62,10 +60,8 @@ export const dungeonClearObjectiveOption: ObjectiveOption<DungeonClearObjectiveC
         return { region, dungeonName };
     },
     getDisplayName: (config: DungeonClearObjectiveConfig) => {
-        return ko.pureComputed(() => {
-            const dungeonName = config.dungeonName();
-            if (dungeonName === undefined) return 'Unconfigured Objective';
-            return `Clear Dungeon - ${dungeonName}`;
-        });
+        const dungeonName = config.dungeonName();
+        if (dungeonName === undefined) return 'Unconfigured Objective';
+        return `Clear Dungeon - ${dungeonName}`;
     },
 };

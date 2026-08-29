@@ -24,21 +24,17 @@ export const berryObjectiveOption: ObjectiveOption<BerryObjectiveConfig> = {
             key: 'berry',
             label: 'Berry',
             searchable: true,
-            values: () => berryValues,
+            values: () => berryValues(),
         },
     ],
-    getProgress: (config: BerryObjectiveConfig) => {
-        return ko.pureComputed((): number => {
-            const berry = config.berry?.();
-            return App.game.farming.berryList[berry]?.() ?? 0;
-        });
+    getProgress: (config: BerryObjectiveConfig): number => {
+        const berry = config.berry?.();
+        return App.game.farming.berryList[berry]?.() ?? 0;
     },
     createConfig: (): BerryObjectiveConfig => ({ berry: ko.observable() }),
     getDisplayName: (config: BerryObjectiveConfig) => {
-        return ko.pureComputed(() => {
-            const berry = config.berry();
-            if (berry === undefined) return 'Unconfigured Objective';
-            return `${BerryType[berry]} Berries`;
-        });
+        const berry = config.berry();
+        if (berry === undefined) return 'Unconfigured Objective';
+        return `${BerryType[berry]} Berries`;
     },
 };

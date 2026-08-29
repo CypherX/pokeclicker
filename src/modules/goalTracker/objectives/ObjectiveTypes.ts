@@ -1,5 +1,3 @@
-import { PureComputed } from 'knockout';
-
 export enum ObjectiveType {
     Item,
     Pokemon,
@@ -20,11 +18,12 @@ export interface ObjectiveOption<TConfig> {
             label: string;
             type?: 'dropdown' | 'number';
             searchable?: boolean;
-            values?: (config?: TConfig) => PureComputed<{ name: string; value: any }[]>;
-            visible?: (config: TConfig) => PureComputed<boolean>;
+            values?: (config?: TConfig) => { name: string; value: any }[];
+            visible?: (config: TConfig) => boolean;
         }
     }[keyof TConfig][];
-    getProgress: (config: TConfig) => PureComputed<number>;
-    getDisplayName?: (config: TConfig) => PureComputed<string>;
+    // Read from inside a computed (Objective's, or a binding's), so plain values track dependencies just fine
+    getProgress: (config: TConfig) => number;
+    getDisplayName?: (config: TConfig) => string;
     createConfig: () => TConfig;
 }

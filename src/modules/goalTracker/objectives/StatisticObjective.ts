@@ -18,21 +18,17 @@ export const statisticObjectiveOption: ObjectiveOption<StatisticObjectiveConfig>
             key: 'statistic',
             label: 'Statistic',
             searchable: true,
-            values: () => statisticValues,
+            values: () => statisticValues(),
         },
     ],
-    getProgress: (config: StatisticObjectiveConfig) => {
-        return ko.pureComputed((): number => {
-            const statistic = config.statistic?.();
-            return App.game.statistics[statistic]?.() ?? 0;
-        });
+    getProgress: (config: StatisticObjectiveConfig): number => {
+        const statistic = config.statistic?.();
+        return App.game.statistics[statistic]?.() ?? 0;
     },
     createConfig: (): StatisticObjectiveConfig => ({ statistic: ko.observable() }),
     getDisplayName: (config: StatisticObjectiveConfig) => {
-        return ko.pureComputed(() => {
-            const statistic = config.statistic();
-            if (statistic === undefined) return 'Unconfigured Objective';
-            return camelCaseToString(statistic);
-        });
+        const statistic = config.statistic();
+        if (statistic === undefined) return 'Unconfigured Objective';
+        return camelCaseToString(statistic);
     },
 };

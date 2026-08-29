@@ -15,16 +15,16 @@ export const gymClearObjectiveOption: ObjectiveOption<GymClearObjectiveConfig> =
         {
             key: 'region',
             label: 'Region',
-            values: () => ko.pureComputed(() => {
+            values: () => {
                 return GameHelper.enumNumbers(Region)
                     .filter((r) => (r <= player.highestRegion() && r > Region.none))
                     .map((r) => ({ name: camelCaseToString(Region[r]), value: r }));
-            }),
+            },
         },
         {
             key: 'gymTown',
             label: 'Gym',
-            values: (config: GymClearObjectiveConfig) => ko.pureComputed(() => {
+            values: (config: GymClearObjectiveConfig) => {
                 const region = config.region?.();
                 if (region === undefined) {
                     return [];
@@ -38,15 +38,13 @@ export const gymClearObjectiveOption: ObjectiveOption<GymClearObjectiveConfig> =
                     name: `${GymList[gymTown].leaderName} - ${GymList[gymTown].parent.name}`,
                     value: gymTown,
                 }));
-            }),
+            },
         },
     ],
-    getProgress: (config: GymClearObjectiveConfig) => {
-        return ko.pureComputed((): number => {
-            const gymTown = config.gymTown?.();
-            if (!gymTown) return 0;
-            return App.game.statistics.gymsDefeated[getGymIndex(gymTown)]();
-        });
+    getProgress: (config: GymClearObjectiveConfig): number => {
+        const gymTown = config.gymTown?.();
+        if (!gymTown) return 0;
+        return App.game.statistics.gymsDefeated[getGymIndex(gymTown)]();
     },
     createConfig: (): GymClearObjectiveConfig => {
         const gymTown = ko.observable();
@@ -55,10 +53,8 @@ export const gymClearObjectiveOption: ObjectiveOption<GymClearObjectiveConfig> =
     },
 
     getDisplayName: (config: GymClearObjectiveConfig) => {
-        return ko.pureComputed(() => {
-            const gym = GymList[config.gymTown()];
-            if (!gym) return 'Unconfigured Objective';
-            return `Clear Gym - ${gym.leaderName} - ${gym.parent.name}`;
-        });
+        const gym = GymList[config.gymTown()];
+        if (!gym) return 'Unconfigured Objective';
+        return `Clear Gym - ${gym.leaderName} - ${gym.parent.name}`;
     },
 };

@@ -17,27 +17,23 @@ export const currencyObjectiveOption: ObjectiveOption<CurrencyObjectiveConfig> =
         {
             key: 'currency',
             label: 'Currency',
-            values: () => currencyValues,
+            values: () => currencyValues(),
         },
     ],
-    getProgress: (config: CurrencyObjectiveConfig) => {
-        return ko.pureComputed((): number => {
-            const currency = config.currency?.();
-            return App.game.wallet.currencies[currency]?.() ?? 0;
-        });
+    getProgress: (config: CurrencyObjectiveConfig): number => {
+        const currency = config.currency?.();
+        return App.game.wallet.currencies[currency]?.() ?? 0;
     },
     createConfig: (): CurrencyObjectiveConfig => ({ currency: ko.observable() }),
     getDisplayName: (config: CurrencyObjectiveConfig) => {
-        return ko.pureComputed(() => {
-            const currency = config.currency();
-            if (currency === undefined) return 'Unconfigured Objective';
+        const currency = config.currency();
+        if (currency === undefined) return 'Unconfigured Objective';
 
-            switch (currency) {
-                case Currency.money:
-                    return 'Pokédollars';
-                default:
-                    return pluralizeString(camelCaseToString(Currency[currency]), 2);
-            }
-        });
+        switch (currency) {
+            case Currency.money:
+                return 'Pokédollars';
+            default:
+                return pluralizeString(camelCaseToString(Currency[currency]), 2);
+        }
     },
 };

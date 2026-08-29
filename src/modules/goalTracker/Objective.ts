@@ -16,7 +16,8 @@ export default class Objective {
 
     public uuid: string;
     private _isCompleteSub: KnockoutSubscription;
-    private _rawProgressSub: KnockoutSubscription;
+    private _rawProgressSub?: KnockoutSubscription;
+    private _trackingModeSub?: KnockoutSubscription;
 
     private get activeOption(): ObjectiveOption<any> | undefined {
         return objectiveOptions[this.type] as ObjectiveOption<any> | undefined;
@@ -24,7 +25,7 @@ export default class Objective {
 
     private getRawProgress = ko.pureComputed(() => {
         if (!this.activeOption) return 0;
-        return this.activeOption.getProgress(this.config)() ?? 0;
+        return this.activeOption.getProgress(this.config) ?? 0;
     });
 
     public getProgress = ko.pureComputed(() => {
@@ -35,8 +36,8 @@ export default class Objective {
     public getOptions = ko.pureComputed(() => {
         if (!this.activeOption) return [];
         return this.activeOption.options.filter(opt => {
-            return opt.visible ? opt.visible(this.config)() : true;
-        }) ?? [];
+            return opt.visible ? opt.visible(this.config) : true;
+        });
     });
 
     public isConfigured = ko.pureComputed(() => {
@@ -67,21 +68,41 @@ export default class Objective {
             }
         });
 
-        this._rawProgressSub = this.getRawProgress.subscribe((newValue) => {
-            const modalOpen = DisplayObservables.modalState.goalTrackerObjectiveModal === 'show';
-            if (this.trackingMode === TrackingMode.Gain && this.isConfigured() && !modalOpen) {
-                const diff = newValue - this._lastRawValue;
-                if (diff > 0) {
-                    this.accumulatedProgress = this.accumulatedProgress + diff;
-                }
+        this._trackingModeSub = this._trackingMode.subscribe(() => this.syncRawProgressSub());
+        this.syncRawProgressSub();
+    }
+
+    // Only Gain mode needs to watch raw progress, so Total and Display leave getRawProgress asleep until something actually reads it
+    private syncRawProgressSub(): void {
+        if (this.trackingMode !== TrackingMode.Gain) {
+            this._rawProgressSub?.dispose();
+            this._rawProgressSub = undefined;
+            return;
+        }
+
+        if (this._rawProgressSub) {
+            return;
+        }
+
+        this._rawProgressSub = this.getRawProgress.subscribe((newValue) => this.accumulateProgress(newValue));
+        this.accumulateProgress(this.getRawProgress.peek());
+    }
+
+    private accumulateProgress(newValue: number): void {
+        const modalOpen = DisplayObservables.modalState.goalTrackerObjectiveModal === 'show';
+        if (this.isConfigured() && !modalOpen) {
+            const diff = newValue - this._lastRawValue;
+            if (diff > 0) {
+                this.accumulatedProgress = this.accumulatedProgress + diff;
             }
-            this._lastRawValue = newValue;
-        });
+        }
+        this._lastRawValue = newValue;
     }
 
     public dispose(): void {
         this._isCompleteSub?.dispose();
         this._rawProgressSub?.dispose();
+        this._trackingModeSub?.dispose();
     }
 
     public resetAccumulatedProgress() {
@@ -102,7 +123,7 @@ export default class Objective {
     }
 
     get displayName(): string {
-        return this.activeOption?.getDisplayName?.(this.config)?.() ?? 'Unconfigured Objective';
+        return this.activeOption?.getDisplayName?.(this.config) ?? 'Unconfigured Objective';
     }
 
     get type(): ObjectiveType {
@@ -137,7 +158,14 @@ export default class Objective {
     }
 
     set trackingMode(value: TrackingMode) {
+        if (value === this._trackingMode()) {
+            return;
+        }
         this._trackingMode(value);
+        if (value === TrackingMode.Gain) {
+            // Don't retroactively credit gains made while in another mode
+            this._lastRawValue = this.getRawProgress.peek();
+        }
     }
 
     get hasGoal(): boolean {
