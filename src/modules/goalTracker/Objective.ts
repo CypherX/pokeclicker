@@ -206,6 +206,7 @@ export default class Objective {
             trackingMode: this.trackingMode,
             accumulatedProgress: this.accumulatedProgress,
             lastRawValue: this._lastRawValue,
+            notifiedComplete: this._notifiedComplete,
         };
     }
 
@@ -225,6 +226,7 @@ export default class Objective {
         }
 
         this._lastRawValue = json.lastRawValue ?? 0;
+        this._notifiedComplete = json.notifiedComplete ?? false;
         this._trackingMode(json.trackingMode ?? TrackingMode.Total);
         this._accumulatedProgress(json.accumulatedProgress ?? 0);
         this._config(config);
