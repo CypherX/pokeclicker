@@ -12,12 +12,14 @@ export default class Objective {
     private _targetAmount = ko.observable(0).extend({ numeric: 0 });
     private _trackingMode = ko.observable<TrackingMode>(TrackingMode.Total);
     private _accumulatedProgress = ko.observable<number>(0).extend({ numeric: 0 });
+    private _resetCount = ko.observable<number>(0);
+    private _lastSourceKey: string = '';
+    private _lastGoalKey: string = '';
     private _lastRawValue: number = 0;
+    private _notifiedComplete: boolean = false;
 
     public uuid: string;
-    private _isCompleteSub: KnockoutSubscription;
-    private _rawProgressSub?: KnockoutSubscription;
-    private _trackingModeSub?: KnockoutSubscription;
+    private _trackerSub: KnockoutSubscription;
 
     private get activeOption(): ObjectiveOption<any> | undefined {
         return objectiveOptions[this.type] as ObjectiveOption<any> | undefined;
@@ -48,66 +50,83 @@ export default class Objective {
     });
 
     private isComplete = ko.pureComputed(() => {
-        return this.hasGoal && this.isConfigured() && DisplayObservables.modalState.goalTrackerObjectiveModal !== 'show'
+        return this.hasGoal && this.isConfigured()
             && this.targetAmount > 0 && this.getProgress() >= this.targetAmount;
     });
+
+    // Everything the objective needs to watch: what it tracks, what counts as done, and where it stands.
+    // Only Gain reads getRawProgress here, so the other modes leave it asleep
+    private _tracker = ko.pureComputed(() => ({
+        sourceKey: this.sourceKey(),
+        goalKey: this.goalKey(),
+        configured: this.isConfigured(),
+        raw: this.trackingMode === TrackingMode.Gain ? this.getRawProgress() : 0,
+        complete: this.isComplete(),
+    }));
 
     constructor() {
         this.uuid = GameHelper.randomUUID();
 
-        this._isCompleteSub = this.isComplete.subscribe((complete) => {
-            if (complete) {
-                Notifier.notify({
-                    title: 'Goal Tracker',
-                    message: `Your "${this.displayName}" objective is complete!`,
-                    type: NotificationConstants.NotificationOption.primary,
-                    sound: NotificationConstants.NotificationSound.General.goal_objective_complete,
-                    setting: NotificationConstants.NotificationSetting.General.goal_objective_complete,
-                    timeout: 5 * MINUTE,
-                });
+        this._trackerSub = this._tracker.subscribe(({ sourceKey, goalKey, configured, raw, complete }) => {
+            const sourceChanged = sourceKey !== this._lastSourceKey;
+            const goalChanged = goalKey !== this._lastGoalKey;
+            this._lastSourceKey = sourceKey;
+            this._lastGoalKey = goalKey;
+
+            if (sourceChanged || goalChanged) {
+                if (sourceChanged) {
+                    this.accumulatedProgress = 0;
+                }
+                this._lastRawValue = raw;
+                this._notifiedComplete = complete;
+                return;
             }
+
+            if (configured && this.trackingMode === TrackingMode.Gain) {
+                const diff = raw - this._lastRawValue;
+                if (diff > 0) {
+                    this.accumulatedProgress = this.accumulatedProgress + diff;
+                }
+            }
+
+            this._lastRawValue = raw;
+
+            if (!complete) {
+                this._notifiedComplete = false;
+                return;
+            }
+
+            if (this._notifiedComplete) {
+                return;
+            }
+
+            this._notifiedComplete = true;
+            Notifier.notify({
+                title: 'Goal Tracker',
+                message: `Your "${this.displayName}" objective is complete!`,
+                type: NotificationConstants.NotificationOption.primary,
+                sound: NotificationConstants.NotificationSound.General.goal_objective_complete,
+                setting: NotificationConstants.NotificationSetting.General.goal_objective_complete,
+                timeout: 5 * MINUTE,
+            });
         });
-
-        this._trackingModeSub = this._trackingMode.subscribe(() => this.syncRawProgressSub());
-        this.syncRawProgressSub();
     }
 
-    // Only Gain mode needs to watch raw progress, so Total and Display leave getRawProgress asleep until something actually reads it
-    private syncRawProgressSub(): void {
-        if (this.trackingMode !== TrackingMode.Gain) {
-            this._rawProgressSub?.dispose();
-            this._rawProgressSub = undefined;
-            return;
-        }
-
-        if (this._rawProgressSub) {
-            return;
-        }
-
-        this._rawProgressSub = this.getRawProgress.subscribe((newValue) => this.accumulateProgress(newValue));
-        this.accumulateProgress(this.getRawProgress.peek());
+    private sourceKey(): string {
+        const config = this.config ? Object.values(this.config).map(obs => obs()) : [];
+        return [this.type, this._resetCount(), ...config].join('|');
     }
 
-    private accumulateProgress(newValue: number): void {
-        const modalOpen = DisplayObservables.modalState.goalTrackerObjectiveModal === 'show';
-        if (this.isConfigured() && !modalOpen) {
-            const diff = newValue - this._lastRawValue;
-            if (diff > 0) {
-                this.accumulatedProgress = this.accumulatedProgress + diff;
-            }
-        }
-        this._lastRawValue = newValue;
+    private goalKey(): string {
+        return [this.targetAmount, this.trackingMode].join('|');
     }
 
     public dispose(): void {
-        this._isCompleteSub?.dispose();
-        this._rawProgressSub?.dispose();
-        this._trackingModeSub?.dispose();
+        this._trackerSub?.dispose();
     }
 
     public resetAccumulatedProgress() {
-        this.accumulatedProgress = 0;
-        this._lastRawValue = this.getRawProgress.peek();
+        this._resetCount(this._resetCount() + 1);
     }
 
     public progressText(): string {
@@ -158,14 +177,7 @@ export default class Objective {
     }
 
     set trackingMode(value: TrackingMode) {
-        if (value === this._trackingMode()) {
-            return;
-        }
         this._trackingMode(value);
-        if (value === TrackingMode.Gain) {
-            // Don't retroactively credit gains made while in another mode
-            this._lastRawValue = this.getRawProgress.peek();
-        }
     }
 
     get hasGoal(): boolean {
@@ -217,5 +229,7 @@ export default class Objective {
         this._accumulatedProgress(json.accumulatedProgress ?? 0);
         this._config(config);
         this._type(json.type);
+        this._lastSourceKey = this.sourceKey();
+        this._lastGoalKey = this.goalKey();
     }
 }
