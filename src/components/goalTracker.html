@@ -18,11 +18,11 @@
         </div>
 
         <div class="small" data-bind="foreach: goals">
-            <div class="card-header rounded-0 py-1" style="margin-top: 1px;" data-toggle="collapse" data-bind="attr : {href : '#objectivecard_' + $index()}">
+            <div class="card-header rounded-0 py-1" style="margin-top: 1px;" data-toggle="collapse" data-bind="attr : {href : '#objectivecard_' + $data.uuid}">
                 <knockout data-bind="text: $data.name"></knockout>
             </div>
             <div class="card-body text-left px-2 py-0 show" data-bind="
-                attr : {id : 'objectivecard_' + $index()},
+                attr : {id : 'objectivecard_' + $data.uuid},
                 foreach: $data.objectives().filter(obj => obj.isConfigured())
             ">
                 <div class="my-2 border-secondary" data-bind="

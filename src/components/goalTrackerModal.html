@@ -54,7 +54,7 @@
                                     foreach: $data.objectives,
                                     getDataId: (objective) => objective.uuid,
                                     options: {
-                                        group: `goalObjectives-${$index()}`,
+                                        group: `goalObjectives-${$data.uuid}`,
                                         draggable: '.goalObjectiveWrapper',
                                         handle: '.goalObjectiveWrapper',
                                         dataIdAttr: 'data-key',
