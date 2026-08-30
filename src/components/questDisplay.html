@@ -16,8 +16,8 @@
             <!-- /ko -->
             <div data-bind="foreach: App.game.quests.currentQuests()">
                 <div class="mb-1" data-bind="text: $data.description"></div>
-                <div class="row no-gutters mb-1">
-                    <div class="col-10">
+                <div class="d-flex mb-1" style="gap: 2px;">
+                    <div class="flex-grow-1">
                         <div class="progress p-0">
                             <div class="progress-bar bg-primary" role="progressbar"
                                 data-bind="attr:{ style: 'width:' + ($data.progress() * 100) + '%'}"
@@ -26,7 +26,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-2">
+                    <div class="flex-shrink-0" style="width: 45px;">
                         <!-- ko ifnot: $data.isCompleted() -->
                         <button class="btn btn-danger btn-sm btn-block p-0" data-bind="click: () => { App.game.quests.quitQuest($data.index, $data.progress() > 0) }">
                             Quit
